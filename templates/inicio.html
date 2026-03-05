@@ -11,16 +11,17 @@
 
     .VideoInicio {
     width: 100%;
-    height: 300px;       
+    height: 700px;       
     overflow: hidden;
     position: relative;
+    margin:0;
     }
 
     .VideoInicio video {
         width: 100%;
         height: 100%;
         object-fit: cover;   
-        object-position: center center; 
+        object-position: 75% 50%; /* Ajusta la posición del video para mostrar la parte deseada */
         display: block;
     }
 
@@ -37,23 +38,30 @@
         text-align: center;
     }
 
-  :root{
-    --pink:#f4c7c4;
-    --rose:#c86a6b;
-    --beige:#f6e2c9;
-    --accent:#d99b4d;
+ :root{
+  --red: #a9133e;     
+  --brown: #572727;   
+  --pink: #f4c7c4;
+  --rose: #c86a6b;
+  --beige: #f8e8d4;   
+  --accent: #d99b4d;  
+  --green: #95ae78;
   }
-
   *{box-sizing:border-box}
   body{margin:0;font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
 
   .columna{
     display:grid;
-    grid-template-columns: 1fr 420px;
-    gap: 32px;
-    align-items: stretch;
-    padding: 48px 64px;
+    grid-template-columns: 1.4fr 1fr; /* Una columna más ancha que otra*/
+    gap: 10px;
+    align-items: stretch; 
     background: white;
+  }
+
+  .desc{ padding: 30px 20px;}
+
+  .recuadro{
+    padding: 10px 10px;
   }
 
   .columna-left{
@@ -61,6 +69,7 @@
     align-items:center;
     justify-content:flex-start;
     position:relative;
+    padding: 0 120px;
   }
 
   .center-block{
@@ -90,18 +99,18 @@
     display:inline-block;
     background:var(--beige);
     text-align: center;
-    padding: 36px 36px;
+    padding: 32px 32px;
     margin-bottom: 18px;
   }
 
   .columna-title{
     margin:0;
     font-family: "Playfair Display", serif;
-    font-weight:700;
-    color:var(--accent);
-    text-transform:uppercase;
-    font-size:46px;
-    letter-spacing:6px;
+    font-weight:600;
+    color:var(--brown);
+    text-transform:uppercase; 
+    font-size:28px;
+    letter-spacing:8px;
     line-height:1;
   }
 
@@ -113,36 +122,22 @@
 
   .spaced{
     display:block;
-    font-size:48px;
-    color:var(--rose);
-    letter-spacing:2px;
-    margin: 10px 0;
-    font-weight:600;
+    font-size:40px;
+    color:var(--red);
+    letter-spacing:1px;
+    margin: 18px 0;
+    font-weight:800;
   }
 
   .desc{
     margin-top:16px;
-    color:#9b6f6f;
+    color: var(--accent);
     font-size:24px;
     text-align: center;
     max-width:520px;
     line-height:1.6;
   }
 
-  .hero-right{
-    overflow:hidden;
-    border-radius:2px;
-    display:block;
-    align-self:stretch;
-  }
-
-  .hero-right img{
-    width:100%;
-    height:100%;
-    min-height:320px;
-    object-fit:cover;
-    display:block;
-  }
 
   @media (max-width:900px){
     .hero{grid-template-columns:1fr; padding:32px;}
@@ -160,15 +155,158 @@
     .hero{padding:18px}
   }
 
+  .hero-right{
+    width:100%;  
+    position:relative; /* Para posicionar el título sobre la imagen */
+  }
+
+  .hero-right img{
+  width:100%;
+  height:700px;
+  object-fit:cover;
+  object-position: 90% 29%;
+
+  /* mejora visual de la imagen */
+  filter: brightness(1.15) contrast(0.9);
+}
+
+  .title-p{
+    position: absolute; /*hace que este sobre la imagen*/
+    top: 46%; /* lo sube */
+    left: 50%; /*lo posiciona en el centro*/
+    transform: translate(-50%, -40%); /* Ajusta la posición para centrar el título */
+    text-align: center; /* Centra el texto horizontalmente */
+    width: 80%; /* Ajusta el ancho del contenedor del título para que no ocupe toda la imagen */
+  }
+
+  .title-p span{
+  display:block;
+  font-family: "Playfair Display", serif;
+  font-weight:700;
+  font-size:60px;
+  letter-spacing:4px;
+
+  color: var(--beige); /* color claro que contrasta con la imagen */
+
+  /* sombra para mejorar visibilidad sobre imágenes */
+  text-shadow: 4px 5px 7px rgba(0,0,0,0.6);
+  }
+
+    /*Colores del tittle-p */
+  .line-top0{color: #f8e8d4;}
+  .spaced0{color: #f8e8d4;}
+  .line-bottom0{color: #f8e8d4;}
+
+  
+  .recuadro1{
+  width:100%;
+  display:flex;
+  gap:20px;                     
+  }
+
+  .columna-tittle{
+    color: rgb(246, 235, 172)
+  }
+
+/*MENÚS*/
+  .menu-section{
+    background-color: rgb(246, 238, 212); /*color de fondo*/
+    color: black; /*color de letra*/
+    display: flex; /* Flexbox para alinear el contenido */
+    justify-content: space-between; /* Espacio entre el texto y la imagen */
+    align-items: center; /*items en el centro*/
+    padding: 70px 90px; /*espacio alrededor del contenido en X y Y*/
+  }
+
+  /* TÍTULO */
+  .contenido h1{
+    font-family: "Playfair Display", serif;
+    font-size: 65px;   
+    font-weight: 400;
+    margin-bottom: 25px;
+    color: #421818;
+  }
+
+  /* Línea */
+  .linea{
+    width: 395px;
+    height: 2px;
+    background: rgb(235, 212, 192);
+    position: relative;
+    margin-bottom: 30px;
+  }
+
+  /* Texto */
+  .contenido p{
+    font-size: 22px;  
+    line-height: 1.5;
+    margin-bottom: 40px;
+    max-width: 500px;
+  }
+
+  /* Botón */
+  .btn{
+    padding: 12px 40px;
+    border: 3px solid var(--brown);
+    font-size: 18px;
+    font-weight: 700;   /* letra más gruesa */
+  }
+
+  /* Imagen */
+  .imagen{
+    width: 65%;          /* más pequeña */
+    max-width: 600px;    /* límite real */
+    position: relative;
+    padding:0 30px;
+  }
+
+  .imagen img{
+    width: 100%;
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
+
+  .imagen img{
+  transition: transform 0.5s ease; /* Transición suave para el efecto hover */
+  }
+
+  .imagen img:hover{
+  transform: scale(1.05); /* Aumenta el tamaño de la imagen al pasar el mouse */
+  }
+
+  .espaC {
+  width: 100%;
+  height: 3px;
+  margin: 0 auto;
+  background-color: var(--brown);
+  }
+
+  .contenido p{
+    color: var(--brown);
+  }
+  
    </style>
 </head>
 
-<body>
+<body >
     {% include 'navbar.html' %}
     <div >
-        <div class="VideoInicio">
-            <video autoplay muted loop src="/static/vid/Contactanos!.mp4"></video>
+
+        <div class="hero-right">
+                <img src="static/img/image1.png" alt="Panaderia">
+                 <div class="title-p">
+                    <p class="columna-title" aria-hidden="true">
+                        <span class="line-top0">D E S S E R T  --  S A C R É</span>
+                        <span class="spaced0">P A N A D E R Í A</span>
+                        <span class="line-bottom0">Q U E  --  E N C A N T A  </span>
+                        <span class="spaced0">T U  --  V I D A</span>
+
+                    </p>
+                 </div>
         </div>
+
+        <section class="espaC"> </section>
 
         <section class="columna" aria-label="columna - Dessert Sacré">
             <div class="columna-left">
@@ -184,7 +322,7 @@
                             <span class="spaced">G L O R I O S O</span>
                             <span class="line-bottom">EN UN</span>
                         </h1>
-                        <span class="spaced" style="font-size:56px; color:var(--rose);">
+                        <span class="spaced" style="font-size:56px; color:var(--red);">
                             BOCADO
                         </span>
                     </div>
@@ -194,10 +332,130 @@
                 </div>
             </div>
 
-            <div class="hero-right">
-                <img src="..." alt="Postres con frambuesas">
+            <div class="VideoInicio">
+              <video autoplay muted loop src="/static/vid/Contactanos!.mp4"></video>
             </div>
         </section>
+
+        <section class="columna1" aria-label="columna1 - Dessert Sacré">
+            <div class="columna-left2">
+                <section class="menu-section" alt="panaderia">
+
+                  <div class="contenido">
+                    <h1>PANADERÍA</h1>
+
+                    <div class="linea">
+                    </div>
+
+                    <p>
+                    Dessert Sacré ofrece una variedad de panadería
+                    fresca, desde panes artesanales hasta
+                    delisciosos croissants, perfectos para acompañar
+                    tus bebidas favoritas.
+                    </p>
+
+                    <a href="/menu" class="btn">VER MENÚ.</a>
+                  </div>
+
+                  <div class="imagen">
+                      <img src="/static/img/pan.jpg" alt="Pan" class="espuma">
+                  </div>
+
+                </section>
+
+                <section class="espaC"> </section>
+
+                 <section class="menu-section" alt="reposteria">
+
+                  <div class="contenido">
+                    <h1>REPOSTERÍA</h1>
+
+                    <div class="linea">
+                    </div>
+
+                    <p>
+                    Dessert Sacré ofrece una esquisita
+                    repostería con deliciosos dulces y postres,
+                    los cuales son perfectos para satisfacer
+                    tus antojos.
+                    </p>
+
+                    <a href="/menu" class="btn">VER MENÚ.</a>
+                  </div>
+
+                  <div class="imagen">
+                      <img src="/static/img/postre.jpg" alt="Postre" class="espuma">
+                  </div>
+
+                </section>
+
+                <section class="espaC"> </section>
+
+                
+                <section class="menu-section" alt="pastelería">
+
+                  <div class="contenido">
+                    <h1>PASTELERÍA</h1>
+
+                    <div class="linea">
+                    </div>
+
+                    <p>
+                    Dessert Sacré te ofrece la mejor repostería,
+                    con productos dulces y salados, para que
+                    deleites desde cada increíble torta hasta 
+                    cada impactante postre.
+                    </p>
+
+                    <a href="/menu" class="btn">VER MENÚ</a>
+                  </div>
+
+                  <div class="imagen">
+                      <img src="/static/img/torta.jpg" alt="Torta" class="espuma">
+                  </div>
+
+                </section>
+                
+                <section class="espaC"> </section>
+
+                <section class="menu-section">
+
+                  <div class="contenido">
+                    <h1>BEBIDAS</h1>
+
+                    <div class="linea">
+                    </div>
+
+                    <p>
+                    Dessert Sacré ofrece una variedad de bebidas,
+                    desde cafés calientes y helados hasta bebidas
+                    refrescantes y ligeras como jugos frutales o té,
+                    para complementar perfectamente tus antojos.
+                    </p>
+
+                    <a href="/menu" class="btn">VER MENÚ.</a>
+                  </div>
+
+                  <div class="imagen">
+                      <img src="/static/img/cafe.jpg" alt="Café" class="espuma">
+                  </div>
+
+                </section>
+                
+                <section class="espaC"> </section>
+
+            </div>
+        </section>
+
+    </div>  
+
+    <footer>
+
+      <section>
+        
+      </section>
+
+    </footer>
 
 </body>
 </html>

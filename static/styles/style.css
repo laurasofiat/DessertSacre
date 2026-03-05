@@ -1,3 +1,13 @@
+:root{
+    --red: #a9133e;
+    --brown: #572727;
+    --pink: #f4c7c4;
+    --rose: #c86a6b;
+    --beige: #f8e8d4;
+    --accent: #d99b4d;
+    --green: #95ae78;
+  }
+
 body {
     background: #FFF7EE;
     font-family: "Georgia", serif;
@@ -79,23 +89,23 @@ body {
 }
 
 nav {
-    background-color: #f1c5c2 !important;
+    background-color: var(--brown) !important;
 }
 
 .navbar-brand {
-    color: #b2636c  !important;
+    color: var(--beige)  !important;
 }
 
 .navbar-brand:hover {
-    color: #b2636c  !important;
+    color: var(--beige)  !important;
 }
 
 a.nav-link {
-    color: #f18686 ;
+    color: var(--beige) ;
 }
 
 a.nav-link:hover {
-    color: #b2636c ;
+    color: var(--beige);
 }
 
 body {
@@ -108,30 +118,30 @@ body {
 }
 
 .dropdown-menu {
-    background-color: #f1c5c2;
+    background-color: rgb(141, 70, 55);
 }
 
 .dropdown-item {
-    color: #f18686;
+    color: var(--beige);
 }
 
 .dropdown-item:hover {
     background-color:transparent !important;
-    color: #b2636c;
+    color: white;
 }
 
 .nav-link.dropdown-toggle {
-  color: #f18686;
+  color: var(--beige);
 }
 
 
 .nav-link.dropdown-toggle {
-  color: #f18686 !important;
+  color: var(--beige) !important;
 }
 
 .nav-link.dropdown-toggle:hover {
     background-color: transparent;
-  color: #b2636c !important; 
+  color: white !important; 
 }
 
 /* FONDO DEL MODAL */
@@ -188,7 +198,7 @@ body {
     position: absolute;
     top: 0px;        /* Ajusta verticalmente */
     left: 30px;      /* Ajusta horizontalmente */
-    height: 40px;    /* Tamaño que necesitas */
+    height: 50px;    /* Tamaño que necesitas */
     width: auto;
     z-index: 9999;   /* Encima del navbar */
     pointer-events: none; /* Para que no afecte clics */
@@ -196,5 +206,5 @@ body {
 
 .navbar-brand {
     position: relative; /* Necesario para referenciar el absolute del logo */
-    padding-left: 60px; /* Deja espacio para el texto */
+    padding-left: 50px; /* Deja espacio para el texto */
 }
