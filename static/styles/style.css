@@ -8,6 +8,10 @@
     --green: #95ae78;
   }
 
+body::-webkit-scrollbar{  /* Elimina la barra de desplazamiento */
+    display:none;
+}
+
 body {
     background: #FFF7EE;
     font-family: "Georgia", serif;
@@ -45,7 +49,7 @@ body {
     width: 350px;
     margin: 50px auto;
     padding: 30px;
-    background: #f1c5c2;
+    background: #e6c298;
     border-radius: 20px;
     text-align: center;
 }
@@ -63,11 +67,13 @@ body {
 }
 
 .form {
-    width: 350px;
-    background: #f1c5c2;
+    display: flex; 
+    justify-content: flex-end;
+    width: 360px;
+    background: #e6c298 ;
     padding: 25px;
     border-radius: 20px;
-    margin: 40px auto;
+    margin: 50px auto;
 }
 
 .form input {
