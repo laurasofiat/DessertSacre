@@ -2,8 +2,210 @@
 <html lang="es">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles/style.css">
 </head>
 <body>
 
 {% include 'navbar.html' %}
+
+    <section class="contact-section">
+        <h2>Contáctanos</h2>
+        <p class="subtitle"> 🥖</p>
+
+        <div class="contact-container">
+
+            <!-- Información de contacto -->
+            <div class="contact-info">
+                <h3>Dessert Sacré</h3>
+                <p><strong>📍 Dirección:</strong> Ubicación del cliente</p>
+                <p><strong>📞 Teléfono:</strong> +57 310 3885820</p>
+                <p><strong>📧 Correo:</strong> dessertsacre@gmail.com</p>
+                <p><strong>🕒 Horario:</strong> Disponibilidad del cliente</p>
+
+                <!-- Mapa -->
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.589831710085!2d-74.0560485852378!3d4.666991396614131!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a5f3d3a4b9d%3A0x7a3c3c7e3f8a4176!2sParque%2093!5e0!3m2!1ses!2sco!4v1678888888888!5m2!1ses!2sco" loading="lazy" allowfullscreen="">
+                </iframe>
+            </div>
+
+            <!-- Formulario -->
+            <div class="contact-form">
+                <h3>Envíanos un mensaje</h3>
+                <form id="contactForm">
+                    <input type="text" id="name" placeholder="Tu nombre" required="">
+                    <input type="email" id="email" placeholder="Tu correo electrónico" required="">
+                    <textarea id="message" placeholder="Escribe tu mensaje aquí..." required=""></textarea>
+                    <button type="submit">Enviar mensaje</button>
+
+                    <div class="success-message" id="successMessage">
+                        ¡Gracias! Tu mensaje fue enviado correctamente 🧁
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Enlace al JavaScript -->
+    <script>
+        // Espera a que el DOM cargue completamente
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const form = document.getElementById("contactForm");
+        const successMessage = document.getElementById("successMessage");
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const message = document.getElementById("message").value.trim();
+
+            // Validar campos vacíos
+            if (name === "" || email === "" || message === "") {
+                alert("Por favor completa todos los campos.");
+                return;
+            }
+
+            // Validar formato de correo electrónico
+            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i;
+            if (!email.match(emailPattern)) {
+                alert("Por favor ingresa un correo electrónico válido.");
+            return;
+            }
+
+            // Mostrar mensaje de éxito
+            successMessage.style.display = "block";
+
+            // Limpiar formulario
+            form.reset();
+
+            // Ocultar mensaje después de 4 segundos
+            setTimeout(() => {
+            successMessage.style.display = "none";
+            }, 4000);
+        });
+
+    });
+    </script>
+
+    <style>
+        /* Estilos generales */
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f5f5dc;
+    }
+
+    .contact-section {
+        padding: 60px 20px;
+        text-align: center; // Centrar el texto del título y subtítulo
+    }
+
+    .contact-section h2 {
+    font-size: 36px;
+    color: #572727;
+    margin-bottom: 10px;
+    }
+
+    .subtitle {
+        color: #555;
+        margin-bottom: 40px;
+    }
+
+    /* Contenedor principal */
+    .contact-container {
+        max-width: 1100px;
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap; // Permitir que los elementos se ajusten en pantallas pequeñas
+        gap: 40px; // Espacio entre los elementos
+        justify-content: center; // Centrar los elementos dentro del contenedor
+    }
+
+    /* Tarjetas */
+    .contact-info,
+    .contact-form {
+        flex: 1 1 450px; // Permitir que las tarjetas crezcan y se ajusten
+        background: #d8c3a4;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Información */
+    .contact-info h3 {
+        color: #572727;
+        margin-bottom: 15px;
+    }
+
+    .contact-info p {
+        margin: 10px 0;
+        color: #555;
+        text-align: left; // Alinear el texto a la izquierda para una mejor legibilidad
+    }
+
+    .contact-info iframe {
+        width: 100%;
+        height: 250px;
+        border-radius: 10px; // Redondear las esquinas del mapa
+        margin-top: 15px;
+        border: none;
+    }
+
+    /* Formulario */
+    .contact-form h3 {
+        color: #572727;
+        margin-bottom: 15px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        box-sizing: border-box; //caja de contenido para que el padding no afecte al ancho total
+    }
+
+    .contact-form textarea {
+        resize: none; // Evitar que el usuario pueda redimensionar el textarea
+        height: 120px; //alto
+    }
+
+    .contact-form button {
+        margin-top: 15px;
+        padding: 12px; //espacio de alto y bajo
+        width: 100%;
+        background-color: #572727;
+        border: none; //sin border
+        border-radius: 8px;  //bordes redondeados
+        color: white; //color de letra
+        font-size: 16px; //tamaño de letra
+        cursor: pointer; //cambiar el cursor al pasar sobre el botón
+        transition: 0.3s; //movimiento
+    }
+
+    .contact-form button:hover {    
+        background-color: #572727;
+    }
+
+    /* Mensaje de éxito */
+    .success-message {
+        margin-top: 15px;
+        color: green;
+        display: none;
+        font-weight: bold; //texto en negrita
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .contact-container {
+            flex-direction: column; // container en direccion columna
+        }
+    }
+    </style>
+
+</body>
+
+</html>
