@@ -345,7 +345,7 @@ def inicioS():
 
 @app.route("/inicio")
 def inicio():
-    usuario = session.get("usuario")
+    return render_template("inicio.html")
 
 @app.route('/menu')
 def menu():
