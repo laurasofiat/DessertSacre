@@ -222,7 +222,7 @@ def verify():
             flash("Correo verificado con éxito", "success")
             session.pop("correo_verificacion", None)
             session.pop("intentos_reenvio", None)
-            return redirect("/inicio1")
+            return redirect("/inicio")
         else:
             flash("El código ingresado es incorrecto", "danger")
             return render_template("verify.html", redirect_login=False, intentos=intentos)
@@ -301,7 +301,7 @@ def login():
 
         session["usuario"] = usuario["primer_nombre"] + " " + usuario["primer_apellido"]
         flash("Inicio de sesión exitoso", "success")
-        return redirect("/inicio1")
+        return redirect("/inicio")
     
     # Limpia el redirect cuando se carga el login
         
@@ -310,6 +310,14 @@ def login():
     correo_auto = session.pop("correo_login_auto", "")
 
     return render_template("login.html", redir_verificar=redir_verificar, correo_auto=correo_auto)
+
+#DASHBOARD
+
+@app.route("/dashboard")
+def dashboard():
+    if not session.get("usuario"):
+        return redirect("/login")
+    return render_template("dashboard.html", usuario=session["usuario"])
 
 
 # LOGOUT
@@ -330,14 +338,14 @@ def logout():
 # # NAVBAR
 # # ------------------------------------
 
-@app.route("/inicio")
-def inicio():
-    return render_template("inicio.html")
-
-@app.route("/inicio1")
-def inicio():
+@app.route("/iniciosesion")
+def inicioS():
     usuario = session.get("usuario")
     return render_template("inicio1.html", usuario=usuario)
+
+@app.route("/inicio")
+def inicio():
+    usuario = session.get("usuario")
 
 @app.route('/menu')
 def menu():
