@@ -18,35 +18,10 @@ body {
     padding-top: 24px;
 }
 
-.menu_de_navegacion ul {
-    background: #f1c5c2;
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    list-style:none;
-}
-
-.menu_de_navegacion ul li {
-    position: relative;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.menu_de_navegacion ul li ul {
-    display: none;
-    position: absolute;
-    background: white;
-    padding: 10px;
-    list-style:none;
-}
-
-.menu_de_navegacion ul li:hover ul {
-    display: block;
-}
 
 .contenedor {
-    width: 350px;
+    width: 90%; /* Ocupa el 90% en pantallas chicas */
+    max-width: 350px; /* Pero no crece más de 350px */
     margin: 50px auto;
     padding: 30px;
     background: #e6c298;
@@ -68,8 +43,10 @@ body {
 
 .form {
     display: flex; 
-    justify-content: flex-end;
-    width: 360px;
+    flex-wrap: wrap; /* Permite que los elementos bajen si no caben */
+    justify-content: center; /* Centra horizontalmente */
+    width: 90%;
+    max-width: 360px;
     background: #e6c298 ;
     padding: 25px;
     border-radius: 20px;
@@ -77,7 +54,7 @@ body {
 }
 
 .form input {
-    width: 90%;
+    width: 100%;
     padding: 10px;
     margin: 8px 0;
     border-radius: 10px;
@@ -169,7 +146,8 @@ body {
 .modal-box {
     background: #fff;
     padding: 25px;
-    width: 350px;
+    width: 90%;
+    max-width: 350px;
     border-radius: 20px;
     text-align: center;
 }
@@ -200,17 +178,62 @@ body {
     margin-bottom: 10px;
 }
 
-.logo-superpuesto {
-    position: absolute;
-    top: 0px;        /* Ajusta verticalmente */
-    left: 30px;      /* Ajusta horizontalmente */
-    height: 50px;    /* Tamaño que necesitas */
+/* Define el tamaño del logo para que no sea gigante */
+.logo-navbar {
+    height: 40px; /* Tamaño ideal para computadoras */
     width: auto;
-    z-index: 9999;   /* Encima del navbar */
-    pointer-events: none; /* Para que no afecte clics */
+    display: block;
 }
 
-.navbar-brand {
-    position: relative; /* Necesario para referenciar el absolute del logo */
-    padding-left: 50px; /* Deja espacio para el texto */
+/* --- REGLA RESPONSIVE --- */
+@media (max-width: 768px) {
+    .logo-navbar {
+        height: 35px; /* Un poco más pequeño en móviles */
+    }
+    
+    .navbar-brand {
+        font-size: 1.1rem; /* El texto de la marca se ajusta sutilmente */
+    }
+}
+
+@media (max-width: 480px) {
+    .contenedor, .form, .modal-box {
+        width: 95%; /* Aprovecha más el espacio en pantallas muy pequeñas */
+        padding: 15px;
+    }
+    
+    .logo-superpuesto {
+        left: 10px; /* Evita que el logo se salga en móviles */
+        height: 35px;
+    }
+
+    .navbar-brand {
+        padding-left: 45px;
+        font-size: 0.9rem; /* Texto un poco más pequeño para que quepa */
+    }
+}
+
+/* 1. Cambiamos el color del borde del botón */
+.navbar-toggler {
+    border-color: var(--beige) !important;
+    padding: 4px 8px; /* Ajuste opcional para que se vea más estilizado */
+}
+
+/* 2. Inyectamos color beige a las rayitas (el icono) */
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23f8e8d4' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+}
+
+/* 3. Efecto visual cuando se hace clic (opcional) */
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem rgba(248, 232, 212, 0.25);
+}
+
+/* Evitar que el menú desplegado sea transparente en móvil */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background-color: var(--brown);
+        padding: 1rem;
+        border-radius: 0 0 15px 15px;
+    }
 }
