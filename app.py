@@ -57,40 +57,6 @@ def enviar_codigo(correo_destino, codigo):
         print("Error enviando correo:", e)
         return False
 
-# # TABLA DE REGISTRO Y RECUPERACION
-
-# # Crea la tabla `registro` en la base de datos si no existe
-# def crear_tabla():
-#     # Solicita una conexión a la base de datos
-#     conexion = get_db_connection()
-#     if conexion:
-#         # Crea un cursor para ejecutar la sentencia SQL
-#         cursor = conexion.cursor()
-#         # Ejecuta la sentencia SQL para crear la tabla
-#         cursor.execute("""
-#        CREATE TABLE IF NOT EXISTS recuperacion (
-#             id SERIAL PRIMARY KEY,
-#             correo VARCHAR(150) NOT NULL REFERENCES registro(correo),
-#             codigo VARCHAR(6) NOT NULL,
-#             expiracion TIMESTAMP DEFAULT (NOW() + INTERVAL '15 minutes'),
-#             usado BOOLEAN DEFAULT FALSE
-# );
-# """)
-#         cursor.execute("""
-#        CREATE TABLE IF NOT EXISTS recuperacion (
-#             id SERIAL PRIMARY KEY,
-#             correo VARCHAR(150) NOT NULL REFERENCES registro(correo),
-#             codigo VARCHAR(6) NOT NULL,
-#             expiracion TIMESTAMP DEFAULT (NOW() + INTERVAL '15 minutes'),
-#             usado BOOLEAN DEFAULT FALSE
-# );
-
-
-#         """);
-#         # Inserta datos y cierra cursor y conexión
-#         conexion.commit()
-#         cursor.close()
-#         conexion.close()
         
 # TABLA DE REGISTRO Y RECUPERACION
 # Crea la tabla `registro` en la base de datos si no existe     
