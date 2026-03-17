@@ -100,11 +100,11 @@ def crear_tabla():
         
         
         
-# INDEX
+# INDEX->se dirija a inicio pq el usuario no tiene que ver el index, sino el inicio con la navbar y todo lo demás, ya luego decide si quiere ir al index o no
 # ------------------------------------
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("inicio.html")
 
 # Registro
 
@@ -384,6 +384,10 @@ def inicioS():
 @app.route("/inicio")
 def inicio():
     return render_template("inicio.html")
+
+@app.route("/index")
+def index2():
+    return render_template("index.html")
 
 @app.route('/menu')
 def menu():
