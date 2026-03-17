@@ -1,415 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
-<title>Dessert Sacré | Inicio </title>
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dessert Sacré | Inicio</title>
   <link rel="stylesheet" href="/static/styles/style.css">
-  <style>
-
-      body{ zoom: 0.82; /*HACE QUE TODA LA PANTALLA ESTE EN 82% EN EL NAVEGADOR*/
-  }
-
-    video {
-        width: 100%;
-    }
-
-    .VideoInicio {
-    width: 100%;
-    height: 700px;       
-    overflow: hidden;
-    position: relative;
-    margin:0;
-    }
-
-    .VideoInicio video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;   
-        object-position: 90% 50%; /* Ajusta la posición del video para mostrar la parte deseada */
-        display: block;
-    }
-
-    .CapaInicio {
-        position: absolute;
-        top: 150px; 
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: white;
-        text-align: center;
-    }
-
- :root{
-  --red: #a9133e;     
-  --brown: #572727;   
-  --pink: #f4c7c4;
-  --rose: #c86a6b;
-  --beige: #f8e8d4;   
-  --accent: #d99b4d;  
-  --green: #95ae78;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
-
-  .columna{
-    display:grid;
-    grid-template-columns: 1.4fr 1fr; /* Una columna más ancha que otra*/
-    gap: 10px;
-    align-items: stretch; 
-    background: white;
-  }
-
-  .desc{ padding: 30px 20px;}
-
-  .recuadro{
-    padding: 10px 10px;
-  }
-
-  .columna-left{
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    position:relative;
-    padding: 0 120px;
-  }
-
-  .center-block{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;   
-    text-align: center;    
-}
-
-  .text-wrap{
-    max-width: 700px;
-    width:100%;
-    padding-left: 12px;
-  }
-
-  .subtitle{
-    font-family: "Montserrat", sans-serif;
-    color:var(--rose);
-    letter-spacing:4px;
-    margin:0 0 18px 0;
-    font-size:14px;
-    font-weight:300;
-  }
-
-  .recuadro{
-    display:inline-block;
-    background:var(--beige);
-    text-align: center;
-    padding: 32px 32px;
-    margin-bottom: 18px;
-  }
-
-  .columna-title{
-    margin:0;
-    font-family: "Playfair Display", serif;
-    font-weight:600;
-    color:var(--brown);
-    text-transform:uppercase; 
-    font-size:28px;
-    letter-spacing:8px;
-    line-height:1;
-  }
-
-  .hero-title .line-top,
-  .hero-title .line-bottom{
-    display:block;
-    font-size:56px;
-  }
-
-  .spaced{
-    display:block;
-    font-size:40px;
-    color:var(--red);
-    letter-spacing:1px;
-    margin: 18px 0;
-    font-weight:800;
-  }
-
-  .desc{
-    margin-top:16px;
-    color: var(--accent);
-    font-size:24px;
-    text-align: center;
-    max-width:520px;
-    line-height:1.6;
-  }
-
-
-  @media (max-width:900px){
-    .hero{grid-template-columns:1fr; padding:32px;}
-    .hero-right{order:2; height:260px;}
-    .hero-left{order:1; padding-bottom:20px;}
-    .hero-title{font-size:44px}
-    .spaced{font-size:36px; letter-spacing:28px}
-  }
-
-  @media (max-width:520px){
-    .highlight{padding:18px 22px}
-    .hero-title{font-size:34px}
-    .spaced{font-size:28px; letter-spacing:14px}
-    .hero-right{height:200px}
-    .hero{padding:18px}
-  }
-
-  .hero-right{
-    width:100%;  
-    position:relative; /* Para posicionar el título sobre la imagen */
-  }
-
-  .hero-right img{
-  width:100%;
-  height:700px;
-  object-fit:cover;
-  object-position: 90% 29%;
-
-  /* mejora visual de la imagen */
-  filter: brightness(1.15) contrast(0.9);
-}
-
-  .title-p{
-    position: absolute; /*hace que este sobre la imagen*/
-    top: 46%; /* lo sube */
-    left: 50%; /*lo posiciona en el centro*/
-    transform: translate(-50%, -40%); /* Ajusta la posición para centrar el título */
-    text-align: center; /* Centra el texto horizontalmente */
-    width: 80%; /* Ajusta el ancho del contenedor del título para que no ocupe toda la imagen */
-  }
-
-  .title-p span{
-  display:block;
-  font-family: "Playfair Display", serif;
-  font-weight:700;
-  font-size:60px;
-  letter-spacing:4px;
-
-  color: var(--beige); /* color claro que contrasta con la imagen */
-
-  /* sombra para mejorar visibilidad sobre imágenes */
-  text-shadow: 4px 5px 7px rgba(0,0,0,0.6);
-  }
-
-    /*Colores del tittle-p */
-  .line-top0{color: #f8e8d4;}
-  .spaced0{color: #f8e8d4;}
-  .line-bottom0{color: #f8e8d4;}
-
-  
-  .recuadro1{
-  width:100%;
-  display:flex;
-  gap:20px;                     
-  }
-
-  .columna-tittle{
-    color: rgb(246, 235, 172)
-  }
-
-/*MENÚS*/
-  .menu-section{
-    background-color: rgb(246, 238, 212); /*color de fondo*/
-    color: black; /*color de letra*/
-    display: flex; /* Flexbox para alinear el contenido */
-    justify-content: space-between; /* Espacio entre el texto y la imagen */
-    align-items: center; /*items en el centro*/
-    padding: 70px 90px; /*espacio alrededor del contenido en X y Y*/
-  }
-
-  /* TÍTULO */
-  .contenido h1{
-    font-family: "Playfair Display", serif;
-    font-size: 65px;   
-    font-weight: 400;
-    margin-bottom: 25px;
-    color: #421818;
-  }
-
-  /* Línea */
-  .linea{
-    width: 395px;
-    height: 2px;
-    background: rgb(235, 212, 192);
-    position: relative;
-    margin-bottom: 30px;
-  }
-
-  /* Texto */
-  .contenido p{
-    font-size: 22px;  
-    line-height: 1.5;
-    margin-bottom: 40px;
-    max-width: 500px;
-  }
-
-  /* Botón */
-  .btn{
-    padding: 12px 40px;
-    border: 3px solid var(--brown);
-    font-size: 18px;
-    font-weight: 700;   /* letra más gruesa */
-  }
-
-  /* Imagen */
-  .imagen{
-    width: 65%;          /* más pequeña */
-    max-width: 600px;    /* límite real */
-    position: relative;
-    padding:0 30px;
-  }
-
-  .imagen img{
-    width: 100%;
-    display: block;
-    position: relative;
-    z-index: 1;
-  }
-
-  .imagen img{
-  transition: transform 0.5s ease; /* Transición suave para el efecto hover */
-  }
-
-  .imagen img:hover{
-  transform: scale(1.05); /* Aumenta el tamaño de la imagen al pasar el mouse */
-  }
-
-  .espaC {
-  width: 100%;
-  height: 3px;
-  margin: 0 auto;
-  background-color: var(--brown);
-  }
-
-  .contenido p{
-    color: var(--brown);
-  }
-
-  /*Footer*/
-/* FOOTER */
-.footer{
-  background:#5f3333;
-  color:var(--beige);
-  padding:60px 80px;
-  font-family:"Montserrat", sans-serif;
-}
-
-.footer-container{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:60px; 
-}
-
-.footer-col h3{
-  font-family:"Playfair Display", serif;
-  font-size:28px;
-  margin-bottom:10px;
-}
-
-.footer-col h4{
-  font-size:18px;
-  margin-bottom:10px;
-}
-
-.footer-col p{
-  font-size:16px;
-  max-width:260px;
-  line-height:1.6;
-}
-
-.footer-col a{
-  color:var(--accent);
-  text-decoration:none;
-  font-weight:600;
-}
-
-.footer-col a:hover{
-  text-decoration:underline;
-}
-
-.footer-col button{
-  margin-top:10px;
-  padding:10px 25px;
-  border:2px solid var(--accent);
-  background:transparent;
-  border-radius:20px;
-}
-
-.footer-col button a{
-  color:var(--beige);
-}
-
-.espaC1{
-  width:100%;
-  height:2px;
-  margin:30px 0;
-  background:var(--beige);
-  opacity:0.5;
-}
-
-.copy{
-  text-align:center;
-  font-size:14px;
-  letter-spacing:1px;
-}
-  
-   </style>
+  <link rel="stylesheet" href="/static/styles/inicio.css">
 </head>
 
-<body >
-    <h1>Bienvenido, {{ usuario }}</h1>
-    {% include 'navbar1.html' %}
-    <div >
+<body>
+  {% include 'navbar.html' %}
 
-        <div class="hero-right">
-                <img src="static/img/image1.png" alt="Panaderia">
-                 <div class="title-p">
-                    <p class="columna-title" aria-hidden="true">
-                        <span class="line-top0">D E S S E R T  --  S A C R É</span>
-                        <span class="spaced0">P A N A D E R Í A</span>
-                        <span class="line-bottom0">Q U E  --  E N C A N T A  </span>
-                        <span class="spaced0">T U  --  V I D A</span>
+  <div class="hero-responsive">
+    <img src="static/img/image1.png" alt="Panaderia" class="hero-img">
+    <div class="hero-title-overlay">
+      <span>DESSERT SACRÉ</span>
+      <span>PANADERÍA QUE ENCANTA</span>
+      <span>TU VIDA</span>
+    </div>
+  </div>
 
-                    </p>
-                 </div>
-        </div>
+  <div class="espaC"></div>
 
-        <section class="espaC"> </section>
+  <section class="welcome-section">
+    <div class="recuadro-beige">
+      <p class="desc">Bienvenidos a Dessert Sacré</p>
+      <div class="slogan-glorioso">
+        <p style="font-family: 'Playfair Display'; font-size: 20px;">EL SABOR</p>
+        <h2 class="bocado-text">GLORIOSO</h2>
+        <p style="font-family: 'Playfair Display'; font-size: 20px;">EN UN BOCADO</p>
+      </div>
+      <p class="desc" style="color: var(--rose);">Donde el Pecado se Funde en Nuestros Glaseados</p>
+    </div>
+  </section>
 
-        <section class="columna" aria-label="columna - Dessert Sacré">
-            <div class="columna-left">
-                <div class="text-wrap">
-                  <div class="center-block">
-                    
-                    <p class="desc">Bienvenidos a Dessert Sacré</p>
+  <section class="columna">
+    <div class="columna-left">
+      <div class="center-block">
+        <h2 style="color: var(--brown); font-family: 'Playfair Display'; font-size:40px">CALIDAD ARTESANAL</h2>
+        <p style="max-width: 400px; text-align: center; font-size:18px;">Cada producto es elaborado con ingredientes seleccionados para brindar una experiencia única.</p>
+      </div>
+    </div>
+    <div class="VideoInicio">
+      <video autoplay muted loop playsinline src="/static/vid/Inicio.mp4"></video>
+    </div>
+  </section>
 
-                    <!-- AQUI METÍ BOCADO DENTRO DEL RECUADRO -->
-                    <div class="recuadro" aria-hidden="true">
-                        <h1 class="columna-title" aria-hidden="true">
-                            <span class="line-top">EL SABOR</span>
-                            <span class="spaced">G L O R I O S O</span>
-                            <span class="line-bottom">EN UN</span>
-                        </h1>
-                        <span class="spaced" style="font-size:56px; color:var(--red);">
-                            BOCADO
-                        </span>
-                    </div>
-
-                    <p class="desc">Donde el Pecado se Funde en Nuestros Glaseados</p>
-                  </div>
-                </div>
-            </div>
-
-            <div class="VideoInicio">
-              <video autoplay muted loop src="/static/vid/Contactanos!.mp4"></video>
-            </div>
-        </section>
+  <div class="espaC"></div>
 
         <section class="columna1" aria-label="columna1 - Dessert Sacré">
             <div class="columna-left2">
@@ -525,33 +162,7 @@
 
     </div>  
 
-    <div class="espaC"></div>
-
-    <footer class="footer">
-
-    <div class="footer-container">
-
-      <div class="footer-col">
-        <h3>Dessert Sacré</h3>
-        <p>Panadería artesanal donde cada bocado encanta tu vida.</p>
-      </div>
-
-      <div class="footer-col">
-        <h4>Explora nuestro <a href="/menu">Menú</a></h4>
-      </div>
-
-      <div class="footer-col">
-        <h4>¿Registrate! Lograrás tener nuestros servicios.</h4>
-        <button><a href="/register">Registrarse</a></button>
-      </div>
-
-    </div>
-
-    <div class="espaC1"></div>
-
-    <p class="copy">© 2026 Dessert Sacré</p>
-
-  </footer>
+  {% include 'footer.html' %}
 
 </body>
 </html>

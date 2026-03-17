@@ -1,0 +1,14 @@
+
+.Textoinicio h2{
+    font-size: 37px;
+    font-weight:46px;
+    color: #572727;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.btn-warning {
+    background: #d99b4d;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}

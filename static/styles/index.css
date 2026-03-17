@@ -1,0 +1,204 @@
+/* 1. CONFIGURACIÓN BASE Y RESET */
+
+    :root {
+      --red: #a9133e;
+      --brown: #572727;
+      --pink: #f4c7c4;
+      --rose: #c86a6b;
+      --beige: #f8e8d4;
+      --accent: #d99b4d;
+      --green: #95ae78;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    /* 2. CONTENEDOR PRINCIPAL CON FONDO */
+
+    .fondoindex {
+  zoom: 0.87;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Imagen de fondo + overlay */
+  background-image:
+    linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+    url('/static/img/fondo1.jpeg');
+
+  /* Posición y tamaño de la imagen */
+  background-position: 45% 94%; /* posición personalizada */
+  background-size: cover;       /* cubrir todo el contenedor */
+  background-repeat: no-repeat; /* evitar repetición */
+
+
+  padding: 0 155px;
+  }
+
+
+    /* 3. ESTRUCTURA PRINCIPAL (VIDEO + TARJETA) */
+
+    .contenido {
+      display: grid;
+
+      /* video | separador | tarjeta */
+      grid-template-columns: 1fr 0.2fr 1fr;
+
+      gap: 40px;
+      align-items: center;
+
+      width: 100%;
+      max-width: 1600px;
+    }
+
+
+    /* 4. VIDEO IZQUIERDA */
+
+    .video-box {
+      min-width: 420px;
+      max-width: 600px;
+      width:660px;
+      height: 560px;
+      overflow: hidden;
+      margin: 10px;
+    }
+
+    .video-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 55% 45%;
+    }
+
+
+    /* SEPARADOR CENTRAL */
+
+    .espaC {
+      width: 3px;
+      height: 90%;
+      background: linear-gradient(
+        transparent,
+        var(--brown),
+        transparent
+      );
+      justify-self: center;
+    }
+
+
+    /* 5. TARJETA LOGIN / REGISTER */
+
+    .contenedor1{
+  background:#7a2f2f;
+  max-width:700px;
+  width:110%;
+  padding:40px 40px;
+  text-align:center;
+  color:var(--beige);
+  box-shadow:0 15px 35px rgba(0,0,0,0.4);
+  border-radius: 10px;
+  }
+
+
+
+    /* LOGO */
+
+    .logo {
+      width: 250px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+
+    /* TITULO */
+
+    .titulo {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 32px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+
+    /* BOTONES */
+
+    .boton {
+      display: block;
+      background: var(--beige);
+      padding: 15px;
+      margin: 15px auto;
+      width: 90%;
+      border-radius: 30px;
+      text-decoration: none;
+      color: var(--beige);
+      font-weight: 800;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .boton:hover {
+      background: transparent;
+      color: var(--beige);
+      border-color: var(--beige);
+      transform: translateY(-3px);
+    }
+
+
+    /* 7. TABLETS */
+
+    @media (max-width: 992px) {
+
+      .contenido {
+        gap: 30px;
+      }
+
+      .contenedor1 {
+        flex: 1;
+      }
+
+    }
+
+
+    /* 8. MÓVILES */
+
+    @media (max-width: 768px) {
+
+      .contenido {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .espaC {
+        display: none;
+      }
+
+      .video-box {
+        width: 80%;
+        max-width: 300px;
+        margin: auto;
+      }
+
+      .contenedor1 {
+        width: 100%;
+        max-width: 100%;
+        padding: 60px 40px;
+      }
+
+      .titulo {
+        font-size: 26px;
+      }
+
+    }

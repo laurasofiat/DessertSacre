@@ -1,5 +1,4 @@
-/*<style>
-    /* Fondo oscurecido */
+/* Fondo oscurecido */
 .modal {
     position: fixed;
     top: 0;
@@ -114,35 +113,3 @@
         opacity: 1;
     }
 }
-
-</style> {
-    % if mostrar_modal %
-}
-
-<div id="loginModal" class="modal"><div class="modal-content"><h2>¡Antes de continuar !</h2><p>Debes iniciar sesión para acceder a esta parte del sitio.</p><div class="buttons"><a href="/login" class="btn login">Iniciar sesión</a><button class="btn later" onclick="cerrarModal()">Más tarde</button></div></div></div> {
-    % endif %
-}
-
-<script>function cerrarModal() {
-    document.getElementById("loginModal").style.display="none";
-
-    // Opcional: no mostrar otra vez durante 1 hora
-    localStorage.setItem("ignorarLogin", Date.now());
-}
-
-</script><script>window.onload=function () {
-    const ignorar=localStorage.getItem("ignorarLogin");
-
-    if (ignorar) {
-        const haceCuanto=Date.now() - parseInt(ignorar);
-
-        if (haceCuanto < 3600000) {
-            // 1 hora
-            const modal=document.getElementById("loginModal");
-            if (modal) modal.style.display="none";
-        }
-    }
-}
-
-;
-</script>*/

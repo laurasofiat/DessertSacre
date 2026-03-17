@@ -12,6 +12,8 @@ body::-webkit-scrollbar{  /* Elimina la barra de desplazamiento */
     display:none;
 }
 
+.menuN{zoom:0.88;} /* Ajusta el zoom para que se vea bien en pantallas grandes */
+
 body {
     background: #FFF7EE;
     font-family: "Georgia", serif;
@@ -85,6 +87,12 @@ nav {
 
 a.nav-link {
     color: var(--beige) ;
+}
+
+a.nav-link1 { /*título de Dessert Sacre*/
+    color: var(--beige) ;
+    font-size: 21px;
+    text-decoration: none;
 }
 
 a.nav-link:hover {

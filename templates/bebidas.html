@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panadería Dessert Sacré</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/style.css') }}"
+      href="{{ url_for('static', filename='styles/bebidas.css') }}"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+
+    <!-- BEBIDAS -->
+    <div class="section-title">
+      <h2>Bebidas</h2>
+      <p>Refrescos, jugos naturales y cafés especiales.</p>
+    </div>
+
+    <div class="container my-4">
+      <div id="carouselBebidas" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img
+              src="{{ url_for('static', filename='img/bebida1.jpeg') }}"
+              alt="Piña colada"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Piña colada</h5>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              src="{{ url_for('static', filename='img/bebido2.jpeg') }}"
+              alt="limonada"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Limonada</h5>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              src="{{ url_for('static', filename='img/bebida3.jpeg') }}"
+              alt="Café Frío"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Café Frío</h5>
+            </div>
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselBebidas"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselBebidas"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

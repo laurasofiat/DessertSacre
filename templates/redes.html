@@ -2,14 +2,20 @@
 <html lang="es">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/redes.css">
 </head>
 <body>
 
 {% include 'navbar.html' %}
 
+    <div class="hero-responsive">
+                <img src="static/img/fondo2.jpeg" alt="Panaderia" class="hero-img">
+            <div class="hero-title-overlay">
+                <span>CONTÁCTANOS</span>
+            </div>
+    </div>
+
     <section class="contact-section">
-        <h2>Contáctanos</h2>
-        <p class="subtitle"> 🥖</p>
 
         <div class="contact-container">
 
@@ -30,8 +36,9 @@
             <div class="contact-form">
                 <h3>Envíanos un mensaje</h3>
                 <form id="contactForm">
-                    <input type="text" id="name" placeholder="Tu nombre" required="">
-                    <input type="email" id="email" placeholder="Tu correo electrónico" required="">
+                    <input type="text" id="name" placeholder="Primer Nombre" required="">
+                    <input type="text" id="name" placeholder="Primer Apellido" required="">
+                    <input type="email" id="email" placeholder="Correo Electrónico" required="">
                     <textarea id="message" placeholder="Escribe tu mensaje aquí..." required=""></textarea>
                     <button type="submit">Enviar mensaje</button>
 
@@ -42,7 +49,10 @@
             </div>
 
         </div>
+
     </section>
+
+    {% include 'footer.html' %}
 
     <!-- Enlace al JavaScript -->
     <script>
@@ -87,124 +97,6 @@
     });
     </script>
 
-    <style>
-        /* Estilos generales */
-    body {
-        margin: 0;
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #f5f5dc;
-    }
-
-    .contact-section {
-        padding: 60px 20px;
-        text-align: center; // Centrar el texto del título y subtítulo
-    }
-
-    .contact-section h2 {
-    font-size: 36px;
-    color: #572727;
-    margin-bottom: 10px;
-    }
-
-    .subtitle {
-        color: #555;
-        margin-bottom: 40px;
-    }
-
-    /* Contenedor principal */
-    .contact-container {
-        max-width: 1100px;
-        margin: auto;
-        display: flex;
-        flex-wrap: wrap; // Permitir que los elementos se ajusten en pantallas pequeñas
-        gap: 40px; // Espacio entre los elementos
-        justify-content: center; // Centrar los elementos dentro del contenedor
-    }
-
-    /* Tarjetas */
-    .contact-info,
-    .contact-form {
-        flex: 1 1 450px; // Permitir que las tarjetas crezcan y se ajusten
-        background: #d8c3a4;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    /* Información */
-    .contact-info h3 {
-        color: #572727;
-        margin-bottom: 15px;
-    }
-
-    .contact-info p {
-        margin: 10px 0;
-        color: #555;
-        text-align: left; // Alinear el texto a la izquierda para una mejor legibilidad
-    }
-
-    .contact-info iframe {
-        width: 100%;
-        height: 250px;
-        border-radius: 10px; // Redondear las esquinas del mapa
-        margin-top: 15px;
-        border: none;
-    }
-
-    /* Formulario */
-    .contact-form h3 {
-        color: #572727;
-        margin-bottom: 15px;
-    }
-
-    .contact-form input,
-    .contact-form textarea {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-size: 14px;
-        box-sizing: border-box; //caja de contenido para que el padding no afecte al ancho total
-    }
-
-    .contact-form textarea {
-        resize: none; // Evitar que el usuario pueda redimensionar el textarea
-        height: 120px; //alto
-    }
-
-    .contact-form button {
-        margin-top: 15px;
-        padding: 12px; //espacio de alto y bajo
-        width: 100%;
-        background-color: #572727;
-        border: none; //sin border
-        border-radius: 8px;  //bordes redondeados
-        color: white; //color de letra
-        font-size: 16px; //tamaño de letra
-        cursor: pointer; //cambiar el cursor al pasar sobre el botón
-        transition: 0.3s; //movimiento
-    }
-
-    .contact-form button:hover {    
-        background-color: #572727;
-    }
-
-    /* Mensaje de éxito */
-    .success-message {
-        margin-top: 15px;
-        color: green;
-        display: none;
-        font-weight: bold; //texto en negrita
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .contact-container {
-            flex-direction: column; // container en direccion columna
-        }
-    }
-    </style>
 
 </body>
 

@@ -77,13 +77,19 @@ def crear_tabla():
 );
 """)
         cursor.execute("""
-       CREATE TABLE IF NOT EXISTS recuperacion (
-            id SERIAL PRIMARY KEY,
-            correo VARCHAR(150) NOT NULL REFERENCES registro(correo),
-            codigo VARCHAR(6) NOT NULL,
-            expiracion TIMESTAMP DEFAULT (NOW() + INTERVAL '15 minutes'),
-            usado BOOLEAN DEFAULT FALSE
-);
+       CREATE TABLE IF NOT EXISTS registro (
+        id SERIAL PRIMARY KEY,
+        primer_nombre VARCHAR(100) NOT NULL,
+        segundo_nombre VARCHAR(100),
+        primer_apellido VARCHAR(36) NOT NULL,
+        segundo_apellido VARCHAR(36),
+        correo VARCHAR(150) UNIQUE NOT NULL,
+        password VARCHAR(200) NOT NULL,
+        telefono VARCHAR(20),
+        direccion VARCHAR(200),
+        codigo_verificacion VARCHAR(6),
+        verificado BOOLEAN DEFAULT FALSE
+        ); 
 
 
         """);
@@ -375,6 +381,27 @@ def pedidos():
 @app.route("/carrito") 
 def carrito(): 
     return render_template("carrito.html")
+
+#Panaderia
+@app.route("/panaderia")
+def panaderia():
+    return render_template('panaderia.html')
+# Puedes hacer lo mismo para pasteleria, galletas y bebidas
+
+#Pasteleria
+@app.route("/pasteleria")
+def pasteleria():
+    return render_template('pasteleria.html')
+
+#Reposteria
+@app.route("/reposteria")
+def reposteria():
+    return render_template('reposteria.html')
+
+#Bebidas
+@app.route("/bebidas")
+def bebidas():
+    return render_template('bebidas.html')
 
 
 #OLVIDO SU CONTRASEÑA?

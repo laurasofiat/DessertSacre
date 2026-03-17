@@ -1,16 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <link rel="stylesheet" href="/static/styles/style.css">
-    <title>Dessert Sacré </title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dessert Sacré</title>
+  <link rel="stylesheet" href="/static/styles/index.css">
 </head>
+
+
 <body>
-{% include 'navbar.html' %}
-<div class="contenedor">
-    <img src="/static/img/LOGO.png" class="logo" alt="Logo Dessert Sacré" width="200" height="200">
-    <h2>¡Bienvenido!</h2>
-    <a href="/register" class="boton">REGÍSTRATE AQUÍ</a>
-    <a href="/login" class="boton">INICIA SESIÓN AQUÍ</a>
-</div>
+
+  {% include 'navbar.html' %}
+
+  <main class="fondoindex">
+
+    <div class="contenido">
+
+      <div class="video-box">
+
+        <video autoplay muted loop playsinline>
+          <source src="{{ url_for('static', filename='vid/Index.mp4') }}" type="video/mp4">
+        </video>
+
+      </div>
+
+
+      <div class="espaC"></div>
+
+
+      <div class="contenedor1">
+
+        <div class="titulo">P A N A D E R I A</div>
+
+        <img src="/static/img/LOGO.png" alt="Logo Dessert Sacré" class="logo">
+
+
+        <a href="/register" class="boton">REGÍSTRATE AQUÍ</a>
+        <a href="/login" class="boton">INICIA SESIÓN AQUÍ</a>
+
+      </div>
+
+    </div>
+
+    </main>
+
+
 </body>
+
 </html>
