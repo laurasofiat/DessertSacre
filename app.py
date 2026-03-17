@@ -57,9 +57,9 @@ def enviar_codigo(correo_destino, codigo):
         print("Error enviando correo:", e)
         return False
 
+        
 # TABLA DE REGISTRO Y RECUPERACION
-
-# Crea la tabla `registro` en la base de datos si no existe
+# Crea la tabla `registro` en la base de datos si no existe     
 def crear_tabla():
     # Solicita una conexión a la base de datos
     conexion = get_db_connection()
@@ -68,15 +68,23 @@ def crear_tabla():
         cursor = conexion.cursor()
         # Ejecuta la sentencia SQL para crear la tabla
         cursor.execute("""
-       CREATE TABLE IF NOT EXISTS recuperacion (
+        CREATE TABLE IF NOT EXISTS registro (
             id SERIAL PRIMARY KEY,
-            correo VARCHAR(150) NOT NULL REFERENCES registro(correo),
-            codigo VARCHAR(6) NOT NULL,
-            expiracion TIMESTAMP DEFAULT (NOW() + INTERVAL '15 minutes'),
-            usado BOOLEAN DEFAULT FALSE
-);
-""")
+            primer_nombre VARCHAR(100) NOT NULL,
+            segundo_nombre VARCHAR(100),
+            primer_apellido VARCHAR(100) NOT NULL,
+            segundo_apellido VARCHAR(100),
+            correo VARCHAR(150) UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            telefono VARCHAR(20),
+            direccion TEXT,
+            codigo_verificacion VARCHAR(6),
+            verificado BOOLEAN DEFAULT FALSE
+        );
+        """)
+
         cursor.execute("""
+<<<<<<< HEAD
        CREATE TABLE IF NOT EXISTS registro (
         id SERIAL PRIMARY KEY,
         primer_nombre VARCHAR(100) NOT NULL,
@@ -93,15 +101,29 @@ def crear_tabla():
 
 
         """);
+=======
+        CREATE TABLE IF NOT EXISTS recuperacion (
+            id SERIAL PRIMARY KEY,
+            correo VARCHAR(150) NOT NULL REFERENCES registro(correo),
+            codigo VARCHAR(6) NOT NULL,
+            expiracion TIMESTAMP DEFAULT (NOW() + INTERVAL '15 minutes'),
+            usado BOOLEAN DEFAULT FALSE
+        );
+        """)
+        
+>>>>>>> 6f1a0ea3650a5e42cfe9dd561a30558fe2ab2f9f
         # Inserta datos y cierra cursor y conexión
         conexion.commit()
         cursor.close()
         conexion.close()
-# INDEX
+        
+        
+        
+# INDEX->se dirija a inicio pq el usuario no tiene que ver el index, sino el inicio con la navbar y todo lo demás, ya luego decide si quiere ir al index o no
 # ------------------------------------
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("inicio.html")
 
 # Registro
 
@@ -276,15 +298,24 @@ def reenviar_codigo():
 
 
 
-
-
 # Ruta para mostrar el formulario de inicio de sesión
+ADMIN_EMAIL = "dessertsacre@gmail.com"
+ADMIN_PASSWORD = "LauraJuanDaAngelicaSalo"
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         correo = request.form["correo"]
         password = request.form["password"]
 
+        # LOGIN ADMINISTRADOR
+        if correo == ADMIN_EMAIL and password == ADMIN_PASSWORD:
+            session["admin"] = True
+            session["usuario"] = "Administrador"
+            flash("Bienvenido administrador", "success")
+            return redirect("/admin")
+
+        # LOGIN USUARIO NORMAL
         conexion = get_db_connection()
         cursor = conexion.cursor(cursor_factory=RealDictCursor)
 
@@ -308,14 +339,34 @@ def login():
         session["usuario"] = usuario["primer_nombre"] + " " + usuario["primer_apellido"]
         flash("Inicio de sesión exitoso", "success")
         return redirect("/inicio")
-    
-    # Limpia el redirect cuando se carga el login
-        
+
     redir_verificar = session.pop("redir_verificar", None)
-    
     correo_auto = session.pop("correo_login_auto", "")
 
     return render_template("login.html", redir_verificar=redir_verificar, correo_auto=correo_auto)
+
+
+# ------------------------------------
+# RUTA PARA ADMINISTRADOR
+# ------------------------------------
+@app.route("/admin")
+def admin():
+    if not session.get("admin"):
+        flash("Acceso solo para administradores", "danger")
+        return redirect("/login")
+
+    return render_template("admin/dashboard.html")
+
+
+# Rutas para ver pedidos(solo para admin)
+@app.route("/admin/pedidos")
+def admin_pedidos():
+    if not session.get("admin"):
+        return redirect("/login")
+
+    return render_template("admin/pedidos.html")
+
+
 
 #DASHBOARD
 
@@ -352,6 +403,10 @@ def inicioS():
 @app.route("/inicio")
 def inicio():
     return render_template("inicio.html")
+
+@app.route("/index")
+def index2():
+    return render_template("index.html")
 
 @app.route('/menu')
 def menu():
@@ -451,7 +506,7 @@ def forgot():
     return render_template("forgot.html")
 
 
-#Crear vista para ingresar el código
+
 # Crear vista para ingresar el código
 @app.route("/reset-code", methods=["GET", "POST"])
 def reset_code():
