@@ -17,6 +17,7 @@
 
         /* FORMULARIO */
         .form1 {
+            background-color: var(--beige);
             zoom:0.92;
             margin: 60px auto 50px auto; /* Separación superior del navbar */
             padding: 50px 40px;
@@ -40,6 +41,15 @@
             color: var(--brown);
             margin-bottom: 30px;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .form1 h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-size: clamp(18px, 4vw, 24px);
+            color: var(--red);
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
         }
 
         /* CAMPOS DE INPUT */
@@ -66,8 +76,8 @@
             width: 100%;
             padding: 14px;
             margin-top: 18px;
-            background-color: var(--beige);
-            color: var(--brown);
+            background-color: var(--red);
+            color: #ffffff;
             border: none;
             border-radius: 10px;
             font-size: 16px;
@@ -86,7 +96,7 @@
             display: block;
             margin-top: 15px;
             font-size: 16px;
-            color: var(--beige);
+            color: var(--red);
             text-decoration: none;
             transition: color 0.3s;
         }
@@ -103,6 +113,7 @@
         /* MEDIA QUERIES */
         @media (max-width: 480px) {
             .form1 {
+                width: 90%;
                 padding: 35px 25px;
                 margin-top: 80px;
             }

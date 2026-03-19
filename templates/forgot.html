@@ -1,5 +1,6 @@
+<body class="body">
 {% include 'navbar.html' %}
-<link rel="stylesheet" href="/static/styles/style.css" />
+<link rel="stylesheet" href="/static/styles/forgot.css" />
 
 <div class="form">
   <h2>Recuperar contraseña</h2>
@@ -24,15 +25,12 @@
   >
     <div class="d-flex">
       <div class="toast-body">{{ message }}</div>
-      <button
-        type="button"
-        class="btn-close btn-close-white me-2 m-auto"
-        data-bs-dismiss="toast"
-      ></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" ></button>
     </div>
   </div>
   {% endfor %} {% endwith %}
 </div>
+</body>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
