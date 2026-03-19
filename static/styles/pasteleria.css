@@ -1,15 +1,39 @@
 .carousel-item img {
-        width: 100%;
-        max-height: 600px;
-        min-height: 400px;
-        object-fit: cover;
-      }
-      .carousel-caption {
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 5px;
-      }
-      .section-title {
-        margin-top: 40px;
-        margin-bottom: 20px;
-        text-align: center;
-      }
+  width: 100%;
+  max-height: 600px;
+  min-height: 400px;
+  object-fit: cover;
+}
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+}
+.section-title {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.container.mt-4 {
+  display: flex;
+  gap: 100px;
+  flex-wrap: wrap;
+  padding: 50px;
+}
+.card {
+  width: 300px;
+  margin: 20px;
+}
+.btn-warning {
+  background: #d99b4d;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+}
+.card h6 {
+  font-weight: bold;
+  color: black;
+}
+.card h5 {
+  font-weight: bold;
+  color: black;
+}

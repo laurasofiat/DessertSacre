@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panadería Dessert Sacré</title>
+    <title>Pastelería Dessert Sacré</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -11,6 +11,9 @@
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='styles/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
       href="{{ url_for('static', filename='styles/pasteleria.css') }}"
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -75,6 +78,306 @@
         >
           <span class="carousel-control-next-icon"></span>
         </button>
+      </div>
+    </div>
+    <div class="container mt-4">
+      <div class="row text-center g-4">
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta envinada.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta Envinada</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho preparado con harina de trigo, azúcar, huevo,
+              mantequilla, frutas secas y vino, caracterizado por su miga húmeda
+              y aroma a licor. Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>48.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/buñuelo.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de Arequipe</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, azúcar, mantequilla, leche
+              y huevo, relleno y/o cubierto con arequipe. Presenta alto
+              contenido de azúcares simples. Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>44.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta de zanahoria.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de zanahoria</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, zanahoria, azúcar, huevo y
+              aceite o mantequilla. Presenta contenido moderado de azúcares.
+              Contiene gluten, lácteos y huevo
+              <br />
+            </p>
+
+            <h6>42.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta red velvet.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+            <h5 class="card-title">Torta Red Velvet</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, azúcar, cacao,
+              mantequilla, leche y huevo, generalmente con cobertura de crema de
+              queso. Presenta alto contenido de azúcares. Contiene gluten,
+              lácteos y huevo
+            </p>
+            <br />
+            <h6>70.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta de limon.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de Limón</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, jugo o ralladura de limón,
+              azúcar, mantequilla, leche y huevo. Presenta sabor cítrico y
+              contenido moderado de azúcares. Contiene gluten, lácteos y huevo.
+            </p>
+            <br />
+            <h6>43.500 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta frutos secos.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de frutos secos</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, azúcar, huevo, mantequilla
+              y mezcla de frutos secos. Aporta grasas naturales de los frutos
+              secos. Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>60.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta de chocolate.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de Chocolate</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho preparado con harina de trigo, cacao, azúcar, huevo,
+              mantequilla y leche. Presenta alto contenido de azúcares y cacao.
+              Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>45.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta tres leches.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de tres leches</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho de harina de trigo y huevo, humedecido con mezcla de
+              leche condensada, leche evaporada y crema de leche. Contiene
+              gluten, lácteos y huevo.
+            </p>
+            <br />
+            <h6>47.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta de coco.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de coco</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, coco rallado, azúcar,
+              huevo, mantequilla y leche. Presenta sabor característico a coco.
+              Contiene gluten, lácteos y huevo.
+            </p>
+            <br />
+            <h6>44.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta de fruta.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de fruta</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, azúcar, huevo, mantequilla
+              y frutas frescas o en almíbar. Presenta sabor dulce y notas
+              frutales naturales. Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>44.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta de fresa.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Torta de fresa</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho preparado con harina de trigo, fresas, azúcar, huevo,
+              mantequilla y leche, generalmente con relleno o cobertura de crema
+              y fresa. Presenta sabor dulce y frutal. Contiene gluten, lácteos y
+              huevo.
+            </p>
+            <br />
+            <h6>45.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/torta de yogurt.jpg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+            <h5 class="card-title">Torta de yogurt</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho preparado con harina de trigo, yogurt, azúcar, huevo y
+              aceite o mantequilla. Presenta textura suave y húmeda. Contiene
+              gluten, lácteos y huevo.
+            </p>
+            <br />
+            <h6>42.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
       </div>
     </div>
   </body>
