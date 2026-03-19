@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panadería Dessert Sacré</title>
+    <title>Pastelería Dessert Sacré</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -11,7 +11,10 @@
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='styles/style.css') }}"
-      href="{{ url_for('static', filename='styles/bebidas.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/pasteleria.css') }}"
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </head>
@@ -21,24 +24,24 @@
     <!-- BEBIDAS -->
     <div class="section-title">
       <h2>Bebidas</h2>
-      <p>Refrescos, jugos naturales y cafés especiales.</p>
+      <p>Jugos,malteadas</p>
     </div>
 
     <div class="container my-4">
-      <div id="carouselBebidas" class="carousel slide" data-bs-ride="carousel">
+      <div id="carouselbebidas" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img
-              src="{{ url_for('static', filename='img/bebida1.jpeg') }}"
-              alt="Piña colada"
+              src="{{ url_for('static', filename='img/bebidas1.jpeg') }}"
+              alt="Piña calada"
             />
             <div class="carousel-caption d-none d-md-block">
-              <h5>Piña colada</h5>
+              <h5>Piña calada</h5>
             </div>
           </div>
           <div class="carousel-item">
             <img
-              src="{{ url_for('static', filename='img/bebido2.jpeg') }}"
+              src="{{ url_for('static', filename='img/bebidas2.jpeg') }}"
               alt="limonada"
             />
             <div class="carousel-caption d-none d-md-block">
@@ -47,8 +50,8 @@
           </div>
           <div class="carousel-item">
             <img
-              src="{{ url_for('static', filename='img/bebida3.jpeg') }}"
-              alt="Café Frío"
+              src="{{ url_for('static', filename='img/bebidas3.jpeg') }}"
+              alt="Cafe frio"
             />
             <div class="carousel-caption d-none d-md-block">
               <h5>Café Frío</h5>
@@ -58,7 +61,7 @@
         <button
           class="carousel-control-prev"
           type="button"
-          data-bs-target="#carouselBebidas"
+          data-bs-target="#carouselbebidas"
           data-bs-slide="prev"
         >
           <span class="carousel-control-prev-icon"></span>
@@ -66,11 +69,311 @@
         <button
           class="carousel-control-next"
           type="button"
-          data-bs-target="#carouselBebidas"
+          data-bs-target="#carouselbebidas"
           data-bs-slide="next"
         >
           <span class="carousel-control-next-icon"></span>
         </button>
+      </div>
+    </div>
+    <div class="container mt-4">
+      <div class="row text-center g-4">
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/Limonada.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Limonada</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho preparado con harina de trigo, azúcar, huevo,
+              mantequilla, frutas secas y vino, caracterizado por su miga húmeda
+              y aroma a licor. Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>3.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/jugo de guayaba.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Jugo de Guayaba</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, azúcar, mantequilla, leche
+              y huevo, relleno y/o cubierto con arequipe. Presenta alto
+              contenido de azúcares simples. Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>3.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/jugo de mango.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Jugo de mango</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, zanahoria, azúcar, huevo y
+              aceite o mantequilla. Presenta contenido moderado de azúcares.
+              Contiene gluten, lácteos y huevo
+              <br />
+            </p>
+
+            <h6>4.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/jugo de maracuya.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+            <h5 class="card-title">Jugo de maracuyá</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, azúcar, cacao,
+              mantequilla, leche y huevo, generalmente con cobertura de crema de
+              queso. Presenta alto contenido de azúcares. Contiene gluten,
+              lácteos y huevo
+            </p>
+            <br />
+            <h6>4.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/jugo de mora.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Jugo de mora</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, jugo o ralladura de limón,
+              azúcar, mantequilla, leche y huevo. Presenta sabor cítrico y
+              contenido moderado de azúcares. Contiene gluten, lácteos y huevo.
+            </p>
+            <br />
+            <h6>3.500 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/Avena.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Avena</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, azúcar, huevo, mantequilla
+              y mezcla de frutos secos. Aporta grasas naturales de los frutos
+              secos. Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>2.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/Agua panela.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Agua panela</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho preparado con harina de trigo, cacao, azúcar, huevo,
+              mantequilla y leche. Presenta alto contenido de azúcares y cacao.
+              Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>2.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/coca-cola.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Coca Cola</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho de harina de trigo y huevo, humedecido con mezcla de
+              leche condensada, leche evaporada y crema de leche. Contiene
+              gluten, lácteos y huevo.
+            </p>
+            <br />
+            <h6>4.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/cafe con leche.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Café con leche</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, coco rallado, azúcar,
+              huevo, mantequilla y leche. Presenta sabor característico a coco.
+              Contiene gluten, lácteos y huevo.
+            </p>
+            <br />
+            <h6>4.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/Jugo de guanabana.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Jugo de guanaba</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho elaborado con harina de trigo, azúcar, huevo, mantequilla
+              y frutas frescas o en almíbar. Presenta sabor dulce y notas
+              frutales naturales. Contiene gluten, lácteos y huevo
+            </p>
+            <br />
+            <h6>4.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/tinto.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+
+            <h5 class="card-title">Tinto</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho preparado con harina de trigo, fresas, azúcar, huevo,
+              mantequilla y leche, generalmente con relleno o cobertura de crema
+              y fresa. Presenta sabor dulce y frutal. Contiene gluten, lácteos y
+              huevo.
+            </p>
+            <br />
+            <h6>2.500 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="/static/img/Chocolate.jpeg"
+              class="card-img-top"
+              alt="Panadería"
+            />
+            <br />
+            <h5 class="card-title">Chocolate</h5>
+            <br />
+            <p class="card-text">
+              Bizcocho preparado con harina de trigo, yogurt, azúcar, huevo y
+              aceite o mantequilla. Presenta textura suave y húmeda. Contiene
+              gluten, lácteos y huevo.
+            </p>
+            <br />
+            <h6>4.000 COP c/u</h6>
+            <br />
+            <a href="{{ url_for('carrito') }}" class="btn-warning"
+              >Agregar al carrito</a
+            >
+          </div>
+        </div>
       </div>
     </div>
   </body>
