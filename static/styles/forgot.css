@@ -6,7 +6,8 @@
         }
 
         /*BODY*/
-        .body { 
+
+.body { 
             zoom:0.88;
             background-image: url('/static/img/fondo1.jpeg');
             /* Posición y tamaño de la imagen */
@@ -18,7 +19,7 @@
         }
 
         /* FORMULARIO*/
-        .form1 {
+        .form {
             background-color: var(--beige);
             margin: 60px auto 50px auto; /* Separación superior del navbar */
             padding: 50px 40px;
@@ -29,13 +30,14 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .form1:hover {
+        .form:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        .form1 h2 {
+        .form h2 {
             font-family: 'Playfair Display', serif;
+            text-align: center;
             font-weight: 800;
             font-size: clamp(28px, 6vw, 36px);
             color: var(--brown);
@@ -43,8 +45,8 @@
             text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
 
-        .form1 input[type="email"],
-        .form1 input[type="password"] {
+        .form input[type="email"],
+        .form input[type="password"] {
             width: 100%;
             padding: 14px 15px;
             margin: 12px 0;
@@ -54,13 +56,12 @@
             transition: border 0.3s, box-shadow 0.3s;
         }
 
-        .form1 input:focus {
+        .form input:focus {
             border-color: var(--red);
             outline: none;
-            box-shadow: 0 0 5px rgba(169, 19, 62, 0.5);
-        }
-
-        .form1 button {
+            box-shadow: 0 0 5px rgba(169, 19, 62, 0.5); }
+        
+        .button {
             width: 100%;
             padding: 14px;
             margin-top: 18px;
@@ -69,43 +70,4 @@
             border: none;
             border-radius: 10px;
             font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
-
-        .form1 button:hover {
-            background-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .form1 .link {
-            display: block;
-            margin-top: 15px;
-            font-size: 16px;
-            color: var(--red);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .form1 .link:hover {
-            color: var(--brown);
-        }
-
-        /* TOASTS */
-        .toast-container {
-            z-index: 2000;
-        }
-
-        /* MEDIA QUERIES */
-        @media (max-width: 480px) {
-            .form1 {
-                width: 90%;
-                padding: 35px 25px;
-                margin-top: 80px;
-            }
-            .form1 h2 { font-size: clamp(24px, 7vw, 30px); }
-            .form1 input[type="email"],
-            .form1 input[type="password"] { font-size: 14px; padding: 12px; }
-            .form1 button { font-size: 15px; padding: 12px; }
         }

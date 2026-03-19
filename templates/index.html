@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,44 +7,29 @@
   <link rel="stylesheet" href="/static/styles/index.css">
 </head>
 
-
-<body>
-
+<body class="fondoindex">
   {% include 'navbar.html' %}
 
-  <main class="fondoindex">
-
+  <main class="main-container">
     <div class="contenido">
-
       <div class="video-box">
-
         <video autoplay muted loop playsinline>
           <source src="{{ url_for('static', filename='vid/Index.mp4') }}" type="video/mp4">
         </video>
-
       </div>
-
 
       <div class="espaC"></div>
 
-
       <div class="contenedor1">
-
         <div class="titulo">P A N A D E R I A</div>
-
         <img src="/static/img/LOGO.png" alt="Logo Dessert Sacré" class="logo">
-
-
-        <a href="/register" class="boton">REGÍSTRATE AQUÍ</a>
-        <a href="/login" class="boton">INICIA SESIÓN AQUÍ</a>
-
+        
+        <div class="botones-group">
+          <a href="/register" class="boton">REGÍSTRATE AQUÍ</a>
+          <a href="/login" class="boton">INICIA SESIÓN AQUÍ</a>
+        </div>
       </div>
-
     </div>
-
-    </main>
-
-
+  </main>
 </body>
-
 </html>
