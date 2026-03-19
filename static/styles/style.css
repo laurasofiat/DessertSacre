@@ -245,3 +245,7 @@ body {
         border-radius: 0 0 15px 15px;
     }
 }
+
+.footer-col button{
+    color:white;
+}

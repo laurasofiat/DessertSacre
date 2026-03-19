@@ -332,13 +332,140 @@ def logout():
     session.clear()
     return redirect("/")
 
-# # ------------------------------------
-# # LOGOUT
-# # ------------------------------------
-# @app.route("/logout")
-# def logout():
-#     session.clear()
-#     return redirect("/")
+# API / funciones de carrito
+
+def _get_cart():
+    return session.get("carrito", [])
+
+
+def _save_cart(cart):
+    session["carrito"] = cart
+
+
+@app.route('/agregar_carrito', methods=['POST'])
+def agregar_carrito():
+    data = request.get_json(silent=True) or request.form
+    nombre = data.get('nombre')
+    precio = data.get('precio')
+
+    try:
+        precio = float(precio)
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Precio inválido'}), 400
+
+    if not nombre or precio <= 0:
+        return jsonify({'error': 'Datos inválidos'}), 400
+
+    cart = _get_cart()
+    for item in cart:
+        if item['nombre'] == nombre:
+            item['qty'] = item.get('qty', 1) + 1
+            break
+    else:
+        cart.append({'nombre': nombre, 'precio': precio, 'qty': 1})
+
+    _save_cart(cart)
+    return jsonify({'success': True, 'cart': cart, 'total_items': sum(item['qty'] for item in cart)})
+
+
+@app.route('/eliminar_del_carrito')
+def eliminar_del_carrito():
+    index = request.args.get('index', type=int)
+    cart = _get_cart()
+    if index is not None and 0 <= index < len(cart):
+        cart.pop(index)
+        _save_cart(cart)
+        flash('Producto eliminado del carrito', 'success')
+    return redirect('/carrito')
+
+
+@app.route('/actualizar_carrito', methods=['POST'])
+def actualizar_carrito():
+    cart = _get_cart()
+    for i, item in enumerate(cart):
+        qty = request.form.get(f"qty_{i}")
+        try:
+            qty = int(qty)
+        except (TypeError, ValueError):
+            continue
+        if qty < 1:
+            continue
+        cart[i]['qty'] = qty
+    _save_cart(cart)
+    flash('Carrito actualizado', 'success')
+    return redirect('/carrito')
+
+
+@app.route('/carrito')
+def carrito():
+    cart = _get_cart()
+    total = sum(item['precio'] * item['qty'] for item in cart)
+    return render_template('carrito.html', cart=cart, total=total)
+
+
+def _get_cart_info(cart=None):
+    if cart is None:
+        cart = _get_cart()
+    total_items = sum(item.get('qty', 0) for item in cart)
+    total_price = sum(item.get('precio', 0) * item.get('qty', 0) for item in cart)
+    return {'cart': cart, 'total_items': total_items, 'total_price': total_price}
+
+
+@app.route('/api/cart')
+def api_cart():
+    return jsonify(_get_cart_info())
+
+
+@app.route('/api/cart/remove', methods=['POST'])
+def api_cart_remove():
+    data = request.get_json(silent=True) or request.form
+    try:
+        index = int(data.get('index', -1))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Índice inválido'}), 400
+
+    cart = _get_cart()
+    if 0 <= index < len(cart):
+        cart.pop(index)
+        _save_cart(cart)
+        return jsonify({'success': True, **_get_cart_info(cart)})
+    return jsonify({'error': 'Índice fuera de rango'}), 400
+
+
+@app.route('/api/cart/update', methods=['POST'])
+def api_cart_update():
+    data = request.get_json(silent=True) or request.form
+    try:
+        index = int(data.get('index', -1))
+        qty = int(data.get('qty', 0))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Datos inválidos'}), 400
+
+    if qty < 1:
+        return jsonify({'error': 'La cantidad debe ser al menos 1'}), 400
+
+    cart = _get_cart()
+    if 0 <= index < len(cart):
+        cart[index]['qty'] = qty
+        _save_cart(cart)
+        return jsonify({'success': True, **_get_cart_info(cart)})
+
+    return jsonify({'error': 'Índice fuera de rango'}), 400
+
+
+@app.route('/confirmacion')
+def confirmacion():
+    cart = _get_cart()
+    if not cart:
+        flash('El carrito está vacío. Agrega productos antes de finalizar.', 'warning')
+        return redirect('/carrito')
+
+    session.pop('carrito', None)
+    flash('¡Tu compra ha sido confirmada! Gracias por tu pedido.', 'success')
+    return redirect('/inicio')
+
+
+
 
 # # ------------------------------------
 # # NAVBAR
@@ -376,11 +503,6 @@ def perfil():
 def pedidos():
     return render_template('pedidos.html')
 
-
-#Carrito de compras
-@app.route("/carrito") 
-def carrito(): 
-    return render_template("carrito.html")
 
 #Panaderia
 @app.route("/panaderia")
