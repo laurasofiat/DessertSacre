@@ -10,6 +10,8 @@
   box-sizing: border-box; /* Fundamental para que el padding no rompa el ancho */
 }
 
+.fondoindex{zoom:0.88;} /* Ajuste global para reducir el tamaño de todo el contenido */
+
 body {
   margin: 0;
   padding: 0;
@@ -25,7 +27,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/img/fondo1.jpeg');
+  background-image: url('/static/img/fondo1.jpeg');
   background-position: 45% 94%; 
   background-size: cover;
   background-repeat: no-repeat;

@@ -3,365 +3,247 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pastelería Dessert Sacré</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles/style.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles/pasteleria.css') }}"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Bebidas Dessert Sacré</title>
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/productos.css') }}" />
   </head>
-  <body>
+
+  <body class="zoom">
     {% include 'navbar.html' %}
 
-    <!-- BEBIDAS -->
-    <div class="section-title">
+    <!-- SECCIÓN BEBIDAS -->
+    <div class="section-title text-center my-5">
       <h2>Bebidas</h2>
-      <p>Jugos,malteadas</p>
+      <p>Jugos, malteadas y bebidas frías</p>
     </div>
+
+    <!-- CARRUSEL -->
+    <div class="zoom">
     <div class="container my-4">
-      <div id="carouselbebidas" class="carousel slide" data-bs-ride="carousel">
+      <div id="carouselBebidas" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img
-              src="{{ url_for('static', filename='img/bebidas1.jpeg') }}"
-              alt="Piña calada"
-            />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Piña calada</h5>
+            <img src="{{ url_for('static', filename='img/bebidas1.jpeg') }}" class="d-block w-100" alt="Piña Calada">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+              <h5>Piña Calada</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img
-              src="{{ url_for('static', filename='img/bebidas2.jpeg') }}"
-              alt="limonada"
-            />
-            <div class="carousel-caption d-none d-md-block">
+            <img src="{{ url_for('static', filename='img/bebidas2.jpeg') }}" class="d-block w-100" alt="Limonada">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
               <h5>Limonada</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img
-              src="{{ url_for('static', filename='img/bebidas3.jpeg') }}"
-              alt="Cafe frio"
-            />
-            <div class="carousel-caption d-none d-md-block">
+            <img src="{{ url_for('static', filename='img/bebidas3.jpeg') }}" class="d-block w-100" alt="Café Frío">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
               <h5>Café Frío</h5>
             </div>
           </div>
         </div>
-        <button
-          class="carousel-control-prev"
-          type="button"
-          data-bs-target="#carouselbebidas"
-          data-bs-slide="prev"
-        >
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselBebidas" data-bs-slide="prev">
           <span class="carousel-control-prev-icon"></span>
         </button>
-        <button
-          class="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselbebidas"
-          data-bs-slide="next"
-        >
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselBebidas" data-bs-slide="next">
           <span class="carousel-control-next-icon"></span>
         </button>
       </div>
     </div>
+
+    <!-- TARJETAS DE BEBIDAS -->
     <div class="container mt-4">
       <div class="row text-center g-4">
-        <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/Limonada.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
 
-            <h5 class="card-title">Limonada</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con agua, jugo de limón y azúcar. Presenta alto
-              contenido de azúcares simples y sabor cítrico.
-            </p>
-            <br />
-            <h6>3.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
-          </div>
-        </div>
+        <!-- Limonada -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/jugo de guayaba.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-
-            <h5 class="card-title">Jugo de Guayaba</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con pulpa de guayaba, agua y azúcar. Presenta
-              contenido de azúcares simples y sabor frutal
-            </p>
-            <br />
-            <h6>3.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+          <div class="card h-100">
+            <img src="/static/img/Limonada.jpeg" class="card-img-top" alt="Limonada">
+            <div class="card-body">
+              <h5 class="card-title">Limonada</h5>
+              <p class="card-text">Agua, jugo de limón y azúcar. Alto contenido de azúcares simples y sabor cítrico.</p>
+            </div>
+            <div class="card-footer">
+              <h6>3.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Limonada" data-price="3000">Agregar al carrito</button>
+            </div>
           </div>
         </div>
 
+        <!-- Jugo de Guayaba -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/jugo de mango.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-
-            <h5 class="card-title">Jugo de mango</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con pulpa de mango, agua y azúcar. Presenta
-              contenido de azúcares simples y sabor dulce y frutal.
-              <br />
-            </p>
-
-            <h6>4.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+          <div class="card h-100">
+            <img src="/static/img/jugo de guayaba.jpeg" class="card-img-top" alt="Jugo de Guayaba">
+            <div class="card-body">
+              <h5 class="card-title">Jugo de Guayaba</h5>
+              <p class="card-text">Pulpa de guayaba, agua y azúcar. Contenido de azúcares simples y sabor frutal.</p>
+            </div>
+            <div class="card-footer">
+              <h6>3.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Jugo de Guayaba" data-price="3000">Agregar al carrito</button>
+            </div>
           </div>
         </div>
 
+        <!-- Jugo de Mango -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/jugo de maracuya.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-            <h5 class="card-title">Jugo de maracuyá</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con pulpa de maracuyá, agua y azúcar. Presenta
-              contenido de azúcares simples y sabor ácido característico.
-            </p>
-            <br />
-            <h6>4.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+          <div class="card h-100">
+            <img src="/static/img/jugo de mango.jpeg" class="card-img-top" alt="Jugo de Mango">
+            <div class="card-body">
+              <h5 class="card-title">Jugo de Mango</h5>
+              <p class="card-text">Pulpa de mango, agua y azúcar. Contenido de azúcares simples y sabor dulce y frutal.</p>
+            </div>
+            <div class="card-footer">
+              <h6>4.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Jugo de Mango" data-price="4000">Agregar al carrito</button>
+            </div>
           </div>
         </div>
 
+        <!-- Jugo de Maracuyá -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/jugo de mora.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-
-            <h5 class="card-title">Jugo de mora</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con pulpa de mora, agua y azúcar. Presenta
-              contenido de azúcares simples y sabor ligeramente ácido
-            </p>
-            <br />
-            <h6>3.500 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/Avena.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-
-            <h5 class="card-title">Avena</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con avena en hojuelas cocida, leche y azúcar.
-              Presenta consistencia espesa, contenido de azúcares simples y
-              contiene lácteos
-            </p>
-            <br />
-            <h6>2.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+          <div class="card h-100">
+            <img src="/static/img/jugo de maracuya.jpeg" class="card-img-top" alt="Jugo de Maracuyá">
+            <div class="card-body">
+              <h5 class="card-title">Jugo de Maracuyá</h5>
+              <p class="card-text">Pulpa de maracuyá, agua y azúcar. Contenido de azúcares simples y sabor ácido característico.</p>
+            </div>
+            <div class="card-footer">
+              <h6>4.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Jugo de Maracuyá" data-price="4000">Agregar al carrito</button>
+            </div>
           </div>
         </div>
 
+        <!-- Jugo de Mora -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/Agua panela.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-
-            <h5 class="card-title">Agua panela</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con panela, agua y jugo de limón. Presenta alto
-              contenido de azúcares simples y sabor cítrico
-            </p>
-            <br />
-            <h6>2.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+          <div class="card h-100">
+            <img src="/static/img/jugo de mora.jpeg" class="card-img-top" alt="Jugo de Mora">
+            <div class="card-body">
+              <h5 class="card-title">Jugo de Mora</h5>
+              <p class="card-text">Pulpa de mora, agua y azúcar. Contenido de azúcares simples y sabor ligeramente ácido.</p>
+            </div>
+            <div class="card-footer">
+              <h6>3.500 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Jugo de Mora" data-price="3500">Agregar al carrito</button>
+            </div>
           </div>
         </div>
 
+        <!-- Avena -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/coca-cola.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-
-            <h5 class="card-title">Coca Cola</h5>
-            <br />
-            <p class="card-text">
-              Bebida gaseosa elaborada con agua carbonatada, azúcar, colorante y
-              saborizantes. Presenta alto contenido de azúcares simples
-            </p>
-            <br />
-            <h6>4.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+          <div class="card h-100">
+            <img src="/static/img/Avena.jpeg" class="card-img-top" alt="Avena">
+            <div class="card-body">
+              <h5 class="card-title">Avena</h5>
+              <p class="card-text">Avena cocida, leche y azúcar. Contenido de azúcares simples y contiene lácteos.</p>
+            </div>
+            <div class="card-footer">
+              <h6>2.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Avena" data-price="2000">Agregar al carrito</button>
+            </div>
           </div>
         </div>
 
+        <!-- Agua Panela -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/cafe con leche.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-
-            <h5 class="card-title">Café con leche</h5>
-            <br />
-            <p class="card-text">
-              Bebida preparada con café y leche caliente, de sabor suave y
-              textura cremosa. Contiene lácteos
-            </p>
-            <br />
-            <h6>4.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+          <div class="card h-100">
+            <img src="/static/img/Agua panela.jpeg" class="card-img-top" alt="Agua Panela">
+            <div class="card-body">
+              <h5 class="card-title">Agua Panela</h5>
+              <p class="card-text">Panela, agua y limón. Alto contenido de azúcares simples y sabor cítrico.</p>
+            </div>
+            <div class="card-footer">
+              <h6>2.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Agua Panela" data-price="2000">Agregar al carrito</button>
+            </div>
           </div>
         </div>
 
+        <!-- Coca Cola -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/Jugo de guanabana.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
+          <div class="card h-100">
+            <img src="/static/img/coca-cola.jpeg" class="card-img-top" alt="Coca Cola">
+            <div class="card-body">
+              <h5 class="card-title">Coca Cola</h5>
+              <p class="card-text">Agua carbonatada, azúcar y saborizantes. Alto contenido de azúcares simples.</p>
+            </div>
+            <div class="card-footer">
+              <h6>4.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Coca Cola" data-price="4000">Agregar al carrito</button>
+            </div>
+          </div>
+        </div>
 
-            <h5 class="card-title">Jugo de guanaba</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con pulpa de guanábana, agua y azúcar. Presenta
-              contenido de azúcares simples y sabor dulce y suave.
-            </p>
-            <br />
-            <h6>4.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+        <!-- Café con Leche -->
+        <div class="col-md-3">
+          <div class="card h-100">
+            <img src="/static/img/cafe con leche.jpeg" class="card-img-top" alt="Café con Leche">
+            <div class="card-body">
+              <h5 class="card-title">Café con Leche</h5>
+              <p class="card-text">Café y leche caliente. Sabor suave y textura cremosa. Contiene lácteos.</p>
+            </div>
+            <div class="card-footer">
+              <h6>4.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Café con Leche" data-price="4000">Agregar al carrito</button>
+            </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/tinto.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
 
-            <h5 class="card-title">Tinto</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con café y agua. Presenta bajo contenido de
-              azúcares y no contiene lácteos.
-            </p>
-            <br />
-            <h6>2.500 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
-          </div>
-        </div>
+        <!-- Jugo de Guanábana -->
         <div class="col-md-3">
-          <div class="card">
-            <img
-              src="/static/img/Chocolate.jpeg"
-              class="card-img-top"
-              alt="Panadería"
-            />
-            <br />
-            <h5 class="card-title">Chocolate</h5>
-            <br />
-            <p class="card-text">
-              Bebida elaborada con leche, cacao o chocolate y azúcar. Presenta
-              alto contenido de azúcares simples y contiene lácteos.
-            </p>
-            <br />
-            <h6>4.000 COP c/u</h6>
-            <br />
-            <button type="button" class="btn-warning add-to-cart">
-              Agregar al carrito
-            </button>
+          <div class="card h-100">
+            <img src="/static/img/Jugo de guanabana.jpeg" class="card-img-top" alt="Jugo de Guanábana">
+            <div class="card-body">
+              <h5 class="card-title">Jugo de Guanábana</h5>
+              <p class="card-text">Pulpa de guanábana, agua y azúcar. Contenido de azúcares simples, sabor dulce y suave.</p>
+            </div>
+            <div class="card-footer">
+              <h6>4.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Jugo de Guanábana" data-price="4000">Agregar al carrito</button>
+            </div>
           </div>
         </div>
+
+        <!-- Tinto -->
+        <div class="col-md-3">
+          <div class="card h-100">
+            <img src="/static/img/tinto.jpeg" class="card-img-top" alt="Tinto">
+            <div class="card-body">
+              <h5 class="card-title">Tinto</h5>
+              <p class="card-text">Café y agua. Bajo contenido de azúcares y sin lácteos.</p>
+            </div>
+            <div class="card-footer">
+              <h6>2.500 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Tinto" data-price="2500">Agregar al carrito</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chocolate -->
+        <div class="col-md-3">
+          <div class="card h-100">
+            <img src="/static/img/Chocolate.jpeg" class="card-img-top" alt="Chocolate">
+            <div class="card-body">
+              <h5 class="card-title">Chocolate</h5>
+              <p class="card-text">Leche, cacao o chocolate y azúcar. Alto contenido de azúcares y contiene lácteos.</p>
+            </div>
+            <div class="card-footer">
+              <h6>4.000 COP c/u</h6>
+              <button type="button" class="btn-warning add-to-cart" data-name="Chocolate" data-price="4000">Agregar al carrito</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
+  </div>
+
     {% include 'footer.html' %}
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
   </body>
 </html>

@@ -1,3 +1,7 @@
+.zoom {
+  zoom: 0.88;
+}
+
 .carousel-item img {
   width: 100%;
   max-height: 600px;
@@ -5,35 +9,34 @@
   object-fit: cover;
 }
 
-.carousel-caption {
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-}
-.section-title {
-  margin-top: 40px;
-  margin-bottom: 20px;
-  text-align: center;
-}
 .container.mt-4 {
-  display: flex;
-  gap: 100px;
-  flex-wrap: wrap;
-  padding: 50px;
+  padding: 10px;
 }
+
+/* Tarjetas */
 .card {
-  width: 250px;
-  margin: 10px;
+  height: 100%;
 }
+
+/* Botón */
 .btn-warning {
   background: #d99b4d;
   color: white;
   text-decoration: none;
   padding: 10px;
+  border: none;
 }
+
+.btn-warning:hover {
+  background: #c4883d;
+}
+
+/* Textos */
 .card h6 {
   font-weight: bold;
   color: black;
 }
+
 .card h5 {
   font-weight: bold;
   color: black;

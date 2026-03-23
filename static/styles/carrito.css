@@ -1,0 +1,99 @@
+:root {
+  --carrito-bg: #fff8f2;
+  --carrito-panel: #fff;
+  --carrito-border: #efdfcd;
+  --carrito-shadow: 0 8px 20px rgba(87, 39, 39, 0.12);
+  --carrito-primary: #a9133e;
+  --carrito-secondary: #572727;
+}
+
+.carrito-page {
+  max-width: 1100px;
+  margin: 90px auto 30px;
+}
+
+.carrito-page h1 {
+  color: var(--carrito-secondary);
+  font-weight: 800;
+}
+
+.carrito-page p {
+  font-size: 1rem;
+  color: #6a4b4b;
+}
+
+.card {
+  background: var(--carrito-bg);
+  border: 1px solid var(--carrito-border);
+  box-shadow: var(--carrito-shadow);
+}
+
+.table {
+  background: var(--carrito-panel);
+  border-radius: 12px;
+}
+
+.qty-input {
+  width: 80px;
+  margin: 0 auto;
+}
+
+.empty-cart {
+  background: #fff7ed;
+  border: 1px dashed #f3c5a3;
+  border-radius: 12px;
+}
+
+.empty-cart a {
+  text-decoration:none;
+  color: #572727;
+  border: 1px dashed #572727;
+  border-radius: 12px;
+}
+
+#cart-status {
+  margin-bottom: 16px;
+}
+
+#cart-status .alert {
+  border-left: 4px solid var(--carrito-primary);
+}
+
+#checkout-btn {
+  background: var(--carrito-primary);
+  border-color: var(--carrito-primary);
+  color: #fff;
+}
+
+.btn-primary,
+#checkout-btn {
+  background-color: var(--red) !important;
+  border-color: var(--red) !important;
+  color: var(--beige) !important;
+}
+
+.btn-danger {
+  background-color: var(--red);
+  border-color: var(--red);
+  color: var(--beige);
+}
+
+.btn-outline-secondary {
+  color: var(--brown);
+  border-color: var(--brown);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--brown);
+  color: var(--beige);
+}
+
+.btn-warning {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--brown);
+}
+
+.btn-warning:hover {
+  background-color: #f7c466;
+}
