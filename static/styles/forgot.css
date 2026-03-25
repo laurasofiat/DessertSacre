@@ -42,7 +42,7 @@
             font-size: clamp(28px, 6vw, 36px);
             color: var(--brown);
             margin-bottom: 30px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
         }
 
         .form input[type="email"],

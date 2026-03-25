@@ -228,7 +228,7 @@ def verify():
             flash("Correo verificado con éxito", "success")
             session.pop("correo_verificacion", None)
             session.pop("intentos_reenvio", None)
-            return redirect("/inicio")
+            return redirect("/inicioU")
         else:
             flash("El código ingresado es incorrecto", "danger")
             return render_template("verify.html", redirect_login=False, intentos=intentos)
@@ -275,9 +275,6 @@ def reenviar_codigo():
     return redirect("/verify")
 
 
-
-
-
 # Ruta para mostrar el formulario de inicio de sesión
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -307,7 +304,7 @@ def login():
 
         session["usuario"] = usuario["primer_nombre"] + " " + usuario["primer_apellido"]
         flash("Inicio de sesión exitoso", "success")
-        return redirect("/inicio")
+        return redirect("/inicioU")
     
     # Limpia el redirect cuando se carga el login
         
@@ -402,6 +399,12 @@ def carrito():
     total = sum(item['precio'] * item['qty'] for item in cart)
     return render_template('carrito.html', cart=cart, total=total)
 
+@app.route('/carritoU')
+def carritoU():
+    cart = _get_cart()
+    total = sum(item['precio'] * item['qty'] for item in cart)
+    return render_template('carrito1.html', cart=cart, total=total)
+
 
 def _get_cart_info(cart=None):
     if cart is None:
@@ -462,7 +465,7 @@ def confirmacion():
 
     session.pop('carrito', None)
     flash('¡Tu compra ha sido confirmada! Gracias por tu pedido.', 'success')
-    return redirect('/inicio')
+    return redirect('/inicioU')
 
 
 
@@ -471,28 +474,37 @@ def confirmacion():
 # # NAVBAR
 # # ------------------------------------
 
-@app.route("/iniciosesion")
-def inicioS():
-    usuario = session.get("usuario")
-    return render_template("inicio1.html", usuario=usuario)
-
 @app.route("/inicio")
 def inicio():
     return render_template("inicio.html")
+
+@app.route("/inicioU")
+def inicioU():
+    return render_template("inicio1.html")
 
 @app.route('/menu')
 def menu():
     return render_template('menu.html')
 
+@app.route('/menuU')
+def menuU():
+    return render_template('menu1.html')
+
 @app.route('/sobrenosotros')
 def sobrenosotros():
     return render_template('sobrenosotros.html')
 
+@app.route('/sobrenosotrosU')
+def sobrenosotrosU():
+    return render_template('sobrenosotros1.html')
 
 @app.route('/redes')
 def redes():
     return render_template('redes.html')
 
+@app.route('/redesU')
+def redesU():
+    return render_template('redes1.html')
 
 # rutas de cuenta
 @app.route('/perfil')
@@ -503,27 +515,41 @@ def perfil():
 def pedidos():
     return render_template('pedidos.html')
 
-
 #Panaderia
 @app.route("/panaderia")
 def panaderia():
     return render_template('panaderia.html')
-# Puedes hacer lo mismo para pasteleria, galletas y bebidas
+
+@app.route("/panaderiaU")
+def panaderiaU():
+    return render_template('panaderia1.html')
 
 #Pasteleria
 @app.route("/pasteleria")
 def pasteleria():
     return render_template('pasteleria.html')
 
+@app.route("/pasteleriaU")
+def pasteleriaU():
+    return render_template('pasteleria1.html')
+
 #Reposteria
 @app.route("/reposteria")
 def reposteria():
     return render_template('reposteria.html')
 
+@app.route("/reposteriaU")
+def reposteriaU():
+    return render_template('reposteria1.html')
+
 #Bebidas
 @app.route("/bebidas")
 def bebidas():
     return render_template('bebidas.html')
+
+@app.route("/bebidasU")
+def bebidasU():
+    return render_template('bebidas1.html')
 
 
 #OLVIDO SU CONTRASEÑA?

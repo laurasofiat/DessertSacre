@@ -18,14 +18,17 @@
     <h2>Crear Cuenta</h2>
     <h3>¡Únete a nosotros y disfruta de los mejores postres!</h3>
 
-    <form action="/guardar" method="POST">
+    <form action="/guardar" method="POST" id="contactForm">
         <input type="text" name="primer_nombre" placeholder="Primer Nombre" required />
         <input type="text" name="segundo_nombre" placeholder="Segundo Nombre" />
         <input type="text" name="primer_apellido" placeholder="Primer Apellido" required />
         <input type="text" name="segundo_apellido" placeholder="Segundo Apellido" />
-        <input type="email" name="correo" placeholder="Correo" required />
-        <input type="password" name="password" placeholder="Contraseña" required />
-        <input type="text" name="telefono" placeholder="Teléfono" required />
+        <input type="email" name="correo" id="correo_electronico" placeholder="Correo" required />
+        <div id="mens2"></div>
+        <input type="password" id="contraseña" name="password" placeholder="Contraseña" required />
+        <div id="mens"></div>
+        <input type="text" name="telefono" id="telefono" placeholder="Teléfono" required />
+        <div id="mens1"></div>
         <input type="text" name="direccion" placeholder="Dirección" required />
         <button type="submit">Registrarse</button>
     </form>
@@ -57,6 +60,84 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".toast").forEach(t => new bootstrap.Toast(t).show());
 });
+        /* Validación de la contraseña en la página*/
+    document.addEventListener("DOMContentLoaded", function() { /*Espera a que todo el contenido del documento se haya cargado antes de ejecutar la función*/
+        function validar_contraseña(contraseña) { /* Función para validar la contraseña */
+            if (contraseña.length < 8) return "La contraseña debe tener al menos 8 caracteres"; /* Verifica longitud mínima. val.length cuenta los valores */
+            if (!/[A-Z]/.test(contraseña)) return "La contraseña debe incluir al menos una letra mayúscula"; /* Verifica letra mayúscula */
+            if (!/[a-z]/.test(contraseña)) return "La contraseña debe incluir al menos una letra minúscula"; /* Verifica letra minúscula */
+            if (!/\d/.test(contraseña)) return "La contraseña debe incluir al menos un número"; /* Verifica número */ 
+            if (!/[!@#$%^&*_(),.?":{}|<>]/.test(contraseña)) return "La contraseña debe incluir un carácter especial"; /* Verifica carácter especial */
+        return ""; /*Si todo es correcto retorna cadena vacía. Test(contraseña) Es una función para devolver true o false*/
+        }
+
+        /* Validación del teléfono en la página*/
+        function validar_telefono(telefono) { /* Función para validar el teléfono */
+            if (!/^\d{10}$/.test(telefono)) return "El teléfono debe tener 10 dígitos numéricos"; /* ^ inicio de cadena, \d{10} exactamente 10 números, $ fin de cadena. */
+        return ""; /*Si todo es correcto retorna cadena vacía. Test(val) Es una función para devolver true o false*/
+        }
+
+        function validar_correo(correo_electronico) { /* Función para validar el correo electrónico */
+            const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(es|com|net|org|cl)$/; /* Define que ek correo contenga un formato básico de correo electrónico */
+            if (!regex.test(correo_electronico)) return "Correo inválido, debe terminar con .com | .es | .net | .org | .cl"; /* Verifica si el correo electrónico coincide con el formato esperado */
+            return ""; /* Si todo es correcto retorna cadena vacía */
+        }
+
+        function mostrarError(msg) { /*Define la función mostrar error con un parámetro llamado msg*/
+        const alerta = document.getElementById("mens"); /*Define la variable alerta, interactua con el documento, buscando el id llamado mens y guardando en la variable*/
+        alerta.innerHTML = msg; /*Modifica el contenido HTML del elemento alerta con el mensaje recibido como parámetro*/
+        alerta.style.color = "brown"; /*Cambia el color del texto del elemento alerta a rojo*/
+        alerta.style.fontSize= "15px"; /*Cambia el tamaño de la fuente del elemento alerta a 15 píxeles*/
+        }
+
+        function mostrarError1(msg) { /*Define la función mostrar error con un parámetro llamado msg*/
+        const alerta = document.getElementById("mens1"); /*Define la variable alerta, interactua con el documento, buscando el id llamado mens1 y guardando en la variable*/
+        alerta.innerHTML = msg; /*Modifica el contenido HTML del elemento alerta con el mensaje recibido como parámetro*/
+        alerta.style.color = "brown"; /*Cambia el color del texto del elemento alerta a rojo*/
+        alerta.style.fontSize= "15px"; /*Cambia el tamaño de la fuente del elemento alerta a 15 píxeles*/
+        }
+
+        function mostrarError2(msg) { /*Define la función mostrar error con un parámetro llamado msg*/
+        const alerta = document.getElementById("mens2"); /*Define la variable alerta, interactua con el documento, buscando el id llamado mens2 y guardando en la variable*/
+        alerta.innerHTML = msg; /*Modifica el contenido HTML del elemento alerta con el mensaje recibido como parámetro*/
+        alerta.style.color = "brown"; /*Cambia el color del texto del elemento alerta a rojo*/
+        alerta.style.fontSize= "15px"; /*Cambia el tamaño de la fuente del elemento alerta a 15 píxeles*/
+        }
+
+        document.getElementById("contraseña").addEventListener("input", function () { /*Busca el en el documento id=contraseña y .addEventListener ejecuta la función en tiempo real mientras se escribe en input*/
+        const error = validar_contraseña(this.value); /*Llama a la función validar_contraseña con el valor actual del campo de entrada*/
+            mostrarError(error); /*Llama a la función mostrarError para mostrar el mensaje de error si lo hay*/
+        });
+        document.getElementById("telefono").addEventListener("input", function () { /*Busca el en el documento id=telefono y .addEventListener ejecuta la función en tiempo real mientras se escribe en input*/
+            const error = validar_telefono(this.value); /*Llama a la función validar_telefono con el valor actual del campo de entrada*/
+            mostrarError1(error); /*Llama a la función mostrarError para mostrar el mensaje de error si lo hay*/
+        });
+
+        document.getElementById("correo_electronico").addEventListener("input", function () { /*Busca el en el documento id=correo_electronico y .addEventListener ejecuta la función en tiempo real mientras se escribe en input*/
+            const error = validar_correo(this.value); /*Llama a la función validar_telefono con el valor actual del campo de entrada*/
+            mostrarError2(error); /*Llama a la función mostrarError para mostrar el mensaje de error si lo hay*/
+        });
+
+        document.getElementById("contactForm").addEventListener("submit", function(event) { /*Buca en el documento id=contacForm y .addEventListener ejecuta la función al enviar el formulario*/
+            const contraseña = document.getElementById("contraseña").value; /*Define la variable contraseña obteniendo el valor del campo de entrada con id=contraseña*/
+            const telefono = document.getElementById("telefono").value; /*Define la variable telefono obteniendo el valor del campo de entrada con id=telefono*/
+            const correo_electronico = document.getElementById("correo_electronico").value; /*Define la variable correo_electronico obteniendo el valor del campo de entrada con id=correo_electronico*/
+
+            const errorPass = validar_contraseña(contraseña); /*llama a la función validar_contraseña con el valor de la variable contraseña*/
+            const errorTel  = validar_telefono(telefono); /*Llama a la función validar_telefono con el valor de la variable telefono*/
+            const errorCorr  = validar_correo(correo_electronico); /*Llama a la función validar_correo con el valor de la variable correo_electronico*/
+
+            if (errorPass || errorTel || errorCorr) { /*Si hay un error en la contraseña o en el teléfono*/
+                event.preventDefault(); /*Evita que el formulario se envíe*/
+                mostrarError(errorPass); /*Muestra el mensaje de error correspondiente*/
+                mostrarError1(errorTel);
+                mostrarError2(errorCorr);
+                return; /*Termina la ejecución de la función*/
+            }
+
+            this.submit(); /*Si no hay errores, envía el formulario*/
+        });
+    });
 </script>
 
 </body>
