@@ -59,7 +59,7 @@ def enviar_codigo(correo_destino, codigo):
 
 # TABLA DE REGISTRO Y RECUPERACION
 
-# Crea la tabla `registro` en la base de datos si no existe
+# Crea la tabla `registro` en la base de datos si no existe     
 def crear_tabla():
     # Solicita una conexión a la base de datos
     conexion = get_db_connection()
@@ -68,35 +68,37 @@ def crear_tabla():
         cursor = conexion.cursor()
         # Ejecuta la sentencia SQL para crear la tabla
         cursor.execute("""
-       CREATE TABLE IF NOT EXISTS recuperacion (
+        CREATE TABLE IF NOT EXISTS registro (
+            id SERIAL PRIMARY KEY,
+            primer_nombre VARCHAR(100) NOT NULL,
+            segundo_nombre VARCHAR(100),
+            primer_apellido VARCHAR(100) NOT NULL,
+            segundo_apellido VARCHAR(100),
+            correo VARCHAR(150) UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            telefono VARCHAR(20),
+            direccion TEXT,
+            codigo_verificacion VARCHAR(6),
+            verificado BOOLEAN DEFAULT FALSE
+        );
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS recuperacion (
             id SERIAL PRIMARY KEY,
             correo VARCHAR(150) NOT NULL REFERENCES registro(correo),
             codigo VARCHAR(6) NOT NULL,
             expiracion TIMESTAMP DEFAULT (NOW() + INTERVAL '15 minutes'),
             usado BOOLEAN DEFAULT FALSE
-);
-""")
-        cursor.execute("""
-       CREATE TABLE IF NOT EXISTS registro (
-        id SERIAL PRIMARY KEY,
-        primer_nombre VARCHAR(100) NOT NULL,
-        segundo_nombre VARCHAR(100),
-        primer_apellido VARCHAR(36) NOT NULL,
-        segundo_apellido VARCHAR(36),
-        correo VARCHAR(150) UNIQUE NOT NULL,
-        password VARCHAR(200) NOT NULL,
-        telefono VARCHAR(20),
-        direccion VARCHAR(200),
-        codigo_verificacion VARCHAR(6),
-        verificado BOOLEAN DEFAULT FALSE
-        ); 
-
-
-        """);
+        );
+        """)
+        
         # Inserta datos y cierra cursor y conexión
         conexion.commit()
         cursor.close()
         conexion.close()
+        
+        
 # INDEX
 # ------------------------------------
 @app.route("/")
@@ -276,12 +278,23 @@ def reenviar_codigo():
 
 
 # Ruta para mostrar el formulario de inicio de sesión
+ADMIN_EMAIL = "dessertsacre@gmail.com"
+ADMIN_PASSWORD = "123456"
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         correo = request.form["correo"]
         password = request.form["password"]
+        
+        # LOGIN ADMINISTRADOR
+        if correo == ADMIN_EMAIL and password == ADMIN_PASSWORD:
+            session["admin"] = True
+            session["usuario"] = "Administrador"
+            flash("Bienvenido administrador", "success")
+            return redirect("/admin")
 
+        # LOGIN USUARIO NORMAL
         conexion = get_db_connection()
         cursor = conexion.cursor(cursor_factory=RealDictCursor)
 
@@ -313,6 +326,28 @@ def login():
     correo_auto = session.pop("correo_login_auto", "")
 
     return render_template("login.html", redir_verificar=redir_verificar, correo_auto=correo_auto)
+
+# ------------------------------------
+# RUTA PARA ADMINISTRADOR
+# ------------------------------------
+@app.route("/admin")
+def admin():
+    if not session.get("admin"):
+        flash("Acceso solo para administradores", "danger")
+        return redirect("/login")
+
+    return render_template("admin/dashboard.html")
+
+
+# Rutas para ver pedidos(solo para admin)
+@app.route("/admin/pedidos")
+def admin_pedidos():
+    if not session.get("admin"):
+        return redirect("/login")
+
+    return render_template("admin/pedidos.html")
+
+
 
 #DASHBOARD
 
@@ -550,6 +585,37 @@ def bebidas():
 @app.route("/bebidasU")
 def bebidasU():
     return render_template('bebidas1.html')
+
+@app.route("/admin")
+def admin_t():
+    if not session.get("admin"):
+        flash("Acceso solo para administradores", "danger")
+        return redirect("/login")
+
+    return render_template("admin/dashboard.html")
+
+@app.route("/admin/pedidos")
+def pedidos_admin():
+    if not session.get("admin"):
+        return redirect("/login")
+    return render_template("admin/pedidos.html")
+
+@app.route("/admin/usuarios")
+def usuarios_admin():
+    if not session.get("admin"):
+        return redirect("/login")
+
+    conexion = get_db_connection()
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute("SELECT * FROM registro")
+    usuarios = cursor.fetchall()
+
+    cursor.close()
+    conexion.close()
+
+    return render_template("admin/usuarios.html", usuarios=usuarios)
+
 
 
 #OLVIDO SU CONTRASEÑA?

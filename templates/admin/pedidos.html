@@ -1,12 +1,77 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles/style.css">
-    <link rel="stylesheet" href="/static/styles/pedidos.css">
-    <title>Dessert Sacré | Pedidos</title>
-</head>
-<body>
+<html lang="en">
 
-{% include 'navbar.html' %}
-{% include 'footer.html' %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+
+<body class="Bespa" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="90" tabindex="0">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  <nav id="navbar-example2" class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="#"> 
+      <img class="logo-navbar" src="/static/img/LOGO1.png" alt="Logo"> 
+      <span class="ms-2">Panel Administrador - Dessert Sacré</span> 
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('admin_t') }}">Panel de control</a>
+        </li>
+        <p class="d-none d-lg-block">ㅤㅤ</p>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('pedidos_admin') }}">Ver pedidos</a>
+        </li>
+        <p class="d-none d-lg-block">ㅤㅤ</p> 
+        
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('usuarios_admin') }}">Ver usuarios</a>
+        </li>
+        <p class="d-none d-lg-block">ㅤㅤ</p> 
+        
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a>
+        </li>
+        <p class="d-none d-lg-block">ㅤㅤ</p>
+
+      </ul>
+    </div> 
+  </div> 
+</nav>
+
+<div class="container mt-5 pt-5">
+  <h2 class="text-center mb-4">Pedidos registrados</h2>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>Total</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pedidos %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.usuario_correo }}</td>
+        <td>$ {{ p.total }}</td>
+        <td>{{ p.fecha }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

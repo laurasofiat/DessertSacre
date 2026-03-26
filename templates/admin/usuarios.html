@@ -31,7 +31,6 @@
                         <a class="nav-link" href="{{ url_for('admin_t') }}">Panel de control</a>
                     </li>
                     <p class="d-none d-lg-block">ㅤㅤ</p>
-
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('pedidos_admin') }}">Ver pedidos</a>
                     </li>
@@ -53,29 +52,34 @@
     </nav>
 
     <div class="container mt-5 pt-5">
-        <div class="dashboard">
+        <h2 class="text-center mb-4">Usuarios registrados</h2>
 
-            <h1 class="titulo">Panel de control</h1>
-
-            <div class="cards">
-                <div class="card">
-                    <h3>Usuarios</h3>
-                    <p>Total registrados</p>
-                    <span>{{ usuarios|length }}</span>
-                </div>
-
-                <div class="card">
-                    <h3>Pedidos</h3>
-                    <p>Total pedidos</p>
-                    <span>{{ pedidos|length }}</span>
-                </div>
-
-                <div class="card">
-                    <h3>Ingresos</h3>
-                    <p>Total ventas</p>
-                    <span>$ {{ total_ventas }}</span>
-                </div>
-            </div>
-
-        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Verificado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
+                    <td>{{ u.correo }}</td>
+                    <td>{{ u.telefono }}</td>
+                    <td>
+                        {% if u.verificado %}
+                        ✅
+                        {% else %}
+                        ❌
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
