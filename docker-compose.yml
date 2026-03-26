@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    container_name: dessertsacre_app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - host=host.docker.internal
+      - dbname=Dessert_Sacre
+      - user=postgres
+      - password=123456
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:15
+    container_name: dessertsacre_db
+    restart: always
+    environment:
+      POSTGRES_DB: Dessert_Sacre
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
