@@ -18,7 +18,7 @@ app.config.from_object(Config)
 
 
 DB_CONFIG = {
-        'host': "localhost",
+        'host': "host.docker.internal",
         'dbname':"Dessert_Sacre",
         'user':"postgres",
         'password': "123456",
@@ -802,4 +802,4 @@ def cerrar_modal():
 # RUN
 # ------------------------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
