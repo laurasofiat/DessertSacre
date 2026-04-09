@@ -83,5 +83,69 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/cart.js"></script>
+      <script>
+      // Botón checkout
+      function initCheckoutButton() {
+        const checkout = document.getElementById('checkout-btn');
+        if (!checkout) return;
+
+        checkout.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          // Eliminar mensaje anterior
+          const existente = document.getElementById('mensaje-login');
+          if (existente) existente.remove();
+
+          const fondoExistente = document.getElementById('fondo-login');
+          if (fondoExistente) fondoExistente.remove();
+
+          // Fondo oscuro
+          const fondo = document.createElement('div');
+          fondo.id = 'fondo-login';
+          fondo.style.position = 'fixed';
+          fondo.style.top = '0';
+          fondo.style.left = '0';
+          fondo.style.width = '100%';
+          fondo.style.height = '100%';
+          fondo.style.backgroundColor = 'rgba(0,0,0,0.5)';
+          fondo.style.zIndex = '9998';
+
+          // Caja centrada
+          const contenedor = document.createElement('div');
+          contenedor.id = 'mensaje-login';
+          contenedor.style.position = 'fixed';
+          contenedor.style.top = '50%';
+          contenedor.style.left = '50%';
+          contenedor.style.transform = 'translate(-50%, -50%)';
+          contenedor.style.zIndex = '9999';
+          contenedor.style.width = '90%';
+          contenedor.style.maxWidth = '400px';
+
+          contenedor.innerHTML = `
+            <div class="alert alert-danger alert-dismissible fade show text-center shadow" role="alert">
+              <strong>⚠  Atención  ⚠</strong><br>
+              No puedes realizar compras, debes ingresar a la página primero.  
+              Ingresa y lograrás tener nuestros productos.
+              <button type="button" class="btn-close"></button>
+            </div>
+          `;
+
+          document.body.appendChild(fondo);
+          document.body.appendChild(contenedor);
+
+          // Cerrar mensaje
+          contenedor.querySelector('.btn-close').addEventListener('click', () => {
+            contenedor.remove();
+            fondo.remove();
+          });
+
+          // También cerrar si hacen click en el fondo
+          fondo.addEventListener('click', () => {
+            contenedor.remove();
+            fondo.remove();
+          });
+        });
+      }
+      </script>
   </body>
 </html>

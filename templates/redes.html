@@ -37,7 +37,7 @@
                 <h3>Envíanos un mensaje</h3>
                 <form id="contactForm">
                     <input type="text" id="name" placeholder="Primer Nombre" required="">
-                    <input type="text" id="name" placeholder="Primer Apellido" required="">
+                    <input type="text" id="apellido" placeholder="Primer Apellido" required="">
                     <input type="email" id="email" placeholder="Correo Electrónico" required="">
                     <textarea id="message" placeholder="Escribe tu mensaje aquí..." required=""></textarea>
                     <button type="submit">Enviar mensaje</button>
@@ -56,42 +56,77 @@
 
     <!-- Enlace al JavaScript -->
     <script>
-        // Espera a que el DOM cargue completamente
+    const usuarioLogueado = {{ 'true' if 'usuario' in session else 'false' }};
+    
     document.addEventListener("DOMContentLoaded", function () {
 
         const form = document.getElementById("contactForm");
-        const successMessage = document.getElementById("successMessage");
+
+        function mostrarMensaje(texto, tipo = "danger") {
+
+            const viejo = document.getElementById("mensaje-form");
+            const fondoViejo = document.getElementById("fondo-form");
+            if (viejo) viejo.remove();
+            if (fondoViejo) fondoViejo.remove();
+
+            const fondo = document.createElement("div");
+            fondo.id = "fondo-form";
+            fondo.style.cssText = `
+                position:fixed;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                background:rgba(0, 0, 0, 0.5);
+                z-index:9998;
+            `;
+
+            const caja = document.createElement("div");
+            caja.id = "mensaje-form";
+            caja.style.cssText = `
+                position:fixed;
+                top:50%;
+                left:50%;
+                transform:translate(-50%,-50%);
+                z-index:9999;
+                width:90%;
+                max-width:400px;
+            `;
+
+            caja.innerHTML = `
+                <div class="alert alert-${tipo} text-center shadow">
+                    ${texto}
+                    <br><br>
+                    <button class="btn btn-dark btn-sm">Cerrar</button>
+                </div>
+            `;
+
+            document.body.appendChild(fondo);
+            document.body.appendChild(caja);
+
+            caja.querySelector("button").onclick = () => {
+                caja.remove();
+                fondo.remove();
+            };
+
+            fondo.onclick = () => {
+                caja.remove();
+                fondo.remove();
+            };
+        }
 
         form.addEventListener("submit", function (e) {
             e.preventDefault();
 
-            const name = document.getElementById("name").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const message = document.getElementById("message").value.trim();
-
-            // Validar campos vacíos
-            if (name === "" || email === "" || message === "") {
-                alert("Por favor completa todos los campos.");
+            // 🔥 VALIDACIÓN DE SESIÓN
+            if (!usuarioLogueado) {
+                mostrarMensaje("No puedes enviar mensajes. Debes iniciar sesión o registrarte primero.", "danger");
                 return;
             }
 
-            // Validar formato de correo electrónico
-            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i;
-            if (!email.match(emailPattern)) {
-                alert("Por favor ingresa un correo electrónico válido.");
-            return;
-            }
-
-            // Mostrar mensaje de éxito
-            successMessage.style.display = "block";
-
-            // Limpiar formulario
+            // SI SÍ ESTÁ LOGUEADO
+            mostrarMensaje("¡Mensaje enviado correctamente 🧁!", "success");
             form.reset();
-
-            // Ocultar mensaje después de 4 segundos
-            setTimeout(() => {
-            successMessage.style.display = "none";
-            }, 4000);
         });
 
     });

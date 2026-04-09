@@ -1,7 +1,9 @@
+
 from flask import Flask, request, render_template,jsonify, redirect, session, flash
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import random
+import uuid
 import smtplib
 from email.mime.text import MIMEText
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -427,6 +429,22 @@ def actualizar_carrito():
     flash('Carrito actualizado', 'success')
     return redirect('/carrito')
 
+@app.route('/actualiza_carrito', methods=['POST'])
+def actualiza_carrito():
+    cart = _get_cart()
+    for i, item in enumerate(cart):
+        qty = request.form.get(f"qty_{i}")
+        try:
+            qty = int(qty)
+        except (TypeError, ValueError):
+            continue
+        if qty < 1:
+            continue
+        cart[i]['qty'] = qty
+    _save_cart(cart)
+    flash('Carrito actualizado', 'success')
+    return redirect('/carritoU')
+
 
 @app.route('/carrito')
 def carrito():
@@ -500,14 +518,67 @@ def confirmacion():
 
     session.pop('carrito', None)
     flash('¡Tu compra ha sido confirmada! Gracias por tu pedido.', 'success')
-    return redirect('/inicioU')
+    return redirect('/pasarela')
 
 
 
+#-----------------------------------------------------------------PASARELA DE PAGOS---------------------------------------------------------#
+ 
+@app.route("/api/datos-pago")
+def datos_pago():
+    metodo = request.args.get("metodo", "nequi")
+    return jsonify({"datos": DATOS_PAGO.get(metodo)})
 
-# # ------------------------------------
+pedidos = {}
+
+@app.route("/api/crear-pedido", methods=["POST"])
+def crear_pedido():
+    data = request.get_json()
+
+    cart = _get_cart()
+
+    if not cart:
+        return jsonify({"error": "Carrito vacío"}), 400
+
+    total = sum(item['precio'] * item['qty'] for item in cart)
+
+    ref = f"PED-{uuid.uuid4().hex[:8].upper()}"
+
+    pedidos[ref] = {
+        "total": total,
+        "metodo": data.get("metodo"),
+        "nombre": data.get("nombre"),
+        "email": data.get("email"),
+        "fecha": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    }
+
+    return jsonify({
+        "referencia": ref,
+        "precio": total
+    })
+    
+    pedidos[ref] = {
+    "total": total,
+    "metodo": data.get("metodo"),
+    "nombre": data.get("nombre"),
+    "email": data.get("email"),
+    "telefono": data.get("telefono"),  # 👈 NUEVO
+    "fecha": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+}
+
+
+@app.route("/pasarela")
+def pasarela():
+    usuario = session.get('usuario')  # obtener datos del login
+    if 'usuario' not in session:
+        flash("Debes iniciar sesión", "danger")
+        return redirect("/login")
+
+    return render_template("pasarela.html", usuario=session['usuario'])
+
+# # --------------------------------------------------------
 # # NAVBAR
-# # ------------------------------------
+# # --------------------------------------------------------
 
 @app.route("/inicio")
 def inicio():

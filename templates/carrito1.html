@@ -31,7 +31,7 @@
 
         {% if cart and cart|length > 0 %}
           <div class="table-responsive">
-            <form id="cart-form" method="post" action="{{ url_for('actualizar_carrito') }}">
+            <form id="cart-form" method="post" action="{{ url_for('actualiza_carrito') }}">
               <table class="table align-middle text-center">
                 <thead class="table-dark">
                   <tr>
@@ -60,7 +60,7 @@
               </table>
 
               <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3">
-                <a href="{{ url_for('menu') }}" class="btn btn-outline-secondary mb-2 mb-md-0">Seguir comprando</a>
+                <a href="{{ url_for('menuU') }}" class="btn btn-outline-secondary mb-2 mb-md-0">Seguir comprando</a>
                 <div class="text-end">
                   <p class="h5">Total: <span id="cart-total">COP {{ "{:,.0f}".format(total) }}</span></p>
                   <button type="submit" class="btn btn-warning me-2">Actualizar carrito</button>
@@ -73,7 +73,7 @@
           <div class="empty-cart text-center p-5">
             <h4>Tu carrito está vacío</h4>
             <p class="text-muted">Explora el menú y agrega los productos que más te gusten.</p>
-            <a href="{{ url_for('menu') }}" class="btn btn-outline-primary">Ir al menú</a>
+            <a href="{{ url_for('menuU') }}" class="btn btn-outline-primary">Ir al menú</a>
           </div>
         {% endif %}
       </div>
@@ -82,6 +82,7 @@
     {% include 'footer1.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/cart.js"></script>
+    <script src="/static/js/cart1.js"></script>
+    
   </body>
 </html>

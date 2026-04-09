@@ -1,0 +1,38 @@
+body {
+    font-family: Arial;
+    background: #fff5f2;
+}
+
+.container {
+    max-width: 420px;
+    margin: auto;
+    padding: 20px;
+}
+
+.producto {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.formulario input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+}
+
+#infoPago {
+    background: white;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #c94c4c;
+    color: white;
+    border: none;
+    margin-top: 15px;
+}

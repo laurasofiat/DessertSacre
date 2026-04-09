@@ -48,12 +48,8 @@
 
         <p class="d-none d-lg-block">ㅤㅤ</p>
 
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Contáctanos</a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ url_for('redesU') }}">Redes Sociales</a></li>
-            <li><a class="dropdown-item" href="#Ubicacion">Ubicación</a></li>
-          </ul>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('redesU') }}">Contáctanos</a>
         </li>
 
         <p class="d-none d-lg-block">ㅤㅤ</p>
@@ -70,7 +66,7 @@
         <p class="d-none d-lg-block">ㅤㅤ</p>
         
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('carritoU') }}">Carrito</a>
+          <a class="nav-link" href="{{ url_for('carritoU') }}">Carrito<span id="cart-count" class="badge bg-danger">0</span></a>
         </li>
       </ul>
     </div> 
