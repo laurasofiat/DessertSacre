@@ -1,57 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title> Pago | Dessert Sacré</title>
-    <link rel="stylesheet" href="/static/styles/pasarela.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pasarela de Pago | Dessert Sacré</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/pasarela.css') }}">
 </head>
+
+{% include 'navbar1.html' %}  
+
 <body>
+  
 
 <div class="container">
 
-    <h1>Finalizar compra 🧁</h1>
+  <h1>Dessert Sacré</h1>
+  <span class="subtitulo">Finalizar compra</span>
 
-    <!-- RESUMEN DEL CARRITO -->
-    <div class="producto">
-        <h3>Total a pagar:</h3>
-        <h2 id="totalCompra">Cargando...</h2>
+  <!-- RESUMEN -->
+  <div class="resumen">
+    <h3>Total a pagar</h3>
+    <p id="total">COP {{ total }}</p>
+  </div>
+
+  <!-- DATOS -->
+  <div class="datos">
+    <h3>Datos del cliente</h3>
+    <input type="text"  id="nombre"   value="{{ usuario.nombre }}" readonly>
+    <input type="email" id="email"    value="{{ usuario.email }}"  readonly>
+    <input type="tel"   id="telefono" value="{{ usuario.telefono }}" placeholder="Teléfono">
+  </div>
+
+  <!-- MÉTODOS DE PAGO -->
+  <div class="metodos">
+    <h3>Método de pago</h3>
+
+    <div class="opciones">
+      <div class="metodo activo" data-metodo="nequi">📱 Nequi</div>
+      <div class="metodo"        data-metodo="banco">🏦 Banco</div>
+      <div class="metodo"        data-metodo="efecty">💵 Efecty</div>
     </div>
 
-    <!-- DATOS CLIENTE -->
-    <div class="formulario">
-        <input type="text" id="nombre" 
-            value="{{ usuario.nombre if usuario else '' }}" 
-            placeholder="Nombre completo" readonly>
+    <div id="infoPago" class="info-pago"></div>
+  </div>
 
-        <input type="email" id="email" 
-            value="{{ usuario.email if usuario else '' }}" 
-            placeholder="Correo electrónico" readonly>
-
-       <input type="text" id="telefono" 
-            value="{{ usuario.telefono if usuario else '' }}" 
-            placeholder="Número de teléfono" readonly>
-    </div>
-
-    <!-- MÉTODO DE PAGO -->
-    <div class="metodos">
-        <h3>Método de pago</h3>
-
-        <select id="metodo">
-            <option value="nequi">Nequi</option>
-            <option value="banco">Transferencia Bancaria</option>
-            <option value="efecty">Efecty</option>
-        </select>
-
-        <div id="infoPago"></div>
-    </div>
-
-    <button onclick="crearPedido()">Confirmar pedido</button>
-
-    <!-- RESULTADO -->
-    <div id="resultado"></div>
+  <button id="btnPagar">Confirmar pedido</button>
+  <div id="resultado" data-redirect="{{ url_for('inicioU') }}"></div>
 
 </div>
 
-<script src="/static/js/pasarela.js"></script>
+
+<script src="{{ url_for('static', filename='js/pasarela.js') }}"></script>
+
+{% include 'footer1.html' %}
+
 </body>
+
 </html>

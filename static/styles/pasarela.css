@@ -1,38 +1,159 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    font-family: Arial;
-    background: #fff5f2;
+  font-family: sans-serif;
+  background: #fbe9d7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .container {
-    max-width: 420px;
-    margin: auto;
-    padding: 20px;
+  width: 480px;
+  padding: 3rem 0 4rem;
+  flex: 1;
 }
 
-.producto {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+h1 {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #411111;
+  text-align: center;
+  margin-bottom: 4px;
 }
 
-.formulario input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
+h1::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: #471010;
+  margin: 10px auto 6px;
 }
 
-#infoPago {
-    background: white;
-    padding: 10px;
-    margin-top: 10px;
+.subtitulo {
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #562020;
+  margin-bottom: 2rem;
 }
 
-button {
-    width: 100%;
-    padding: 12px;
-    background: #c94c4c;
-    color: white;
-    border: none;
-    margin-top: 15px;
+.resumen, .datos, .metodos {
+  background: #fff;
+  border: 0.5px solid #610b0b;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #451c1c;
+  margin-bottom: 10px;
+}
+
+#total {
+  font-size: 44px;
+  font-weight: 500;
+  color: #d99b4d;
+  line-height: 1;
+}
+
+.datos input {
+  width: 100%;
+  padding: 9px 12px;
+  margin-top: 8px;
+  border: 0.5px solid #e8e3de;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #faf7f4;
+  color: #000000;
+  outline: none;
+  transition: border-color .2s, background .2s;
+}
+
+.datos input:focus { border-color: #bbb; background: #fff; }
+.datos input[readonly] { color: #3f2323; cursor: default; }
+
+.opciones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+
+.metodo {
+  border: 0.5px solid #e8e3de;
+  border-radius: 8px;
+  padding: 12px 6px;
+  text-align: center;
+  cursor: pointer;
+  background: #faf7f4;
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+  transition: border-color .2s, background .2s, color .2s;
+  user-select: none;
+}
+
+.metodo:hover { border-color: #290303; background: #fff; }
+
+.metodo.activo {
+  border-color: #7a3535;
+  background: rgba(122,53,53,.05);
+  color: #7a3535;
+}
+
+.info-pago {
+  background: #faf7f4;
+  border: 0.5px solid #e8e3de;
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: #777;
+  line-height: 1.6;
+  min-height: 42px;
+}
+
+#btnPagar {
+  width: 100%;
+  padding: 13px;
+  background: #7a3535;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 1.25rem;
+  transition: background .2s, transform .1s;
+}
+
+#btnPagar:hover { background: #5e2828; }
+#btnPagar:active { transform: scale(0.99); }
+
+#resultado {
+  margin-top: 10px;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  display: none;
+}
+
+#resultado.show {
+  display: block;
+  background: #edf7ed;
+  color: #2e7d32;
 }

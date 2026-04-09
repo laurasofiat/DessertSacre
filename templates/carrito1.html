@@ -64,7 +64,7 @@
                 <div class="text-end">
                   <p class="h5">Total: <span id="cart-total">COP {{ "{:,.0f}".format(total) }}</span></p>
                   <button type="submit" class="btn btn-warning me-2">Actualizar carrito</button>
-                  <button type="button" class="btn btn-primary" id="checkout-btn">Finalizar compra</button>
+                  <a href="{{ url_for('pasarela') }}" class="btn btn-primary" id="checkout-btn">Finalizar compra</a>
                 </div>
               </div>
             </form>

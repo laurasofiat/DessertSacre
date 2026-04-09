@@ -20,7 +20,7 @@ app.config.from_object(Config)
 
 
 DB_CONFIG = {
-        'host': "host.docker.internal",
+        'host': "localhost",
         'dbname':"Dessert_Sacre",
         'user':"postgres",
         'password': "123456",
@@ -317,7 +317,14 @@ def login():
             flash("Debes verificar tu correo antes de iniciar sesión", "warning")
             return redirect("/verify")
 
-        session["usuario"] = usuario["primer_nombre"] + " " + usuario["primer_apellido"]
+        session["usuario"] = {
+            "nombre": usuario["primer_nombre"] + " " + usuario["primer_apellido"],
+            "email": usuario["correo"],
+            "telefono": usuario["telefono"],
+            "direccion": usuario["direccion"]
+            }
+        
+        
         flash("Inicio de sesión exitoso", "success")
         return redirect("/inicioU")
     
@@ -366,7 +373,7 @@ def logout():
     session.clear()
     return redirect("/")
 
-# API / funciones de carrito
+#-------------------------------------------CARRITO---------------------------------------------------------------
 
 def _get_cart():
     return session.get("carrito", [])
@@ -523,59 +530,79 @@ def confirmacion():
 
 
 #-----------------------------------------------------------------PASARELA DE PAGOS---------------------------------------------------------#
+
+@app.route("/pasarela")
+def pasarela():
+    usuario = session.get('usuario')
+
+    if not usuario:
+        flash("Debes iniciar sesión", "danger")
+        return redirect("/login")
+
+    cart = _get_cart()
+    total = sum(item['precio'] * item['qty'] for item in cart)
+
+    return render_template("pasarela.html", usuario=usuario, total=total, cart=cart)
  
+DATOS_PAGO = {
+    "nequi": {
+        "numero": "123456789",
+        "titular": "Dessert Sacré"
+    },
+    "banco": {
+        "banco": "BANCOLOMBIA",
+        "numero": "123456789",
+        "tipo": "Ahorros",
+        "titular": "Dessert Sacré",
+        "cedula": "3214586088"
+    },
+    "efecty": {
+        "convenio": "3214586088",
+        "titular": "Dessert Sacré"
+    }
+}
+
 @app.route("/api/datos-pago")
 def datos_pago():
     metodo = request.args.get("metodo", "nequi")
     return jsonify({"datos": DATOS_PAGO.get(metodo)})
+ 
 
 pedidos = {}
 
 @app.route("/api/crear-pedido", methods=["POST"])
 def crear_pedido():
-    data = request.get_json()
-
-    cart = _get_cart()
-
-    if not cart:
-        return jsonify({"error": "Carrito vacío"}), 400
-
-    total = sum(item['precio'] * item['qty'] for item in cart)
-
-    ref = f"PED-{uuid.uuid4().hex[:8].upper()}"
-
-    pedidos[ref] = {
-        "total": total,
-        "metodo": data.get("metodo"),
-        "nombre": data.get("nombre"),
-        "email": data.get("email"),
-        "fecha": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-    }
-
-    return jsonify({
-        "referencia": ref,
-        "precio": total
-    })
+    if not session.get('usuario'):
+        return jsonify({"error": "No autenticado"}), 401
     
-    pedidos[ref] = {
-    "total": total,
-    "metodo": data.get("metodo"),
-    "nombre": data.get("nombre"),
-    "email": data.get("email"),
-    "telefono": data.get("telefono"),  # 👈 NUEVO
-    "fecha": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-}
+    try:
+        data = request.get_json()
+        cart = _get_cart()
 
+        if not cart:
+            return jsonify({"error": "Carrito vacío"}), 400
 
-@app.route("/pasarela")
-def pasarela():
-    usuario = session.get('usuario')  # obtener datos del login
-    if 'usuario' not in session:
-        flash("Debes iniciar sesión", "danger")
-        return redirect("/login")
+        total = sum(item['precio'] * item['qty'] for item in cart)
+        ref = f"PED-{uuid.uuid4().hex[:8].upper()}"
 
-    return render_template("pasarela.html", usuario=session['usuario'])
+        pedidos[ref] = {
+            "total": total,
+            "metodo": data.get("metodo"),
+            "nombre": data.get("nombre"),
+            "email": data.get("email"),
+            "telefono": data.get("telefono"),
+            "fecha": datetime.now().strftime("%Y-%m-%d %H:%M")
+        }
 
+        return jsonify({"referencia": ref, "precio": total})
+
+    except Exception as e:
+        print("ERROR CREAR PEDIDO:", e)
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+    
+    
 # # --------------------------------------------------------
 # # NAVBAR
 # # --------------------------------------------------------
