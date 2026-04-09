@@ -1,12 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles/style.css">
-    <link rel="stylesheet" href="/static/styles/perfil.css">
-    <title>Dessert Sacré | Perfil</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Pedidos | Dessert Sacré</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/perfil.css') }}">
 </head>
 <body>
 
 {% include 'navbar1.html' %}
+
+<div class="container">
+
+  <div class="perfil-header">
+    <div class="avatar">{{ usuario.nombre[0] | upper }}</div>
+    <div>
+      <h1>Mis pedidos</h1>
+      <span class="subtitulo">{{ usuario.nombre }}</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Historial de pedidos</h3>
+
+    {% if pedidos %}
+    <table class="tabla-pedidos">
+      <thead>
+        <tr>
+          <th>Referencia</th>
+          <th>Fecha</th>
+          <th>Método</th>
+          <th>Total</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ref, p in pedidos.items() if p.email == usuario.email %}
+        <tr>
+          <td><code>{{ ref }}</code></td>
+          <td>{{ p.fecha }}</td>
+          <td>{{ p.metodo | capitalize }}</td>
+          <td>${{ '{:,.0f}'.format(p.total) }}</td>
+          <td><span class="badge-estado">Pendiente</span></td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" style="text-align:center; color:#bbb; padding: 1.5rem 0;">
+            No tienes pedidos aún.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+    <p class="vacio">No tienes pedidos registrados aún.</p>
+    {% endif %}
+  </div>
+
+</div>
+
 {% include 'footer1.html' %}
+
+</body>
+</html>

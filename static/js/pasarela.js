@@ -19,33 +19,18 @@ function cargarDatosPago() {
       let html = "";
 
       if (metodoSeleccionado === "nequi") {
-        html = `
-          <b>📱 Pagar con Nequi</b><br><br>
-          Número: ${d.numero}<br>
-          Titular: ${d.titular}
-        `;
+        html = `<b>📱 Pagar con Nequi</b><br><br>Número: ${d.numero}<br>Titular: ${d.titular}`;
       }
-
       if (metodoSeleccionado === "banco") {
-        html = `
-          <b>🏦 Transferencia Bancaria</b><br><br>
-          Banco: ${d.banco}<br>
-          Cuenta: ${d.numero}<br>
-          Tipo: ${d.tipo}<br>
-          Titular: ${d.titular}
-        `;
+        html = `<b>🏦 Transferencia Bancaria</b><br><br>Banco: ${d.banco}<br>Cuenta: ${d.numero}<br>Tipo: ${d.tipo}<br>Titular: ${d.titular}`;
       }
-
       if (metodoSeleccionado === "efecty") {
-        html = `
-          <b>💵 Pago por Efecty</b><br><br>
-          Convenio: ${d.convenio}<br>
-          Titular: ${d.titular}
-        `;
+        html = `<b>💵 Pago por Efecty</b><br><br>Convenio: ${d.convenio}<br>Titular: ${d.titular}`;
       }
 
       document.getElementById("infoPago").innerHTML = html;
-    });
+    })
+    .catch(err => console.error("Error cargando datos de pago:", err));
 }
 
 // CREAR PEDIDO
@@ -54,35 +39,30 @@ document.getElementById("btnPagar").addEventListener("click", () => {
   const telefono = document.getElementById("telefono").value;
   const nombre   = document.getElementById("nombre").value;
   const email    = document.getElementById("email").value;
+  const btn      = document.getElementById("btnPagar");
+
+  btn.disabled = true;
+  btn.textContent = "Procesando...";
 
   fetch("/api/crear-pedido", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      metodo: metodoSeleccionado,
-      nombre: nombre,
-      email: email,
-      telefono: telefono
-    })
+    body: JSON.stringify({ metodo: metodoSeleccionado, nombre, email, telefono })
   })
   .then(res => {
-    if (res.status === 401) {
-        window.location.href = "/login";
-        return;
-    }
+    if (!res.ok) return res.json().then(e => { throw new Error(e.error || res.status); });
     return res.json();
-})
-.then(data => {
-    if (!data) return;
+  })
+  .then(data => {
     const resultado = document.getElementById("resultado");
     resultado.innerHTML = `
       ✅ ¡Pedido confirmado!<br>
       🧾 Ref: ${data.referencia}<br>
-      💰 Total: $${data.precio.toLocaleString()}<br>
-      ⚠️ Realiza el pago y envía el comprobante.
+      💰 Total: $${data.total.toLocaleString()}<br>
+      ⚠️ Realiza el pago y envía el comprobante.<br><br>
+      Redirigiendo...
     `;
     resultado.classList.add("show");
-    document.getElementById("btnPagar").disabled = true;
 
     setTimeout(() => {
       window.location.href = "/inicioU";
@@ -90,9 +70,17 @@ document.getElementById("btnPagar").addEventListener("click", () => {
   })
   .catch(err => {
     console.error("Error:", err);
-  });
+    const btn = document.getElementById("btnPagar");
+    btn.disabled = false;
+    btn.textContent = "Confirmar pedido";
 
-}); // <-- cierre del addEventListener
+    const resultado = document.getElementById("resultado");
+    resultado.innerHTML = `❌ Error: ${err.message}`;
+    resultado.classList.add("show");
+    resultado.style.background = "#fdecea";
+    resultado.style.color = "#c0392b";
+  });
+});
 
 // CARGA INICIAL
 cargarDatosPago();

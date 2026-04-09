@@ -1,12 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles/style.css">
-    <link rel="stylesheet" href="/static/styles/perfil.css">
-    <title>Dessert Sacré | Perfil</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil | Dessert Sacré</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/perfil.css') }}">
 </head>
 <body>
 
 {% include 'navbar1.html' %}
+
+<div class="container">
+
+  <!-- ENCABEZADO -->
+  <div class="perfil-header">
+    <div class="avatar">{{ usuario.nombre[0] | upper }}</div>
+    <div>
+      <h1>{{ usuario.nombre }}</h1>
+      <span class="subtitulo">Cuenta activa</span>
+    </div>
+  </div>
+
+  <!-- DATOS PERSONALES -->
+  <div class="card">
+    <h3>Datos personales</h3>
+    <div class="datos-grid">
+      <div class="dato">
+        <span class="label">Correo</span>
+        <span class="valor">{{ usuario.email }}</span>
+      </div>
+      <div class="dato">
+        <span class="label">Teléfono</span>
+        <span class="valor">{{ usuario.telefono or '—' }}</span>
+      </div>
+      <div class="dato">
+        <span class="label">Dirección</span>
+        <span class="valor">{{ usuario.direccion or '—' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORIAL DE PEDIDOS -->
+  <div class="card">
+    <h3>Historial de pedidos</h3>
+    {% if pedidos %}
+      <table class="tabla-pedidos">
+        <thead>
+          <tr>
+            <th>Referencia</th>
+            <th>Fecha</th>
+            <th>Método</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ref, p in pedidos.items() %}
+          <tr>
+            <td><code>{{ ref }}</code></td>
+            <td>{{ p.fecha }}</td>
+            <td>{{ p.metodo | capitalize }}</td>
+            <td>${{ '{:,.0f}'.format(p.total) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="vacio">Aún no tienes pedidos registrados.</p>
+    {% endif %}
+  </div>
+
+  <!-- CALIFICACIÓN -->
+  <div class="card">
+    <h3>Califica tu experiencia</h3>
+    <p class="desc">¿Cómo ha sido tu experiencia con Dessert Sacré?</p>
+
+    <div class="estrellas" id="estrellas">
+      <span data-val="1">★</span>
+      <span data-val="2">★</span>
+      <span data-val="3">★</span>
+      <span data-val="4">★</span>
+      <span data-val="5">★</span>
+    </div>
+
+    <textarea id="comentario" placeholder="Escribe un comentario (opcional)..."></textarea>
+
+    <button id="btnCalificar">Enviar calificación</button>
+    <div id="msgCalificacion"></div>
+  </div>
+
+</div>
+
 {% include 'footer1.html' %}
+
+<script>
+  let calificacion = 0;
+  const spans = document.querySelectorAll(".estrellas span");
+
+  spans.forEach(s => {
+    s.addEventListener("mouseenter", () => {
+      const v = +s.dataset.val;
+      spans.forEach(x => x.classList.toggle("hover", +x.dataset.val <= v));
+    });
+    s.addEventListener("mouseleave", () => {
+      spans.forEach(x => x.classList.remove("hover"));
+      spans.forEach(x => x.classList.toggle("activa", +x.dataset.val <= calificacion));
+    });
+    s.addEventListener("click", () => {
+      calificacion = +s.dataset.val;
+      spans.forEach(x => x.classList.toggle("activa", +x.dataset.val <= calificacion));
+    });
+  });
+
+  document.getElementById("btnCalificar").addEventListener("click", () => {
+    if (!calificacion) {
+      document.getElementById("msgCalificacion").textContent = "Selecciona una calificación.";
+      return;
+    }
+    const comentario = document.getElementById("comentario").value;
+    const msg = document.getElementById("msgCalificacion");
+    msg.textContent = `¡Gracias por tu calificación de ${calificacion} estrella${calificacion > 1 ? 's' : ''}!`;
+    msg.style.color = "#2e7d32";
+    document.getElementById("btnCalificar").disabled = true;
+  });
+</script>
+
+</body>
+</html>

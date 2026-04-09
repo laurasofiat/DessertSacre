@@ -1,0 +1,195 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: sans-serif;
+  background: #faf7f4;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  width: 640px;
+  padding: 3rem 0 4rem;
+  flex: 1;
+}
+
+/* HEADER */
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #7a3535;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: 0.02em;
+}
+
+.subtitulo {
+  font-size: 12px;
+  color: #aaa;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* CARDS */
+.card {
+  background: #fff;
+  border: 0.5px solid #e8e3de;
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-bottom: 1rem;
+}
+
+/* DATOS */
+.datos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.label {
+  font-size: 11px;
+  color: #bbb;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.valor {
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+/* TABLA PEDIDOS */
+.tabla-pedidos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabla-pedidos th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #bbb;
+  padding-bottom: 8px;
+  border-bottom: 0.5px solid #e8e3de;
+}
+
+.tabla-pedidos td {
+  padding: 10px 0;
+  border-bottom: 0.5px solid #f0ece8;
+  color: #444;
+}
+
+.tabla-pedidos tr:last-child td { border-bottom: none; }
+
+.tabla-pedidos code {
+  font-size: 12px;
+  background: #faf7f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #7a3535;
+}
+
+.vacio {
+  font-size: 13px;
+  color: #bbb;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+/* CALIFICACIÓN */
+.desc {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.estrellas {
+  display: flex;
+  gap: 6px;
+  font-size: 32px;
+  color: #ddd;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.estrellas span.activa,
+.estrellas span.hover { color: #c9a84c; }
+
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 0.5px solid #e8e3de;
+  border-radius: 8px;
+  font-family: sans-serif;
+  font-size: 13px;
+  background: #faf7f4;
+  color: #1a1a1a;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+textarea:focus { border-color: #bbb; background: #fff; }
+
+#btnCalificar {
+  padding: 10px 24px;
+  background: #7a3535;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+#btnCalificar:hover { background: #5e2828; }
+#btnCalificar:disabled { background: #ccc; cursor: default; }
+
+#msgCalificacion {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #777;
+}

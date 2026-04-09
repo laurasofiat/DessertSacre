@@ -1,5 +1,4 @@
-
-from flask import Flask, request, render_template,jsonify, redirect, session, flash
+from flask import Flask, request, render_template, jsonify, redirect, session, flash
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import random
@@ -8,8 +7,8 @@ import smtplib
 from email.mime.text import MIMEText
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-from config import Config 
-import traceback   
+from config import Config
+import traceback
 
 # ------------------------------------
 # CONFIG GENERAL
@@ -18,35 +17,32 @@ app = Flask(__name__)
 app.secret_key = "clave_super_secreta"
 app.config.from_object(Config)
 
-
 DB_CONFIG = {
-        'host': "localhost",
-        'dbname':"Dessert_Sacre",
-        'user':"postgres",
-        'password': "123456",
-        'port': 5432
-    }
-def  get_db_connection():
+    'host': "localhost",
+    'dbname': "Dessert_Sacre",
+    'user': "postgres",
+    'password': "123456",
+    'port': 5432
+}
+
+def get_db_connection():
     try:
         return psycopg2.connect(**DB_CONFIG)
     except Exception as e:
         print("Error BD:", e)
         return None
 
-
-
+# ------------------------------------
 # CONFIG SMTP GMAIL
-
+# ------------------------------------
 EMAIL_USER = app.config["EMAIL_USER"]
-EMAIL_PASS = app.config["EMAIL_PASS"]  # Contraseña de aplicación Gmail
-
+EMAIL_PASS = app.config["EMAIL_PASS"]
 
 def enviar_codigo(correo_destino, codigo):
     msg = MIMEText(f"Tu código de verificación es: {codigo}")
     msg["Subject"] = "Código de verificación"
     msg["From"] = EMAIL_USER
     msg["To"] = correo_destino
-
     try:
         with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
             smtp.starttls()
@@ -54,21 +50,17 @@ def enviar_codigo(correo_destino, codigo):
             smtp.send_message(msg)
             print("Correo enviado ✔")
             return True
-
     except Exception as e:
         print("Error enviando correo:", e)
         return False
 
-# TABLA DE REGISTRO Y RECUPERACION
-
-# Crea la tabla `registro` en la base de datos si no existe     
+# ------------------------------------
+# TABLAS
+# ------------------------------------
 def crear_tabla():
-    # Solicita una conexión a la base de datos
     conexion = get_db_connection()
     if conexion:
-        # Crea un cursor para ejecutar la sentencia SQL
         cursor = conexion.cursor()
-        # Ejecuta la sentencia SQL para crear la tabla
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS registro (
             id SERIAL PRIMARY KEY,
@@ -84,7 +76,6 @@ def crear_tabla():
             verificado BOOLEAN DEFAULT FALSE
         );
         """)
-
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS recuperacion (
             id SERIAL PRIMARY KEY,
@@ -94,70 +85,56 @@ def crear_tabla():
             usado BOOLEAN DEFAULT FALSE
         );
         """)
-        
-        # Inserta datos y cierra cursor y conexión
         conexion.commit()
         cursor.close()
         conexion.close()
-        
-        
+
+# ------------------------------------
 # INDEX
 # ------------------------------------
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# Registro
-
+# ------------------------------------
+# REGISTRO
+# ------------------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    # Reiniciar sesiones temporales
     session.pop("intentos_reenvio", None)
     session.pop("correo_verificacion", None)
     return render_template("register.html")
 
-@app.route('/guardar', methods=['POST'])   
-def guardar(): 
+@app.route('/guardar', methods=['POST'])
+def guardar():
     try:
-        #  Obtener conexión a la base de datos
         conexion = get_db_connection()
         if conexion is None:
-            # Si no hay conexión, devolver error
             return jsonify(error="Error: No se pudo conectar a la base de datos")
 
-        # Procesar datos del formulario (solo si es POST)
         if request.method == "POST":
-            # Capturar valores enviados desde el formulario
-            primer_nombre = request.form.get("primer_nombre", "").strip()
-            segundo_nombre = request.form.get("segundo_nombre", "").strip()
-            primer_apellido = request.form.get("primer_apellido", "").strip()
+            primer_nombre    = request.form.get("primer_nombre", "").strip()
+            segundo_nombre   = request.form.get("segundo_nombre", "").strip()
+            primer_apellido  = request.form.get("primer_apellido", "").strip()
             segundo_apellido = request.form.get("segundo_apellido", "").strip()
-            correo = request.form.get("correo", "").strip()
-            password = request.form.get("password", "").strip()
-            telefono = request.form.get("telefono", "").strip()
-            direccion = request.form.get("direccion", "").strip()
+            correo           = request.form.get("correo", "").strip()
+            password         = request.form.get("password", "").strip()
+            telefono         = request.form.get("telefono", "").strip()
+            direccion        = request.form.get("direccion", "").strip()
 
-            # Validar campos obligatorios
             if not primer_nombre or not primer_apellido or not correo or not password:
                 return jsonify(error="Faltan datos obligatorios")
 
-            #Crear cursor para ejecutar consultas
             cursor = conexion.cursor(cursor_factory=RealDictCursor)
-
-            # Validar si el correo ya existe en la tabla
             cursor.execute("SELECT id FROM registro WHERE correo=%s", (correo,))
             if cursor.fetchone():
                 flash("El correo ya está registrado. Inicia sesión.", "warning")
                 session["correo_login_auto"] = correo
                 return redirect("/login")
 
-            # Encriptar la contraseña
             password_hash = generate_password_hash(password)
-
-            # Generar código de verificación aleatorio
             codigo = str(random.randint(100000, 999999))
 
-            # Insertar nuevo usuario en la tabla
             sql_insertar = """
                 INSERT INTO registro (
                     primer_nombre, segundo_nombre, primer_apellido, segundo_apellido,
@@ -169,51 +146,38 @@ def guardar():
                 primer_nombre, segundo_nombre, primer_apellido, segundo_apellido,
                 correo, password_hash, telefono, direccion, codigo
             ))
-
-            # Confirmar cambios en la base de datos
             conexion.commit()
 
-            #  Enviar código de verificación por correo
             if not enviar_codigo(correo, codigo):
                 flash("Error enviando correo")
 
-            # Guardar correo en sesión para verificar después
             session["correo_verificacion"] = correo
-
-            # Cerrar cursor y conexión
             cursor.close()
             conexion.close()
-
-            # Redirigir a la página de verificación
             return redirect("/verify")
 
     except Exception as e:
-        # Manejo de errores: imprimir en consola y devolver mensaje JSON
-        print("\n ERROR SQL:")
+        print("\nERROR SQL:")
         print(e)
         traceback.print_exc()
         return jsonify(error="Error al procesar la solicitud")
 
-
-
-# VERIFICACION
+# ------------------------------------
+# VERIFICACIÓN
+# ------------------------------------
 @app.route("/verify", methods=["GET", "POST"])
 def verify():
     correo = session.get("correo_verificacion")
-
     if not correo:
         flash("No hay correo para verificar", "danger")
         return redirect("/login")
 
-    # PASAR LOS INTENTOS A LA PLANTILLA
     intentos = session.get("intentos_reenvio", 0)
 
     if request.method == "POST":
         codigo_ingresado = request.form["codigo"]
-
         conexion = get_db_connection()
         cursor = conexion.cursor(cursor_factory=RealDictCursor)
-
         cursor.execute("SELECT codigo_verificacion FROM registro WHERE correo=%s", (correo,))
         result = cursor.fetchone()
 
@@ -221,14 +185,11 @@ def verify():
             flash("Error interno.")
             return render_template("verify.html", redirect_login=False, intentos=intentos)
 
-        codigo_real = result["codigo_verificacion"]
-
-        if codigo_ingresado == codigo_real:
+        if codigo_ingresado == result["codigo_verificacion"]:
             cursor.execute("UPDATE registro SET verificado=TRUE WHERE correo=%s", (correo,))
             conexion.commit()
             cursor.close()
             conexion.close()
-
             flash("Correo verificado con éxito", "success")
             session.pop("correo_verificacion", None)
             session.pop("intentos_reenvio", None)
@@ -237,69 +198,55 @@ def verify():
             flash("El código ingresado es incorrecto", "danger")
             return render_template("verify.html", redirect_login=False, intentos=intentos)
 
-    #Este return final asegura que siempre haya respuesta en caso de GET
     return render_template("verify.html", redirect_login=False, intentos=intentos)
-
-#Reenvio de código
 
 @app.route("/reenviar_codigo")
 def reenviar_codigo():
     correo = session.get("correo_verificacion")
-
     if not correo:
         flash("No hay correo para verificar", "danger")
         return redirect("/login")
 
-    # Contador de reenvíos
     intentos = session.get("intentos_reenvio", 0)
-
     if intentos >= 3:
-        flash("Límite de reenvíos alcanzado. Verifica tu correo o regístrate de nuevo.", "warning")
+        flash("Límite de reenvíos alcanzado.", "warning")
         return redirect("/verify")
 
-    # Generar y guardar nuevo código
     nuevo_codigo = str(random.randint(100000, 999999))
-
     conexion = get_db_connection()
     cursor = conexion.cursor(cursor_factory=RealDictCursor)
-    cursor.execute("UPDATE registro SET codigo_verificacion=%s WHERE correo=%s",
-                   (nuevo_codigo, correo))
+    cursor.execute("UPDATE registro SET codigo_verificacion=%s WHERE correo=%s", (nuevo_codigo, correo))
     conexion.commit()
     cursor.close()
     conexion.close()
 
-    # Aumentar contador
     session["intentos_reenvio"] = intentos + 1
-
-    # Enviar código
-    if not enviar_codigo(correo,nuevo_codigo):
+    if not enviar_codigo(correo, nuevo_codigo):
         flash("Error enviando correo")
 
     flash("Código reenviado. Revisa tu correo.", "success")
     return redirect("/verify")
 
-
-# Ruta para mostrar el formulario de inicio de sesión
-ADMIN_EMAIL = "dessertsacre@gmail.com"
+# ------------------------------------
+# LOGIN
+# ------------------------------------
+ADMIN_EMAIL    = "dessertsacre@gmail.com"
 ADMIN_PASSWORD = "123456"
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        correo = request.form["correo"]
+        correo   = request.form["correo"]
         password = request.form["password"]
-        
-        # LOGIN ADMINISTRADOR
+
         if correo == ADMIN_EMAIL and password == ADMIN_PASSWORD:
             session["admin"] = True
             session["usuario"] = "Administrador"
             flash("Bienvenido administrador", "success")
             return redirect("/admin")
 
-        # LOGIN USUARIO NORMAL
         conexion = get_db_connection()
-        cursor = conexion.cursor(cursor_factory=RealDictCursor)
-
+        cursor   = conexion.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM registro WHERE correo=%s", (correo,))
         usuario = cursor.fetchone()
 
@@ -318,26 +265,38 @@ def login():
             return redirect("/verify")
 
         session["usuario"] = {
-            "nombre": usuario["primer_nombre"] + " " + usuario["primer_apellido"],
-            "email": usuario["correo"],
-            "telefono": usuario["telefono"],
+            "nombre":    usuario["primer_nombre"] + " " + usuario["primer_apellido"],
+            "email":     usuario["correo"],
+            "telefono":  usuario["telefono"],
             "direccion": usuario["direccion"]
-            }
-        
-        
+        }
+
         flash("Inicio de sesión exitoso", "success")
         return redirect("/inicioU")
-    
-    # Limpia el redirect cuando se carga el login
-        
-    redir_verificar = session.pop("redir_verificar", None)
-    
-    correo_auto = session.pop("correo_login_auto", "")
 
+    redir_verificar = session.pop("redir_verificar", None)
+    correo_auto     = session.pop("correo_login_auto", "")
     return render_template("login.html", redir_verificar=redir_verificar, correo_auto=correo_auto)
 
 # ------------------------------------
-# RUTA PARA ADMINISTRADOR
+# LOGOUT
+# ------------------------------------
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
+
+# ------------------------------------
+# DASHBOARD
+# ------------------------------------
+@app.route("/dashboard")
+def dashboard():
+    if not session.get("usuario"):
+        return redirect("/login")
+    return render_template("dashboard.html", usuario=session["usuario"])
+
+# ------------------------------------
+# ADMIN
 # ------------------------------------
 @app.route("/admin")
 def admin():
@@ -345,50 +304,60 @@ def admin():
         flash("Acceso solo para administradores", "danger")
         return redirect("/login")
 
-    return render_template("admin/dashboard.html")
+    conexion = get_db_connection()
+    cursor   = conexion.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT * FROM registro")
+    usuarios = cursor.fetchall()
+    cursor.close()
+    conexion.close()
 
+    total_ventas = sum(p["total"] for p in pedidos_guardados.values())
 
-# Rutas para ver pedidos(solo para admin)
+    return render_template("admin/dashboard.html",
+        usuarios=usuarios,
+        pedidos=pedidos_guardados,
+        total_ventas=total_ventas
+    )
+
 @app.route("/admin/pedidos")
 def admin_pedidos():
     if not session.get("admin"):
         return redirect("/login")
-
     return render_template("admin/pedidos.html")
 
-
-
-#DASHBOARD
-
-@app.route("/dashboard")
-def dashboard():
-    if not session.get("usuario"):
+@app.route("/admin/usuarios")
+def usuarios_admin():
+    if not session.get("admin"):
         return redirect("/login")
-    return render_template("dashboard.html", usuario=session["usuario"])
+    conexion = get_db_connection()
+    cursor   = conexion.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT * FROM registro")
+    usuarios = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    return render_template("admin/usuarios.html", usuarios=usuarios)
 
-
-# LOGOUT
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect("/")
-
-#-------------------------------------------CARRITO---------------------------------------------------------------
-
+# ------------------------------------
+# CARRITO
+# ------------------------------------
 def _get_cart():
     return session.get("carrito", [])
-
 
 def _save_cart(cart):
     session["carrito"] = cart
 
+def _get_cart_info(cart=None):
+    if cart is None:
+        cart = _get_cart()
+    total_items = sum(item.get('qty', 0) for item in cart)
+    total_price = sum(item.get('precio', 0) * item.get('qty', 0) for item in cart)
+    return {'cart': cart, 'total_items': total_items, 'total_price': total_price}
 
 @app.route('/agregar_carrito', methods=['POST'])
 def agregar_carrito():
-    data = request.get_json(silent=True) or request.form
+    data   = request.get_json(silent=True) or request.form
     nombre = data.get('nombre')
     precio = data.get('precio')
-
     try:
         precio = float(precio)
     except (TypeError, ValueError):
@@ -408,17 +377,15 @@ def agregar_carrito():
     _save_cart(cart)
     return jsonify({'success': True, 'cart': cart, 'total_items': sum(item['qty'] for item in cart)})
 
-
 @app.route('/eliminar_del_carrito')
 def eliminar_del_carrito():
     index = request.args.get('index', type=int)
-    cart = _get_cart()
+    cart  = _get_cart()
     if index is not None and 0 <= index < len(cart):
         cart.pop(index)
         _save_cart(cart)
         flash('Producto eliminado del carrito', 'success')
     return redirect('/carrito')
-
 
 @app.route('/actualizar_carrito', methods=['POST'])
 def actualizar_carrito():
@@ -452,32 +419,21 @@ def actualiza_carrito():
     flash('Carrito actualizado', 'success')
     return redirect('/carritoU')
 
-
 @app.route('/carrito')
 def carrito():
-    cart = _get_cart()
+    cart  = _get_cart()
     total = sum(item['precio'] * item['qty'] for item in cart)
     return render_template('carrito.html', cart=cart, total=total)
 
 @app.route('/carritoU')
 def carritoU():
-    cart = _get_cart()
+    cart  = _get_cart()
     total = sum(item['precio'] * item['qty'] for item in cart)
     return render_template('carrito1.html', cart=cart, total=total)
-
-
-def _get_cart_info(cart=None):
-    if cart is None:
-        cart = _get_cart()
-    total_items = sum(item.get('qty', 0) for item in cart)
-    total_price = sum(item.get('precio', 0) * item.get('qty', 0) for item in cart)
-    return {'cart': cart, 'total_items': total_items, 'total_price': total_price}
-
 
 @app.route('/api/cart')
 def api_cart():
     return jsonify(_get_cart_info())
-
 
 @app.route('/api/cart/remove', methods=['POST'])
 def api_cart_remove():
@@ -486,7 +442,6 @@ def api_cart_remove():
         index = int(data.get('index', -1))
     except (TypeError, ValueError):
         return jsonify({'error': 'Índice inválido'}), 400
-
     cart = _get_cart()
     if 0 <= index < len(cart):
         cart.pop(index)
@@ -494,71 +449,61 @@ def api_cart_remove():
         return jsonify({'success': True, **_get_cart_info(cart)})
     return jsonify({'error': 'Índice fuera de rango'}), 400
 
-
 @app.route('/api/cart/update', methods=['POST'])
 def api_cart_update():
     data = request.get_json(silent=True) or request.form
     try:
         index = int(data.get('index', -1))
-        qty = int(data.get('qty', 0))
+        qty   = int(data.get('qty', 0))
     except (TypeError, ValueError):
         return jsonify({'error': 'Datos inválidos'}), 400
-
     if qty < 1:
         return jsonify({'error': 'La cantidad debe ser al menos 1'}), 400
-
     cart = _get_cart()
     if 0 <= index < len(cart):
         cart[index]['qty'] = qty
         _save_cart(cart)
         return jsonify({'success': True, **_get_cart_info(cart)})
-
     return jsonify({'error': 'Índice fuera de rango'}), 400
-
 
 @app.route('/confirmacion')
 def confirmacion():
     cart = _get_cart()
     if not cart:
-        flash('El carrito está vacío. Agrega productos antes de finalizar.', 'warning')
+        flash('El carrito está vacío.', 'warning')
         return redirect('/carrito')
-
     session.pop('carrito', None)
-    flash('¡Tu compra ha sido confirmada! Gracias por tu pedido.', 'success')
+    flash('¡Tu compra ha sido confirmada!', 'success')
     return redirect('/pasarela')
 
-
-
-#-----------------------------------------------------------------PASARELA DE PAGOS---------------------------------------------------------#
-
+# ------------------------------------
+# PASARELA DE PAGOS
+# ------------------------------------
 @app.route("/pasarela")
 def pasarela():
     usuario = session.get('usuario')
-
     if not usuario:
         flash("Debes iniciar sesión", "danger")
         return redirect("/login")
-
-    cart = _get_cart()
+    cart  = _get_cart()
     total = sum(item['precio'] * item['qty'] for item in cart)
-
     return render_template("pasarela.html", usuario=usuario, total=total, cart=cart)
- 
+
 DATOS_PAGO = {
     "nequi": {
-        "numero": "123456789",
+        "numero":  "123456789",
         "titular": "Dessert Sacré"
     },
     "banco": {
-        "banco": "BANCOLOMBIA",
-        "numero": "123456789",
-        "tipo": "Ahorros",
+        "banco":   "BANCOLOMBIA",
+        "numero":  "123456789",
+        "tipo":    "Ahorros",
         "titular": "Dessert Sacré",
-        "cedula": "3214586088"
+        "cedula":  "3214586088"
     },
     "efecty": {
         "convenio": "3214586088",
-        "titular": "Dessert Sacré"
+        "titular":  "Dessert Sacré"
     }
 }
 
@@ -566,15 +511,15 @@ DATOS_PAGO = {
 def datos_pago():
     metodo = request.args.get("metodo", "nequi")
     return jsonify({"datos": DATOS_PAGO.get(metodo)})
- 
 
-pedidos = {}
+# Diccionario de pedidos (renombrado para no chocar con def pedidos())
+pedidos_guardados = {}
 
 @app.route("/api/crear-pedido", methods=["POST"])
 def crear_pedido():
     if not session.get('usuario'):
         return jsonify({"error": "No autenticado"}), 401
-    
+
     try:
         data = request.get_json()
         cart = _get_cart()
@@ -583,30 +528,41 @@ def crear_pedido():
             return jsonify({"error": "Carrito vacío"}), 400
 
         total = sum(item['precio'] * item['qty'] for item in cart)
-        ref = f"PED-{uuid.uuid4().hex[:8].upper()}"
+        ref   = f"PED-{uuid.uuid4().hex[:8].upper()}"
 
-        pedidos[ref] = {
-            "total": total,
-            "metodo": data.get("metodo"),
-            "nombre": data.get("nombre"),
-            "email": data.get("email"),
+        pedidos_guardados[ref] = {
+            "total":    total,
+            "metodo":   data.get("metodo"),
+            "nombre":   data.get("nombre"),
+            "email":    data.get("email"),
             "telefono": data.get("telefono"),
-            "fecha": datetime.now().strftime("%Y-%m-%d %H:%M")
+            "fecha":    datetime.now().strftime("%Y-%m-%d %H:%M")
         }
 
-        return jsonify({"referencia": ref, "precio": total})
+        session.pop("carrito", None)
+
+        return jsonify({"referencia": ref, "total": total})
 
     except Exception as e:
         print("ERROR CREAR PEDIDO:", e)
-        import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
-    
-    
-# # --------------------------------------------------------
-# # NAVBAR
-# # --------------------------------------------------------
 
+# ------------------------------------
+# PERFIL
+# ------------------------------------
+@app.route('/perfil')
+def perfil():
+    if not session.get('usuario'):
+        return redirect('/login')
+    return render_template('perfil.html',
+        usuario=session['usuario'],
+        pedidos=pedidos_guardados
+    )
+
+# ------------------------------------
+# NAVBAR — RUTAS
+# ------------------------------------
 @app.route("/inicio")
 def inicio():
     return render_template("inicio.html")
@@ -639,110 +595,72 @@ def redes():
 def redesU():
     return render_template('redes1.html')
 
-# rutas de cuenta
-@app.route('/perfil')
-def perfil():
-    return render_template('perfil.html')
-
 @app.route('/pedidos')
 def pedidos():
-    return render_template('pedidos.html')
+    if not session.get('usuario'):
+        return redirect('/login')
+    return render_template('pedidos.html',
+        usuario=session['usuario'],
+        pedidos=pedidos_guardados
+    )
 
-#Panaderia
-@app.route("/panaderia")
+@app.route('/panaderia')
 def panaderia():
     return render_template('panaderia.html')
 
-@app.route("/panaderiaU")
+@app.route('/panaderiaU')
 def panaderiaU():
     return render_template('panaderia1.html')
 
-#Pasteleria
-@app.route("/pasteleria")
+@app.route('/pasteleria')
 def pasteleria():
     return render_template('pasteleria.html')
 
-@app.route("/pasteleriaU")
+@app.route('/pasteleriaU')
 def pasteleriaU():
     return render_template('pasteleria1.html')
 
-#Reposteria
-@app.route("/reposteria")
+@app.route('/reposteria')
 def reposteria():
     return render_template('reposteria.html')
 
-@app.route("/reposteriaU")
+@app.route('/reposteriaU')
 def reposteriaU():
     return render_template('reposteria1.html')
 
-#Bebidas
-@app.route("/bebidas")
+@app.route('/bebidas')
 def bebidas():
     return render_template('bebidas.html')
 
-@app.route("/bebidasU")
+@app.route('/bebidasU')
 def bebidasU():
     return render_template('bebidas1.html')
 
-@app.route("/admin")
-def admin_t():
-    if not session.get("admin"):
-        flash("Acceso solo para administradores", "danger")
-        return redirect("/login")
-
-    return render_template("admin/dashboard.html")
-
-@app.route("/admin/pedidos")
-def pedidos_admin():
-    if not session.get("admin"):
-        return redirect("/login")
-    return render_template("admin/pedidos.html")
-
-@app.route("/admin/usuarios")
-def usuarios_admin():
-    if not session.get("admin"):
-        return redirect("/login")
-
-    conexion = get_db_connection()
-    cursor = conexion.cursor(cursor_factory=RealDictCursor)
-
-    cursor.execute("SELECT * FROM registro")
-    usuarios = cursor.fetchall()
-
-    cursor.close()
-    conexion.close()
-
-    return render_template("admin/usuarios.html", usuarios=usuarios)
-
-
-
-#OLVIDO SU CONTRASEÑA?
-
-#Ruta para solicitar la recuperación
+# ------------------------------------
+# RECUPERACIÓN DE CONTRASEÑA
+# ------------------------------------
 @app.route("/forgot", methods=["GET", "POST"])
 def forgot():
     if request.method == "POST":
         correo = request.form.get("correo", "").strip()
-        
         if not correo:
             flash("Por favor ingresa un correo.", "warning")
             return redirect("/forgot")
-        
+
         conexion = get_db_connection()
         if not conexion:
             flash("Error de conexión a la base de datos.", "danger")
             return redirect("/forgot")
-        
+
         with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute("SELECT id FROM registro WHERE correo=%s", (correo,))
             usuario = cursor.fetchone()
             if not usuario:
                 flash("El correo ingresado no existe.", "danger")
-                session["redir_register"] = True  
+                session["redir_register"] = True
                 return redirect("/forgot")
 
-            # Generar código de recuperación
-            codigo = str(random.randint(100000, 999999))
+            codigo     = str(random.randint(100000, 999999))
             expiracion = datetime.now() + timedelta(minutes=15)
             cursor.execute("""
                 INSERT INTO recuperacion (correo, codigo, expiracion, usado)
@@ -751,128 +669,90 @@ def forgot():
             conexion.commit()
 
         conexion.close()
-        
-        # Enviar código por correo
         enviar_codigo(correo, codigo)
         flash("Código enviado a tu correo.", "success")
         session["correo_recuperar"] = correo
-        
         return redirect("/reset-code")
 
-    #Este return final cubre el caso GET
     return render_template("forgot.html")
 
-
-#Crear vista para ingresar el código
-# Crear vista para ingresar el código
 @app.route("/reset-code", methods=["GET", "POST"])
 def reset_code():
-    # Recuperar el correo guardado en sesión
     correo = session.get("correo_recuperar")
     if not correo:
         flash("Primero ingresa tu correo", "warning")
         return redirect("/forgot")
 
     if request.method == "POST":
-        # Obtener el código ingresado en el formulario
         codigo_ingresado = request.form.get("codigo", "").strip()
-
-        # Conexión a la base de datos
         conexion = get_db_connection()
         if not conexion:
             flash("Error de conexión a la base de datos.", "danger")
             return redirect("/reset-code")
-        
-        # Usar el cursor dentro del bloque with
+
         with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
-            # Buscar el código en la tabla de recuperación
             cursor.execute("""
                 SELECT * FROM recuperacion
                 WHERE correo=%s AND codigo=%s AND usado=FALSE
-                ORDER BY expiracion DESC
-                LIMIT 1
+                ORDER BY expiracion DESC LIMIT 1
             """, (correo, codigo_ingresado))
             resultado = cursor.fetchone()
-            
-            # Validar si existe el código
+
             if not resultado:
                 flash("Código incorrecto o ya usado.", "danger")
                 return redirect("/reset-code")
-        
-            # Validar si el código expiró
+
             if datetime.now() > resultado["expiracion"]:
                 flash("El código ha expirado.", "danger")
                 return redirect("/forgot")
 
-            # Código válido: marcar como usado dentro del mismo cursor
             cursor.execute("UPDATE recuperacion SET usado=TRUE WHERE id=%s", (resultado["id"],))
             conexion.commit()
 
-        # Cerrar conexión después de usar el cursor
         conexion.close()
-
-        # Mensaje de éxito y redirección
         flash("Código correcto.", "success")
         return redirect("/reset-password")
 
-    # Caso GET: mostrar el formulario
     return render_template("reset_code.html")
 
-
-#Ruta para cambiar la contraseña
-# Ruta para cambiar la contraseña
 @app.route("/reset-password", methods=["GET", "POST"])
 def reset_password():
-    # Recuperar el correo guardado en sesión
     correo = session.get("correo_recuperar")
     if not correo:
         flash("Primero ingresa tu correo", "warning")
         return redirect("/forgot")
 
     if request.method == "POST":
-        # Obtener las contraseñas del formulario
         new_password = request.form.get("password", "").strip()
-        confirm = request.form.get("confirm_password", "").strip()
+        confirm      = request.form.get("confirm_password", "").strip()
 
-        # Validar que no estén vacías
         if not new_password or not confirm:
             flash("Debes ingresar una contraseña.", "warning")
             return redirect("/reset-password")
 
-        # Validar coincidencia
         if new_password != confirm:
             flash("Las contraseñas no coinciden.", "danger")
             return redirect("/reset-password")
 
-        # Generar hash seguro
         password_hash = generate_password_hash(new_password)
-
-        # Conexión a la base de datos
         conexion = get_db_connection()
         if not conexion:
             flash("Error de conexión a la base de datos.", "danger")
             return redirect("/reset-password")
 
-        # Actualizar contraseña en la tabla registro
         with conexion.cursor() as cursor:
-            cursor.execute(
-                "UPDATE registro SET password=%s WHERE correo=%s",
-                (password_hash, correo)
-            )
+            cursor.execute("UPDATE registro SET password=%s WHERE correo=%s", (password_hash, correo))
             conexion.commit()
 
         conexion.close()
-
-        # Limpiar sesión y mostrar mensaje
         session.pop("correo_recuperar", None)
         flash("Contraseña cambiada correctamente ✔", "success")
         return redirect("/login")
 
-    # Caso GET: mostrar formulario
     return render_template("reset_password.html")
 
-# # ------------------------------------
-# DETECTAR EL LOGIN
+# ------------------------------------
+# MODAL LOGIN
 # ------------------------------------
 @app.route("/zona_protegida")
 def zona_protegida():
@@ -880,24 +760,21 @@ def zona_protegida():
         return render_template("zona_protegida.html", mostrar_modal=True)
     return render_template("zona_protegida.html", mostrar_modal=False)
 
-
 @app.context_processor
 def inject_modal_flag():
     mostrar_modal = (
-        not session.get("usuario")
-        and not session.get("modal_cerrado")
+        not session.get("usuario") and not session.get("modal_cerrado")
     )
     return dict(mostrar_modal=mostrar_modal)
-
 
 @app.route("/cerrar-modal")
 def cerrar_modal():
     session["modal_cerrado"] = True
     return "", 204
 
-
 # ------------------------------------
 # RUN
 # ------------------------------------
 if __name__ == "__main__":
+    crear_tabla()
     app.run(host="0.0.0.0", port=5000, debug=True)
