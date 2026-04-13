@@ -104,9 +104,8 @@
     /* Mensaje de éxito */
     .success-message {
         margin-top: 15px;
-        color: rgb(128, 0, 0);
+        color: #a9133e;
         display: none;
-        font-weight: bold; /*texto en negrita*/
     }
 
     /* Responsive */

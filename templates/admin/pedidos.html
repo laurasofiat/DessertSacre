@@ -1,77 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos | Dessert Sacré Admin</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <link rel="stylesheet" href="/static/styles/style.css">
+  <link rel="stylesheet" href="/static/styles/pedidos.css">
 </head>
 
-<body class="Bespa" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="90" tabindex="0">
+<body>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <!--se cambio nabvar por diseño-->
+  <!--se cambio agrego ds a las clases para que boostrap no las tocara e interrumpiera diseño-->
 
-  <nav id="navbar-example2" class="navbar navbar-expand-lg fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center" href="#"> 
-      <img class="logo-navbar" src="/static/img/LOGO1.png" alt="Logo"> 
-      <span class="ms-2">Panel Administrador - Dessert Sacré</span> 
-    </a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('admin_t') }}">Panel de control</a>
-        </li>
-        <p class="d-none d-lg-block">ㅤㅤ</p>
-
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('pedidos_admin') }}">Ver pedidos</a>
-        </li>
-        <p class="d-none d-lg-block">ㅤㅤ</p> 
-        
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('usuarios_admin') }}">Ver usuarios</a>
-        </li>
-        <p class="d-none d-lg-block">ㅤㅤ</p> 
-        
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a>
-        </li>
-        <p class="d-none d-lg-block">ㅤㅤ</p>
-
+  <!-- NAVBAR -->
+  <nav class="ds-navbar">
+    <div class="ds-navbar-inner">
+      <div class="ds-brand">
+        <img src="/static/img/LOGO1.png" alt="Logo" class="ds-logo">
+        <span>Dessert Sacré <em>Admin</em></span>
+      </div>
+      <ul class="ds-links">
+        <li><a href="{{ url_for('admin') }}">Panel</a></li>
+        <li><a href="{{ url_for('admin_pedidos') }}" class="activo">Pedidos</a></li>
+        <li><a href="{{ url_for('usuarios_admin') }}">Usuarios</a></li>
+        <li><a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a></li>
       </ul>
-    </div> 
-  </div> 
-</nav>
+    </div>
+  </nav>
 
-<div class="container mt-5 pt-5">
-  <h2 class="text-center mb-4">Pedidos registrados</h2>
+  <div class="container">
+    <h2 class="mb-4">Pedidos registrados</h2>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Usuario</th>
-        <th>Total</th>
-        <th>Fecha</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for p in pedidos %}
-      <tr>
-        <td>{{ p.id }}</td>
-        <td>{{ p.usuario_correo }}</td>
-        <td>$ {{ p.total }}</td>
-        <td>{{ p.fecha }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+    {% if pedidos %}
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Referencia</th>
+          <th>Cliente</th>
+          <th>Método</th>
+          <th>Fecha</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ref, p in pedidos.items() %}
+        <tr>
+          <td><code>{{ ref }}</code></td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.metodo | capitalize }}</td>
+          <td>{{ p.fecha }}</td>
+          <td>${{ '{:,.0f}'.format(p.total) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted text-center mt-5">No hay pedidos registrados aún.</p>
+    {% endif %}
+
+  </div>
+
+</body>
+</html>

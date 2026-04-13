@@ -12,11 +12,25 @@
 
 <div class="container">
 
+  <!-- AQUÍ ESTÁ LA MAGIA DEL PERFIL -->
   <div class="perfil-header">
-    <div class="avatar">{{ usuario.nombre[0] | upper }}</div>
+    <div class="avatar">
+      {% if usuario and usuario.nombre %}
+        {{ usuario.nombre[0] | upper }}
+      {% else %}
+        <!-- Si Flask no envía el usuario, pone un ? para no dar error -->
+        ?
+      {% endif %}
+    </div>
     <div>
-      <h1>Mis pedidos</h1>
-      <span class="subtitulo">{{ usuario.nombre }}</span>
+      <h1>
+        {% if usuario and usuario.nombre %}
+          {{ usuario.nombre }}
+        {% else %}
+          Usuario Desconocido
+        {% endif %}
+      </h1>
+      <span class="subtitulo">Mis pedidos</span>
     </div>
   </div>
 
@@ -35,7 +49,8 @@
         </tr>
       </thead>
       <tbody>
-        {% for ref, p in pedidos.items() if p.email == usuario.email %}
+        <!-- Agregué validación de usuario aquí también para evitar errores -->
+        {% for ref, p in pedidos.items() if usuario and p.email == usuario.email %}
         <tr>
           <td><code>{{ ref }}</code></td>
           <td>{{ p.fecha }}</td>

@@ -6,7 +6,7 @@ body {
 
 body::-webkit-scrollbar { display: none; }
 
-/* ── NAVBAR ── */
+/* ── NAVBAR (prefijo ds- para no chocar con Bootstrap) ── */
 .ds-navbar {
     position: fixed;
     top: 0;
@@ -35,6 +35,7 @@ body::-webkit-scrollbar { display: none; }
     font-weight: 600;
     color: #f8e8d4;
     letter-spacing: 0.02em;
+    text-decoration: none;
 }
 
 .ds-brand em {
@@ -83,12 +84,4 @@ h2 {
     font-size: 22px;
     font-weight: 700;
     color: #572727;
-}
-
-table code {
-    font-size: 12px;
-    background: #faf0e6;
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: #7a3535;
 }

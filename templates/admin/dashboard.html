@@ -8,6 +8,9 @@
 </head>
 <body>
 
+  <!--se cambio nabvar por diseño-->
+  <!--se cambio agrego ds a las clases para que boostrap no las tocara e interrumpiera diseño-->
+
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="navbar-inner">
@@ -56,7 +59,6 @@
     <div class="card">
       <div class="card-header">
         <h3>Pedidos recientes</h3>
-        <a href="{{ url_for('admin_pedidos') }}" class="ver-todos">Ver todos →</a>
       </div>
 
       {% if pedidos %}
@@ -91,7 +93,6 @@
     <div class="card">
       <div class="card-header">
         <h3>Usuarios recientes</h3>
-        <a href="{{ url_for('usuarios_admin') }}" class="ver-todos">Ver todos →</a>
       </div>
 
       {% if usuarios %}

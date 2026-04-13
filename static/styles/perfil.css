@@ -46,7 +46,7 @@ h1 {
 
 .subtitulo {
   font-size: 12px;
-  color: #aaa;
+  color: #d99b4d;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -84,7 +84,7 @@ h3 {
 
 .label {
   font-size: 11px;
-  color: #bbb;
+  color: #d99b4d;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -107,7 +107,7 @@ h3 {
   font-weight: 400;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #bbb;
+  color: #d99b4d;
   padding-bottom: 8px;
   border-bottom: 0.5px solid #e8e3de;
 }
@@ -138,7 +138,7 @@ h3 {
 /* CALIFICACIÓN */
 .desc {
   font-size: 13px;
-  color: #777;
+  color: #d99b4d;
   margin-bottom: 1rem;
 }
 
