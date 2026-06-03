@@ -655,7 +655,14 @@ def perfil():
 @app.route("/inicio")  # Ruta de inicio (público)
 def inicio():
     return render_template("inicio.html")
+@app.route("/admin/calificaciones")  # Ruta de calificaciones en admin
+def admin_calificaciones():
+    if not session.get("admin"):  # Si no es admin
+        return redirect("/login")  # Redirige al login
 
+    return render_template("admin/calificaciones.html",
+        calificaciones=calificaciones  # Pasa todas las calificaciones
+    )
 @app.route("/inicioU")  # Ruta de inicio (usuario logueado)
 def inicioU():
     return render_template("inicio1.html")

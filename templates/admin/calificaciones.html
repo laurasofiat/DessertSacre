@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calificaciones — Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  <style>
+    /* Contenedor general de la página */
+    body {
+      font-family: "Montserrat", sans-serif;
+      background: #faf7f4;
+      padding: 40px;
+    }
+
+    h2 {
+      font-family: "Playfair Display", serif;
+      color: #5a1f1f;
+      margin-bottom: 30px;
+    }
+
+    /* Tabla de calificaciones */
+    .tabla-calificaciones {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    /* Encabezados de la tabla */
+    .tabla-calificaciones th {
+      background: #5a1f1f;        /* fondo café oscuro */
+      color: #fff;                /* texto blanco */
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Celdas de la tabla */
+    .tabla-calificaciones td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f0ece8;
+      font-size: 14px;
+      color: #444;
+      vertical-align: middle;    /* centra verticalmente el contenido */
+    }
+
+    /* Fila sin borde al final */
+    .tabla-calificaciones tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Imagen del producto */
+    .foto-producto {
+      width: 60px;               /* ancho fijo de la imagen */
+      height: 60px;              /* alto fijo de la imagen */
+      object-fit: cover;         /* recorta la imagen para que llene el espacio */
+      border-radius: 8px;        /* bordes redondeados */
+    }
+
+    /* Estrellas doradas */
+    .estrellas {
+      color: #f5c518;            /* color dorado */
+      font-size: 18px;
+    }
+
+    /* Estrellas vacías */
+    .estrellas-vacias {
+      color: #ddd;               /* color gris para estrellas vacías */
+      font-size: 18px;
+    }
+
+    /* Mensaje cuando no hay calificaciones */
+    .vacio {
+      text-align: center;
+      padding: 40px;
+      color: #bbb;
+      font-size: 14px;
+    }
+
+    /* Botón volver */
+    .btn-volver {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background: #5a1f1f;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .btn-volver:hover {
+      background: #3e1515;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Botón para volver al panel admin -->
+  <a href="/admin" class="btn-volver">← Volver al panel</a>
+
+  <h2>Calificaciones de productos</h2>
+
+  {% if calificaciones %}
+  <table class="tabla-calificaciones">
+    <thead>
+      <tr>
+        <th>Foto</th>        <!-- imagen del producto -->
+        <th>Producto</th>    <!-- nombre del producto -->
+        <th>Calificación</th><!-- estrellas -->
+        <th>Comentario</th>  <!-- comentario del cliente -->
+        <th>Cliente</th>     <!-- nombre del cliente -->
+        <th>Email</th>       <!-- email del cliente -->
+        <th>Fecha</th>       <!-- fecha de la calificación -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in calificaciones %}
+      <tr>
+
+        <!-- Foto del producto — busca la imagen por nombre -->
+        <td>
+          <img src="/static/img/{{ c.producto | lower | replace(' ', '_') }}.jpeg"
+               class="foto-producto"
+               alt="{{ c.producto }}"
+               onerror="this.src='/static/img/default.jpeg'"> 
+               <!-- onerror: si no encuentra la imagen muestra una por defecto -->
+        </td>
+
+        <!-- Nombre del producto -->
+        <td>{{ c.producto }}</td>
+
+        <!-- Estrellas llenas y vacías -->
+        <td>
+          <span class="estrellas">{{ "★" * c.estrellas }}</span>
+          <span class="estrellas-vacias">{{ "☆" * (5 - c.estrellas) }}</span>
+        </td>
+
+        <!-- Comentario — si está vacío muestra guión -->
+        <td>{{ c.comentario if c.comentario else "—" }}</td>
+
+        <!-- Datos personales del cliente -->
+        <td>{{ c.cliente }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.fecha }}</td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+  <!-- Mensaje cuando no hay calificaciones aún -->
+  <p class="vacio">Aún no hay calificaciones registradas.</p>
+  {% endif %}
+
+</body>
+</html>

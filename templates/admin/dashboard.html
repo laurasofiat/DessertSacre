@@ -8,9 +8,6 @@
 </head>
 <body>
 
-  <!--se cambio nabvar por diseño-->
-  <!--se cambio agrego ds a las clases para que boostrap no las tocara e interrumpiera diseño-->
-
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="navbar-inner">
@@ -19,115 +16,295 @@
         <span>Dessert Sacré <em>Admin</em></span>
       </div>
       <ul class="navbar-links">
-        <li><a href="{{ url_for('admin') }}" class="activo">Panel</a></li>
-        <li><a href="{{ url_for('admin_pedidos') }}">Pedidos</a></li>
-        <li><a href="{{ url_for('usuarios_admin') }}">Usuarios</a></li>
-        <li><a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a></li>
+        <li><a href="#" onclick="mostrarTab('panel')"          id="tab-panel"          class="activo">Panel</a></li>
+        <li><a href="#" onclick="mostrarTab('pedidos')"        id="tab-pedidos"                      >Pedidos</a></li>
+        <li><a href="#" onclick="mostrarTab('usuarios')"       id="tab-usuarios"                     >Usuarios</a></li>
+        <li><a href="#" onclick="mostrarTab('calificaciones')" id="tab-calificaciones"               >Calificaciones</a></li>
+        <li style="margin-top:auto;"><a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- CONTENIDO -->
   <div class="container">
 
-    <div class="page-header">
-      <h1>Panel de control</h1>
-      <span class="fecha">{{ now }}</span>
+    <!-- PANEL ----------------------------------------------------------->
+    <div id="panel" class="tab-content activo">
+
+      <div class="page-header">
+        <h1>Panel de control</h1>
+        <span class="fecha">{{ now }}</span>
+      </div>
+
+      <!-- MÉTRICAS -->
+      <div class="metrics">
+        <div class="metric-card">
+          <span class="metric-label">Usuarios registrados</span>
+          <span class="metric-value">{{ usuarios | length }}</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Pedidos totales</span>
+          <span class="metric-value">{{ pedidos | length }}</span>
+        </div>
+        <div class="metric-card accent">
+          <span class="metric-label">Ingresos totales</span>
+          <span class="metric-value">${{ '{:,.0f}'.format(total_ventas) }}</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Calificaciones recibidas</span>
+          <span class="metric-value">{{ calificaciones | length }}</span>
+        </div>
+      </div>
+
+      <!-- RESUMEN PEDIDOS -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Pedidos recientes</h3>
+          <a href="#" onclick="mostrarTab('pedidos')" class="ver-todas">Ver todos →</a>
+        </div>
+        {% if pedidos %}
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cliente</th>
+              <th>Método</th>
+              <th>Fecha</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ref, p in pedidos.items() %}
+            {% if loop.index <= 5 %}
+            <tr>
+              <td>{{ p.productos | join(", ") if p.productos else "—" }}</td>
+              <td>{{ p.nombre }}</td>
+              <td>{{ p.metodo | capitalize }}</td>
+              <td>{{ p.fecha }}</td>
+              <td>${{ '{:,.0f}'.format(p.total) }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="vacio">No hay pedidos aún.</p>
+        {% endif %}
+      </div>
+
+      <!-- RESUMEN USUARIOS -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Usuarios recientes</h3>
+          <a href="#" onclick="mostrarTab('usuarios')" class="ver-todas">Ver todos →</a>
+        </div>
+        {% if usuarios %}
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>Verificado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in usuarios[:5] %}
+            <tr>
+              <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
+              <td>{{ u.correo }}</td>
+              <td>{{ u.telefono or '—' }}</td>
+              <td>
+                {% if u.verificado %}
+                  <span class="badge verde">Sí</span>
+                {% else %}
+                  <span class="badge gris">No</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="vacio">No hay usuarios registrados.</p>
+        {% endif %}
+      </div>
+
     </div>
 
-    <!-- MÉTRICAS -->
-    <div class="metrics">
+    <!-- PEDIDOS ---------------------------------------------------------------------------------->
+    <div id="pedidos" class="tab-content">
 
-      <div class="metric-card">
-        <span class="metric-label">Usuarios registrados</span>
-        <span class="metric-value">{{ usuarios | length }}</span>
+      <div class="page-header">
+        <h1>Pedidos</h1>
       </div>
 
-      <div class="metric-card">
-        <span class="metric-label">Pedidos totales</span>
-        <span class="metric-value">{{ pedidos | length }}</span>
-      </div>
-
-      <div class="metric-card accent">
-        <span class="metric-label">Ingresos totales</span>
-        <span class="metric-value">${{ '{:,.0f}'.format(total_ventas) }}</span>
+      <div class="card">
+        <div class="card-header">
+          <h3>Todos los pedidos</h3>
+          <span style="font-size:14px; color:#d99b4d;">
+            Total: ${{ '{:,.0f}'.format(total_ventas) }}
+          </span>
+        </div>
+        {% if pedidos %}
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cliente</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Método</th>
+              <th>Fecha</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ref, p in pedidos.items() %}
+            <tr>
+              <td>{{ p.productos | join(", ") if p.productos else "—" }}</td>
+              <td>{{ p.nombre }}</td>
+              <td>{{ p.email }}</td>
+              <td>{{ p.telefono }}</td>
+              <td>{{ p.metodo | capitalize }}</td>
+              <td>{{ p.fecha }}</td>
+              <td>${{ '{:,.0f}'.format(p.total) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="vacio">No hay pedidos aún.</p>
+        {% endif %}
       </div>
 
     </div>
 
-    <!-- PEDIDOS RECIENTES -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Pedidos recientes</h3>
+    <!-- USUARIOS ------------------------------------------------------------- -->
+    <div id="usuarios" class="tab-content"><!-- fuera de panel -->
+
+      <div class="page-header">
+        <h1>Usuarios</h1>
       </div>
 
-      {% if pedidos %}
-      <table>
-        <thead>
-          <tr>
-            <th>Referencia</th>
-            <th>Cliente</th>
-            <th>Método</th>
-            <th>Fecha</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for ref, p in pedidos.items() %}
-          <tr>
-            <td><code>{{ ref }}</code></td>
-            <td>{{ p.nombre }}</td>
-            <td>{{ p.metodo | capitalize }}</td>
-            <td>{{ p.fecha }}</td>
-            <td>${{ '{:,.0f}'.format(p.total) }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <p class="vacio">No hay pedidos aún.</p>
-      {% endif %}
+      <div class="card">
+        <div class="card-header">
+          <h3>Todos los usuarios</h3>
+        </div>
+        {% if usuarios %}
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>Verificado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in usuarios %}
+            <tr>
+              <td>{{ u.id }}</td>
+              <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
+              <td>{{ u.correo }}</td>
+              <td>{{ u.telefono or '—' }}</td>
+              <td>
+                {% if u.verificado %}
+                  <span class="badge verde">Verificado</span>
+                {% else %}
+                  <span class="badge gris">No verificado</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="vacio">No hay usuarios registrados.</p>
+        {% endif %}
+      </div>
+
     </div>
 
-    <!-- USUARIOS RECIENTES -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Usuarios recientes</h3>
+    <!-- PESTAÑA: CALIFICACIONES -------------------------------------------------------------------------------->
+    <div id="calificaciones" class="tab-content"><!-- fuera de panel -->
+
+      <div class="page-header">
+        <h1>Calificaciones</h1>
       </div>
 
-      {% if usuarios %}
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Verificado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for u in usuarios[:5] %}
-          <tr>
-            <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
-            <td>{{ u.correo }}</td>
-            <td>{{ u.telefono or '—' }}</td>
-            <td>
-              {% if u.verificado %}
-                <span class="badge verde">Sí</span>
-              {% else %}
-                <span class="badge gris">No</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <p class="vacio">No hay usuarios registrados.</p>
-      {% endif %}
+      <div class="card">
+        <div class="card-header">
+          <h3>Todas las calificaciones</h3>
+        </div>
+        {% if calificaciones %}
+        <table>
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Producto</th>
+              <th>Calificación</th>
+              <th>Comentario</th>
+              <th>Cliente</th>
+              <th>Email</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in calificaciones %}
+            <tr>
+              <td>
+                <img src="/static/img/{{ c.producto | lower | replace(' ', '_') }}.jpeg"
+                     class="foto-producto"
+                     alt="{{ c.producto }}"
+                     onerror="this.src='/static/img/default.jpeg'">
+              </td>
+              <td>{{ c.producto }}</td>
+              <td>
+                <span class="star-on">{{ "★" * c.estrellas }}</span>
+                <span class="star-off">{{ "☆" * (5 - c.estrellas) }}</span>
+              </td>
+              <td>{{ c.comentario if c.comentario else "—" }}</td>
+              <td>{{ c.cliente }}</td>
+              <td>{{ c.email }}</td>
+              <td>{{ c.fecha }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="vacio">No hay calificaciones aún.</p>
+        {% endif %}
+      </div>
+
     </div>
 
   </div>
+
+  <script>
+    /* FUNCIÓN PARA CAMBIAR DE PESTAÑA ------------------------------------*/
+    function mostrarTab(tabId) {
+
+      /* Oculta todas las secciones */
+      document.querySelectorAll(".tab-content").forEach(function(tab) {
+        tab.classList.remove("activo");
+      });
+
+      /* Quita el estilo activo de todos los links */
+      document.querySelectorAll(".navbar-links a").forEach(function(link) {
+        link.classList.remove("activo");
+      });
+
+      /* Muestra la sección seleccionada */
+      document.getElementById(tabId).classList.add("activo");
+
+      /* Marca el link como activo */
+      const linkActivo = document.getElementById("tab-" + tabId);
+      if (linkActivo) {
+        linkActivo.classList.add("activo");
+      }
+    }
+  </script>
 
 </body>
 </html>

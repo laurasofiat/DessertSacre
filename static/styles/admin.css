@@ -10,42 +10,41 @@
 
 body::-webkit-scrollbar { display: none; }
 
-body {
-    background: #FFF7EE;
-    font-family: "Georgia", serif;
-    padding-top: 80px;
-}
-
-
-/* ── NAVBAR ── */
+/* ── NAVBAR — vertical izquierdo ── */
 .navbar {
-  position: fixed;
+  position: fixed;          /* fijo en pantalla */
   top: 0;
   left: 0;
-  right: 0;
+  width: 220px;             /* ancho del navbar */
+  height: 100vh;            /* toda la altura */
   background: #572727;
-  border-bottom: 0.5px solid #e8e3de;
+  display: flex;
+  flex-direction: column;   /* elementos apilados verticalmente */
+  padding: 24px 0;
+  gap: 0;
+  border-bottom: none;      /* quita el borde inferior */
   z-index: 100;
 }
 
+/* Contenedor interno */
 .navbar-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  height: 60px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;   /* logo arriba, links abajo */
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  gap: 24px;
 }
 
+/* Logo y nombre */
 .navbar-brand {
   display: flex;
+  flex-direction: column;   /* logo encima del texto */
   align-items: center;
   gap: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #ffffff;
-  letter-spacing: 0.02em;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1); /* línea separadora */
 }
 
 .navbar-brand em {
@@ -53,61 +52,78 @@ body {
   font-weight: 400;
   color: #aaa;
   font-size: 13px;
-  margin-left: 4px;
+  margin-left: 0;
 }
 
 .navbar-logo {
-  height: 32px;
-  width: auto;
+  height: 60px;             /* logo más grande vertical */
+  width: 60px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
+/* Lista de links */
 .navbar-links {
   list-style: none;
   display: flex;
-  align-items: center;
-  gap: 2rem;
+  flex-direction: column;   /* links apilados */
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  flex: 1;                  /* ocupa el espacio restante */
 }
 
+/* Cada link */
 .navbar-links a {
-  text-decoration: none;
+  display: block;           /* ocupa todo el ancho */
+  padding: 13px 24px;
   font-size: 13px;
   color: #d2b8b8;
+  text-decoration: none;
   letter-spacing: 0.04em;
-  transition: color .2s;
+  transition: background 0.2s, color 0.2s;
+  border-left: 3px solid transparent; /* espacio para el indicador activo */
 }
 
-.navbar-links a:hover { color: #e8e3de; }
+/* Hover */
+.navbar-links a:hover {
+  background: rgba(255,255,255,0.08);
+  color: #e8e3de;
+}
 
-.navbar-links a.logout { color: #d99b4d; }
-.navbar-links a.logout:hover { color: #a9133e; }
+/* Link activo */
+.navbar-links a.activo {
+  background: rgba(255,255,255,0.12);
+  border-left: 3px solid #f5c518; /* línea dorada izquierda */
+  border-bottom: none;            /* quita el subrayado inferior */
+  font-weight: 700;
+  color: #fff;
+}
 
+/* Cerrar sesión */
+.navbar-links a.logout {
+  color: #d99b4d;
+  margin-top: auto;
+}
 
-  /* ── CONTENIDO ── */
-  .container {
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 0 1.5rem 4rem;
-  }
+.navbar-links a.logout:hover {
+  background: rgba(169,19,62,0.2);
+  color: #e08080;
+}
 
-  .page-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #e6c298;
-  }
+/* ── CONTENIDO — se desplaza a la derecha ── */
+.container {
+  margin-left: 220px;       /* mismo ancho que el navbar */
+  max-width: calc(100% - 220px);
+  padding: 2rem 2.5rem 4rem;
+}
 
-  .page-header h1 {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--brown);
-  }
-
-  .fecha {
-      font-size: 13px;
-      color: #aaa;
-  }
+/* ── BODY — quita el padding-top ── */
+body {
+  background: #FFF7EE;
+  font-family: "Georgia", serif;
+  padding-top: 0;           /* ya no necesita espacio arriba */
+}
 
 /* ── MÉTRICAS ── */
 .metrics {
@@ -241,3 +257,45 @@ table code {
     background: #f0ece8;
     color: #999;
 }
+
+/* Oculta todas las secciones por defecto */
+    .tab-content {
+      display: none;
+    }
+
+    /* Muestra solo la sección activa */
+    .tab-content.activo {
+      display: block;
+    }
+
+    /* Estilo del link activo en el navbar */
+    .navbar-links a.activo {
+      border-bottom: 2px solid #f5c518; /* subrayado dorado en el tab activo */
+      font-weight: 700;
+    }
+
+    /* Imagen del producto en calificaciones */
+    .foto-producto {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    /* Estrellas */
+    .star-on  { color: #f5c518; font-size: 16px; } /* estrella llena */
+    .star-off { color: #ddd;    font-size: 16px; } /* estrella vacía */
+
+    /* Enlace ver todas */
+    .ver-todas {
+      font-size: 13px;
+      color: #d99b4d;
+      text-decoration: none;
+      margin-left: auto;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }

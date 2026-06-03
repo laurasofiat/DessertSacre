@@ -47,7 +47,7 @@
       <tbody>
         {% for ref, p in pedidos.items() %}
         <tr>
-          <td><code>{{ ref }}</code></td>
+          <td>{{ p.productos | join(", ") }}</td>
           <td>{{ p.nombre }}</td>
           <td>{{ p.metodo | capitalize }}</td>
           <td>{{ p.fecha }}</td>
