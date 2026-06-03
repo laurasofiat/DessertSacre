@@ -135,3 +135,54 @@ window.addEventListener('DOMContentLoaded', () => {
   initCartTable();
   initCheckoutButton();
 });
+
+/* Al hacer clic envía la calificación al servidor y la guarda*/
+document.querySelectorAll(".estrellas-carrusel").forEach(function(contenedor) {
+
+    let seleccionada = 0; /* guarda la estrella seleccionada por contenedor */
+
+    contenedor.querySelectorAll("span").forEach(function(star) {
+
+        /* Al pasar el mouse — ilumina hasta esa estrella */
+        star.addEventListener("mouseover", function() {
+            const val = parseInt(this.dataset.val); /* valor de la estrella */
+            contenedor.querySelectorAll("span").forEach(function(s) {
+                s.classList.toggle("activa", parseInt(s.dataset.val) <= val);
+            });
+        });
+
+        /* Al salir el mouse — vuelve a la selección actual */
+        star.addEventListener("mouseout", function() {
+            contenedor.querySelectorAll("span").forEach(function(s) {
+                s.classList.toggle("activa", parseInt(s.dataset.val) <= seleccionada);
+            });
+        });
+
+        /* Al hacer clic — guarda y envía la calificación */
+        star.addEventListener("click", async function() {
+            seleccionada = parseInt(this.dataset.val); /* guarda la estrella clickeada */
+            const producto = contenedor.dataset.producto; /* obtiene el nombre del producto */
+
+            /* Envía la calificación al servidor */
+            const res = await fetch("/api/calificar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    producto:   producto,    /* nombre del producto */
+                    estrellas:  seleccionada, /* número de estrellas */
+                    comentario: ""           /* sin comentario desde el carrusel */
+                })
+            });
+
+            const data = await res.json(); /* obtiene respuesta del servidor */
+
+            if (data.success) {
+                /* Muestra un pequeño mensaje de confirmación */
+                alert(`¡Gracias por calificar ${producto} con ${seleccionada} estrella(s)!`);
+            } else if (data.error === "No autenticado") {
+                /* Si no está logueado, avisa al usuario */
+                alert("Debes iniciar sesión para calificar.");
+            }
+        });
+    });
+});

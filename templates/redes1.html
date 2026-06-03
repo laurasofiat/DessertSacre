@@ -15,6 +15,12 @@
             </div>
     </div>
 
+    <a href="https://wa.me/573025662571?text=Hola,%20quiero%20hacer%20un%20pedido" 
+        class="whatsapp-float" 
+        target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    </a>
+
     <section class="contact-section">
 
         <div class="contact-container">
@@ -22,10 +28,10 @@
             <!-- Información de contacto -->
             <div class="contact-info">
                 <h3>Dessert Sacré</h3>
-                <p><strong>📍 Dirección:</strong> Ubicación del cliente</p>
-                <p><strong>📞 Teléfono:</strong> +57 310 3885820</p>
-                <p><strong>📧 Correo:</strong> dessertsacre@gmail.com</p>
-                <p><strong>🕒 Horario:</strong> Disponibilidad del cliente</p>
+                <p><strong> Dirección:</strong> Ubicación del cliente </p>
+                <p><strong> Teléfono:</strong> +57 302 566 2571</p>
+                <p><strong>Correo:</strong> dessertsacre@gmail.com</p>
+                <p><strong> Horario:</strong> Disponibilidad del cliente</p>
 
                 <!-- Mapa -->
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.589831710085!2d-74.0560485852378!3d4.666991396614131!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a5f3d3a4b9d%3A0x7a3c3c7e3f8a4176!2sParque%2093!5e0!3m2!1ses!2sco!4v1678888888888!5m2!1ses!2sco" loading="lazy" allowfullscreen="">
@@ -43,7 +49,7 @@
                     <button type="submit">Enviar mensaje</button>
 
                     <div class="success-message" id="successMessage">
-                        ¡Gracias por contáctarnos! Tu mensaje estará en espera por cuestiones de almacenamiento 🧁
+                        ¡Gracias por contáctarnos! Tu mensaje se revisará más tarde. 
                     </div>
                 </form>
             </div>
@@ -82,16 +88,33 @@
             return;
             }
 
+            const destinatario = "dessertsacre@gmail.com";
+
+            /* Asunto del correo con el nombre del cliente */
+            const asunto = encodeURIComponent(`Mensaje de ${name}`);
+            /* encodeURIComponent convierte espacios y caracteres especiales para la URL */
+
+            /* Cuerpo del correo con todos los datos */
+            const cuerpo = encodeURIComponent(
+                `Nombre: ${name} \nCorreo: ${email}\n\nMensaje:\n${message}`
+            );
+
+            /* Construye el enlace de Gmail con todo prellenado */
+            const gmailURL = `https://mail.google.com/mail/?view=cm&to=${destinatario}&su=${asunto}&body=${cuerpo}`;
+
+            /* Abre Gmail en una pestaña nueva */
+            window.open(gmailURL, "_blank");
+
             // Mostrar mensaje de éxito
             successMessage.style.display = "block";
 
             // Limpiar formulario
             form.reset();
 
-            // Ocultar mensaje después de 4 segundos
+            // Ocultar mensaje después de 1 minuto
             setTimeout(() => {
             successMessage.style.display = "none";
-            }, 4000);
+            }, 120000);
         });
 
     });

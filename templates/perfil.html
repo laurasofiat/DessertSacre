@@ -56,8 +56,8 @@
         <tbody>
           {% for ref, p in pedidos.items() %}
           <tr>
-            <td><code>{{ ref }}</code></td>
-            <td>{{ p.fecha }}</td>
+            <td><code>{{ p.productos | join(", ") }}</code></td> <!-- join quita los corchetes de la lista-->
+            <td>{{ p.fecha }}</td>  
             <td>{{ p.metodo | capitalize }}</td>
             <td>${{ '{:,.0f}'.format(p.total) }}</td>
           </tr>
@@ -69,60 +69,9 @@
     {% endif %}
   </div>
 
-  <!-- CALIFICACIÓN -->
-  <div class="card">
-    <h3>Califica tu experiencia</h3>
-    <p class="desc">¿Cómo ha sido tu experiencia con Dessert Sacré?</p>
-
-    <div class="estrellas" id="estrellas">
-      <span data-val="1">★</span>
-      <span data-val="2">★</span>
-      <span data-val="3">★</span>
-      <span data-val="4">★</span>
-      <span data-val="5">★</span>
-    </div>
-
-    <textarea id="comentario" placeholder="Escribe un comentario (opcional)..."></textarea>
-
-    <button id="btnCalificar">Enviar calificación</button>
-    <div id="msgCalificacion"></div>
-  </div>
-
 </div>
 
 {% include 'footer1.html' %}
-
-<script>
-  let calificacion = 0;
-  const spans = document.querySelectorAll(".estrellas span");
-
-  spans.forEach(s => {
-    s.addEventListener("mouseenter", () => {
-      const v = +s.dataset.val;
-      spans.forEach(x => x.classList.toggle("hover", +x.dataset.val <= v));
-    });
-    s.addEventListener("mouseleave", () => {
-      spans.forEach(x => x.classList.remove("hover"));
-      spans.forEach(x => x.classList.toggle("activa", +x.dataset.val <= calificacion));
-    });
-    s.addEventListener("click", () => {
-      calificacion = +s.dataset.val;
-      spans.forEach(x => x.classList.toggle("activa", +x.dataset.val <= calificacion));
-    });
-  });
-
-  document.getElementById("btnCalificar").addEventListener("click", () => {
-    if (!calificacion) {
-      document.getElementById("msgCalificacion").textContent = "Selecciona una calificación.";
-      return;
-    }
-    const comentario = document.getElementById("comentario").value;
-    const msg = document.getElementById("msgCalificacion");
-    msg.textContent = `¡Gracias por tu calificación de ${calificacion} estrella${calificacion > 1 ? 's' : ''}!`;
-    msg.style.color = "#2e7d32";
-    document.getElementById("btnCalificar").disabled = true;
-  });
-</script>
 
 </body>
 </html>

@@ -18,7 +18,7 @@ app.secret_key = "clave_super_secreta"
 app.config.from_object(Config)
 
 DB_CONFIG = {
-    'host': "host.docker.internal",
+    'host': "localhost", #host.docker.internal
     'dbname': "Dessert_Sacre",
     'user': "postgres",
     'password': "123456",
@@ -343,13 +343,17 @@ def admin():
 
     # Conecta a BD y obtiene todos los usuarios
     conexion = get_db_connection()
-    cursor   = conexion.cursor(cursor_factory=RealDictCursor)
-    cursor.execute("SELECT * FROM registro")
+    if not conexion:  # Verifica que la conexión fue exitosa
+        flash("Error de conexión a la base de datos", "danger")
+        return redirect("/login")
+
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT * FROM registro")  # Obtiene todos los usuarios
     usuarios = cursor.fetchall()
     cursor.close()
     conexion.close()
 
-    # Calcula total de ventas (suma de totales en pedidos_guardados)
+    # Calcula total de ventas
     total_ventas = sum(p["total"] for p in pedidos_guardados.values())
 
     # Renderiza la plantilla admin con datos
@@ -357,7 +361,8 @@ def admin():
         usuarios=usuarios,
         pedidos=pedidos_guardados,
         total_ventas=total_ventas,
-        now=datetime.now().strftime("%d %b %Y")  # Fecha actual
+        calificaciones=calificaciones,            
+        now=datetime.now().strftime("%d %b %Y")   # Fecha actual
     )
 
 @app.route("/admin/pedidos")  # Ruta de pedidos en admin
@@ -562,7 +567,8 @@ def datos_pago():
 
 # Diccionario para almacenar pedidos (en memoria, no persistente)
 pedidos_guardados = {}
-
+# Lista para almacenar calificaciones (en memoria, no persistente)
+calificaciones = []
 @app.route("/api/crear-pedido", methods=["POST"])  # API para crear pedido
 def crear_pedido():
     if not session.get('usuario'):  # Si no hay usuario
@@ -585,7 +591,8 @@ def crear_pedido():
             "nombre":   data.get("nombre"),  # Nombre del comprador
             "email":    data.get("email"),  # Email
             "telefono": data.get("telefono"),  # Teléfono
-            "fecha":    datetime.now().strftime("%Y-%m-%d %H:%M")  # Fecha
+            "fecha":    datetime.now().strftime("%Y-%m-%d %H:%M"),  # Fecha
+            "productos": [item["nombre"] for item in cart]  # ← lista de productos del carrito
         }
 
         session.pop("carrito", None)  # Limpia carrito
@@ -597,16 +604,49 @@ def crear_pedido():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500  # Retorna error
 
+@app.route("/api/calificar", methods=["POST"])  # API para guardar calificación
+def calificar():
+    if not session.get('usuario'):  # Si no hay usuario autenticado
+        return jsonify({"error": "No autenticado"}), 401
+
+    try:
+        data    = request.get_json()       # Obtiene datos JSON del frontend
+        usuario = session.get('usuario')   # Obtiene el usuario de la sesión
+
+        # Agrega la calificación a la lista con todos los datos
+        calificaciones.append({
+            "cliente":    usuario["nombre"],          # Nombre del cliente
+            "email":      usuario["email"],           # Email del cliente
+            "producto":   data.get("producto"),       # Nombre del producto calificado
+            "estrellas":  int(data.get("estrellas")), # Número de estrellas (1-5)
+            "comentario": data.get("comentario"),     # Comentario del cliente
+            "fecha":      datetime.now().strftime("%Y-%m-%d %H:%M")  # Fecha
+        })
+
+        return jsonify({"success": True})  # Retorna éxito
+
+    except Exception as e:
+        print("ERROR CALIFICAR:", e)
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 # ====================================
 # RUTA DE PERFIL
 # ====================================
-@app.route('/perfil')  # Ruta del perfil del usuario
+@app.route('/perfil')  # ← agrega esta línea
 def perfil():
     if not session.get('usuario'):  # Si no hay usuario
         return redirect('/login')  # Redirige al login
+
+    # Filtra solo las calificaciones del usuario actual
+    mis_calificaciones = [
+        c for c in calificaciones          # recorre todas las calificaciones
+        if c["email"] == session['usuario']["email"]  # solo las del usuario logueado
+    ]
+
     return render_template('perfil.html',  # Renderiza perfil
-        usuario=session['usuario'],  # Pasa datos del usuario
-        pedidos=pedidos_guardados  # Pasa pedidos
+        usuario=session['usuario'],        # Pasa datos del usuario
+        pedidos=pedidos_guardados,         # Pasa pedidos
+        calificaciones=mis_calificaciones  # Pasa calificaciones del usuario
     )
 
 # ====================================

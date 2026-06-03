@@ -1,10 +1,11 @@
 /*Footer*/
 /* FOOTER */
 .footer{
-  background:#5f3333;
+  background:#572727;
   color:var(--beige);
   padding:60px 80px;
   font-family:"Montserrat", sans-serif;
+  align-self: stretch;  /* ← anula el align-items: center solo para el footer */
 }
 
 .footer-container{

@@ -41,3 +41,17 @@
   font-weight: bold;
   color: black;
 }
+
+/* Estrellas dentro del carrusel */
+.estrellas-carrusel {
+  font-size: 28px;        /* tamaño de las estrellas */
+  color: #ccc;            /* color gris por defecto */
+  cursor: pointer;        /* cursor de mano al pasar el mouse */
+  margin-top: 6px;        /* espacio entre el título y las estrellas */
+}
+
+/* Estrella activa (seleccionada o hover) */
+.estrellas-carrusel span.activa,
+.estrellas-carrusel span.hover {
+  color: #f5c518;         /* color dorado al seleccionar */
+}

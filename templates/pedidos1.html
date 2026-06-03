@@ -52,7 +52,7 @@
         <!-- Agregué validación de usuario aquí también para evitar errores -->
         {% for ref, p in pedidos.items() if usuario and p.email == usuario.email %}
         <tr>
-          <td><code>{{ ref }}</code></td>
+          <td>{{ p.productos | join(", ") }}</td>
           <td>{{ p.fecha }}</td>
           <td>{{ p.metodo | capitalize }}</td>
           <td>${{ '{:,.0f}'.format(p.total) }}</td>
