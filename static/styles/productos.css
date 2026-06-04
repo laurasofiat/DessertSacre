@@ -2,11 +2,25 @@
   zoom: 0.88;
 }
 
+.Textoinicio h2{
+    font-size: 37px;
+    font-weight:46px;
+    color: #572727;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
 .carousel-item img {
   width: 100%;
   max-height: 600px;
   min-height: 400px;
   object-fit: cover;
+}
+
+.card-img-top {
+  height: 200px;         /* Ajusta este valor al gusto */
+  width: 100%;
+  object-fit: cover;     /* Mantiene la proporción y rellena el espacio */
 }
 
 .container.mt-4 {
@@ -15,11 +29,24 @@
 
 /* Tarjetas */
 .card {
-  height: 100%;
+  height: 100%;          /* Asegura que todas las tarjetas midan lo mismo en la fila */
+  border: 1px solid #ddd;
+}
+
+/* 3. Alinear el contenido (Flexbox) */
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body h6 {
+  margin-top: auto;      /* Empuja el precio hacia la parte inferior */
+  margin-bottom: 15px;
 }
 
 /* Botón */
 .btn-warning {
+  width: 100%;
   background: #d99b4d;
   color: white;
   text-decoration: none;
@@ -55,3 +82,4 @@
 .estrellas-carrusel span.hover {
   color: #f5c518;         /* color dorado al seleccionar */
 }
+

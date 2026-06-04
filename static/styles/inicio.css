@@ -63,6 +63,7 @@
       letter-spacing: 2px;
       line-height: 1.2;
       font-size: clamp(24px, 7vw, 60px); /* Tamaño fluido */
+      
     }
 
     /* 3. BLOQUE DE BIENVENIDA (Beige) */
@@ -146,6 +147,7 @@
       flex: 1;
       text-align: left;
     }
+    
 
     .contenido h1 {
       font-family: "Playfair Display", serif;
@@ -211,4 +213,10 @@
       .hero-title-overlay span { letter-spacing: 1px; }
     }
 
-  
+.espaC {
+  display: none;
+}
+
+#reposteria, #bebidas {
+  background-color: white;
+}
