@@ -182,7 +182,7 @@ body {
 
 /* FONDO DEL MODAL */
 .modal {
-    display: block; /* Flask lo puede manejar cambiando el display */
+    display: none; /* Flask lo puede manejar cambiando el display */
     position: fixed;
     top: 0;
     left: 0;
