@@ -1,60 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pasarela de Pago | Dessert Sacré</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/pasarela.css') }}">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pasarela de Pago | Dessert Sacré</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/pasarela.css') }}"
+    />
+  </head>
 
-{% include 'navbar1.html' %}  
+  <body>
+    {% include 'navbar1.html' %}
 
-<body>
-  
-<div class= "espa"> <p>\n</p> </div>
+    <div class="container">
+      <h1>Dessert Sacré</h1>
+      <span class="subtitulo">Finalizar compra</span>
 
-<div class="container">
+      <!-- RESUMEN DEL PEDIDO -->
+      <div class="resumen">
+        <h3>Resumen del pedido</h3>
+        {% for item in cart %}
+        <div class="resumen-item">
+          <span>{{ item.nombre }} × {{ item.qty }}</span>
+          <span>COP {{ "{:,.0f}".format(item.precio * item.qty) }}</span>
+        </div>
+        {% endfor %}
+        <div class="resumen-total">
+          <span>Total</span>
+          <p id="total">COP {{ "{:,.0f}".format(total) }}</p>
+        </div>
+      </div>
 
-  <h1>Dessert Sacré</h1>
-  <span class="subtitulo">Finalizar compra</span>
+      <!-- DATOS DEL CLIENTE -->
+      <div class="datos">
+        <h3>Datos del cliente</h3>
+        <input type="text" id="nombre" value="{{ usuario.nombre }}" readonly />
+        <input type="email" id="email" value="{{ usuario.email }}" readonly />
+        <input
+          type="tel"
+          id="telefono"
+          value="{{ usuario.telefono or '' }}"
+          placeholder="Teléfono"
+        />
+      </div>
 
-  <!-- RESUMEN -->
-  <div class="resumen">
-    <h3>Total a pagar</h3>
-    <p id="total">COP {{ total }}</p>
-  </div>
+      <!-- MÉTODOS DE PAGO -->
+      <div class="metodos">
+        <h3>Método de pago</h3>
 
-  <!-- DATOS -->
-  <div class="datos">
-    <h3>Datos del cliente</h3>
-    <input type="text"  id="nombre"   value="{{ usuario.nombre }}" readonly>
-    <input type="email" id="email"    value="{{ usuario.email }}"  readonly>
-    <input type="tel"   id="telefono" value="{{ usuario.telefono }}" placeholder="Teléfono">
-  </div>
+        <div class="opciones">
+          <div class="metodo activo" data-metodo="stripe">💳 Tarjeta</div>
+          <div class="metodo" data-metodo="nequi">📱 Nequi</div>
+          <div class="metodo" data-metodo="efecty">💵 Efecty</div>
+        </div>
 
-  <!-- MÉTODOS DE PAGO -->
-  <div class="metodos">
-    <h3>Método de pago</h3>
+        <!-- Panel Stripe Elements -->
+        <div id="panel-stripe" class="info-pago">
+          <form id="payment-form">
+            <div id="payment-element"></div>
+            <p id="payment-errors"></p>
+            <button id="btnPagar" type="submit">
+              <span id="btn-text"
+                >🔒 Pagar COP {{ "{:,.0f}".format(total) }}</span
+              >
+              <span id="spinner" hidden>Procesando…</span>
+            </button>
+          </form>
+        </div>
 
-    <div class="opciones">
-      <div class="metodo activo" data-metodo="nequi">📱 Nequi</div>
-      <div class="metodo"        data-metodo="banco">🏦 Banco</div>
-      <div class="metodo"        data-metodo="efecty">💵 Efecty</div>
+        <!-- Panel Nequi -->
+        <div id="panel-nequi" class="info-pago" hidden>
+          <div id="info-nequi"></div>
+          <button id="btn-nequi" class="btn-manual">Ya realicé el pago</button>
+        </div>
+
+        <!-- Panel Efecty -->
+        <div id="panel-efecty" class="info-pago" hidden>
+          <div id="info-efecty"></div>
+          <button id="btn-efecty" class="btn-manual">Ya realicé el pago</button>
+        </div>
+      </div>
+      <!-- /.metodos -->
+
+      <!-- RESULTADO / CONFIRMACIÓN -->
+      <div id="resultado"></div>
     </div>
+    <!-- /.container -->
 
-    <div id="infoPago" class="info-pago"></div>
-  </div>
-
-  <button id="btnPagar">Confirmar pedido</button>
-  <div id="resultado" data-redirect="{{ url_for('inicioU') }}"></div>
-
-</div>
-
-
-<script src="{{ url_for('static', filename='js/pasarela.js') }}"></script>
-
-{% include 'footer1.html' %}
-
-</body>
-
+    <script src="{{ url_for('static', filename='js/pasarela.js') }}"></script>
+    {% include 'footer1.html' %}
+  </body>
 </html>

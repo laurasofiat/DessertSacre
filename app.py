@@ -9,11 +9,21 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from config import Config
 import traceback
+import os
+import hmac
+import hashlib
+from dotenv import load_dotenv
+import stripe
+load_dotenv()
+
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+
 
 # ------------------------------------
 # CONFIG GENERAL
 # ------------------------------------
 app = Flask(__name__)
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 app.secret_key = "clave_super_secreta"
 app.config.from_object(Config)
 
@@ -532,78 +542,193 @@ def confirmacion():
 # ====================================
 # PASARELA DE PAGOS
 # ====================================
-@app.route("/pasarela")  # Ruta de la pasarela de pagos
+@app.route("/pasarela")
 def pasarela():
-    usuario = session.get('usuario')  # Obtiene usuario de sesión
-    if not usuario:  # Si no hay usuario
+    if not session.get("usuario"):
         flash("Debes iniciar sesión", "danger")
         return redirect("/login")
-    cart  = _get_cart()  # Obtiene carrito
-    total = sum(item['precio'] * item['qty'] for item in cart)  # Calcula total
-    return render_template("pasarela.html", usuario=usuario, total=total, cart=cart)  # Renderiza
 
-DATOS_PAGO = {  # Diccionario con datos de pago para diferentes métodos
-    "nequi": {
-        "numero":  "123456789",  # Número de Nequi
-        "titular": "Dessert Sacré"  # Titular
-    },
-    "banco": {
-        "banco":   "BANCOLOMBIA",  # Banco
-        "numero":  "123456789",  # Número de cuenta
-        "tipo":    "Ahorros",  # Tipo de cuenta
-        "titular": "Dessert Sacré",  # Titular
-        "cedula":  "3214586088"  # Cédula
-    },
-    "efecty": {
-        "convenio": "3214586088",  # Convenio Efecty
-        "titular":  "Dessert Sacré"  # Titular
-    }
+    cart = _get_cart()
+    if not cart:
+        flash("El carrito está vacío", "warning")
+        return redirect("/carritoU")
+
+    total = sum(item["precio"] * item["qty"] for item in cart)
+    usuario = session["usuario"]
+
+    return render_template(
+        "pasarela.html",
+        usuario   = usuario,
+        cart      = cart,
+        total     = total,
+        stripe_pk = os.getenv("STRIPE_PUBLISHABLE_KEY"),
+    )
+
+@app.route("/procesar_pago", methods=["POST"])
+def procesar_pago():
+   
+    if not session.get("usuario"):
+        return jsonify({"error": "Debes iniciar sesión"}), 401
+
+    cart = _get_cart()
+    if not cart:
+        return jsonify({"error": "Carrito vacío"}), 400
+
+    total   = sum(item["precio"] * item["qty"] for item in cart)
+    usuario = session["usuario"]
+
+    try:
+        # 1. Crea o reutiliza cliente de Stripe
+        clientes = stripe.Customer.list(email=usuario["email"], limit=1)
+        if clientes.data:
+            customer_id = clientes.data[0].id
+        else:
+            cliente = stripe.Customer.create(
+                name  = usuario["nombre"],
+                email = usuario["email"],
+                metadata = {"user_id": str(usuario.get("id", ""))}
+            )
+            customer_id = cliente.id
+
+        intent = stripe.PaymentIntent.create(
+            amount              = int(total * 100),  # COP: cantidad en centavos
+            currency            = "cop",
+            customer            = customer_id,
+            receipt_email       = usuario["email"],
+            # Habilita automáticamente todos los métodos configurados en Stripe Dashboard
+            automatic_payment_methods = {
+                "enabled": True,
+                "allow_redirects": "always"  # Requiere confirmación para ciertos métodos (Nequi, etc.)
+            },
+            metadata = {
+                "cart_items": len(cart),
+                "total": total,
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+
+        return jsonify({
+            "clientSecret": intent.client_secret,
+            "total": total,
+            "currency": "cop"
+        })
+
+    except stripe.error.StripeError as e:
+        print(f"Error Stripe: {e}")
+        return jsonify({"error": e.user_message or str(e)}), 500
+    except Exception as e:
+        print(f"Error: {e}")
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/pago_exitoso", methods=["GET"])
+def pago_exitoso():
+    """
+
+    """
+    # Limpia el carrito de la sesión
+    session.pop("carrito", None)
+    
+    # Muestra página de éxito o redirige
+    flash("¡Pago realizado con éxito! Gracias por tu compra.", "success")
+    return redirect("/inicioU")
+
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    """
+    """
+    
+    payload = request.get_data(as_text=True)
+    sig_header = request.headers.get("Stripe-Signature")
+    webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
+    
+    if not webhook_secret:
+        print("STRIPE_WEBHOOK_SECRET no configurada")
+        return jsonify({"status": "ok"}), 200
+    
+    try:
+        # Valida la firma del webhook
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        )
+    except ValueError:
+        print("Payload inválido")
+        return jsonify({"error": "Invalid payload"}), 400
+    except stripe.error.SignatureVerificationError:
+        print(" Firma inválida")
+        return jsonify({"error": "Invalid signature"}), 400
+    
+    # Procesa eventos
+    if event["type"] == "payment_intent.succeeded":
+        payment_intent = event["data"]["object"]
+        customer_id = payment_intent.get("customer")
+        amount = payment_intent.get("amount")
+        currency = payment_intent.get("currency")
+        
+        print(f" Pago exitoso: {payment_intent['id']} - {amount} {currency}")
+        
+        # Aquí puedes guardar el pedido en BD, enviar confirmación, etc.
+        # Ejemplo: _save_order_to_db(payment_intent)
+        
+    elif event["type"] == "payment_intent.payment_failed":
+        payment_intent = event["data"]["object"]
+        print(f" Pago fallido: {payment_intent['id']}")
+        
+    elif event["type"] == "charge.refunded":
+        charge = event["data"]["object"]
+        print(f"↩ Reembolso procesado: {charge['id']}")
+    
+    return jsonify({"status": "received"}), 200
+
+
+
+
+DATOS_PAGO = {
+    "nequi":  {"numero": "123456789", "titular": "Dessert Sacré"},
+    "banco":  {"banco": "BANCOLOMBIA", "numero": "123456789",
+               "tipo": "Ahorros", "titular": "Dessert Sacré", "cedula": "3214586088"},
+    "efecty": {"convenio": "3214586088", "titular": "Dessert Sacré"}
 }
 
-@app.route("/api/datos-pago")  # API para obtener datos de pago
+@app.route("/api/datos-pago")
 def datos_pago():
-    metodo = request.args.get("metodo", "nequi")  # Método por defecto nequi
-    return jsonify({"datos": DATOS_PAGO.get(metodo)})  # Retorna datos del método
+    metodo = request.args.get("metodo", "nequi")
+    return jsonify({"datos": DATOS_PAGO.get(metodo)})
 
+pedidos_guardados = {}
+
+@app.route("/api/crear-pedido", methods=["POST"])
+def crear_pedido():
+    if not session.get('usuario'):
+        return jsonify({"error": "No autenticado"}), 401
+    try:
+        data = request.get_json()
+        cart = _get_cart()
+        if not cart:
+            return jsonify({"error": "Carrito vacío"}), 400
+
+        total = sum(item['precio'] * item['qty'] for item in cart)
+        ref   = f"PED-{uuid.uuid4().hex[:8].upper()}"
+
+        pedidos_guardados[ref] = {
+            "total":    total,
+            "metodo":   data.get("metodo"),
+            "nombre":   data.get("nombre"),
+            "email":    data.get("email"),
+            "telefono": data.get("telefono"),
+            "fecha":    datetime.now().strftime("%Y-%m-%d %H:%M")
+        }
+
+        session.pop("carrito", None)
+        return jsonify({"referencia": ref, "total": total})
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 # Diccionario para almacenar pedidos (en memoria, no persistente)
 pedidos_guardados = {}
 # Lista para almacenar calificaciones (en memoria, no persistente)
 calificaciones = []
-@app.route("/api/crear-pedido", methods=["POST"])  # API para crear pedido
-def crear_pedido():
-    if not session.get('usuario'):  # Si no hay usuario
-        return jsonify({"error": "No autenticado"}), 401
-
-    try:
-        data = request.get_json()  # Obtiene datos JSON
-        cart = _get_cart()  # Obtiene carrito
-
-        if not cart:  # Si carrito vacío
-            return jsonify({"error": "Carrito vacío"}), 400
-
-        total = sum(item['precio'] * item['qty'] for item in cart)  # Calcula total
-        ref   = f"PED-{uuid.uuid4().hex[:8].upper()}"  # Genera referencia única
-
-        # Guarda pedido en diccionario
-        pedidos_guardados[ref] = {
-            "total":    total,
-            "metodo":   data.get("metodo"),  # Método de pago
-            "nombre":   data.get("nombre"),  # Nombre del comprador
-            "email":    data.get("email"),  # Email
-            "telefono": data.get("telefono"),  # Teléfono
-            "fecha":    datetime.now().strftime("%Y-%m-%d %H:%M"),  # Fecha
-            "productos": [item["nombre"] for item in cart]  # ← lista de productos del carrito
-        }
-
-        session.pop("carrito", None)  # Limpia carrito
-
-        return jsonify({"referencia": ref, "total": total})  # Retorna referencia y total
-
-    except Exception as e:
-        print("ERROR CREAR PEDIDO:", e)  # Imprime error
-        traceback.print_exc()
-        return jsonify({"error": str(e)}), 500  # Retorna error
-
 @app.route("/api/calificar", methods=["POST"])  # API para guardar calificación
 def calificar():
     if not session.get('usuario'):  # Si no hay usuario autenticado
