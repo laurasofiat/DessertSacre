@@ -1,32 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Admin | Dessert Sacré</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin/navbar-top.css') }}">
 </head>
-<body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="navbar-inner">
-      <div class="navbar-brand">
-        <img src="/static/img/LOGO1.png" alt="Logo" class="navbar-logo">
-        <span>Dessert Sacré <em>Admin</em></span>
-      </div>
-      <ul class="navbar-links">
-        <li><a href="#" onclick="mostrarTab('panel')"          id="tab-panel"          class="activo">Panel</a></li>
-        <li><a href="#" onclick="mostrarTab('pedidos')"        id="tab-pedidos"                      >Pedidos</a></li>
-        <li><a href="#" onclick="mostrarTab('usuarios')"       id="tab-usuarios"                     >Usuarios</a></li>
-        <li><a href="#" onclick="mostrarTab('calificaciones')" id="tab-calificaciones"               >Calificaciones</a></li>
-        <li style="margin-top:auto;"><a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a></li>
-      </ul>
-    </div>
-  </nav>
+<body>
+  {% include '/admin/navbar.html' %}
+  <div class="container-admin-top">
+    {% include '/admin/navbar-top.html' %}
+  </div>
+
 
   <div class="container">
-
     <!-- PANEL ----------------------------------------------------------->
     <div id="panel" class="tab-content activo">
 
@@ -34,6 +24,7 @@
         <h1>Panel de control</h1>
         <span class="fecha">{{ now }}</span>
       </div>
+      <br>
 
       <!-- MÉTRICAS -->
       <div class="metrics">
@@ -74,16 +65,15 @@
           </thead>
           <tbody>
             {% for ref, p in pedidos.items() %}
-            {% if loop.index <= 5 %}
-            <tr>
+            {% if loop.index <= 5 %} <tr>
               <td>{{ p.productos | join(", ") if p.productos else "—" }}</td>
               <td>{{ p.nombre }}</td>
               <td>{{ p.metodo | capitalize }}</td>
               <td>{{ p.fecha }}</td>
               <td>${{ '{:,.0f}'.format(p.total) }}</td>
-            </tr>
-            {% endif %}
-            {% endfor %}
+              </tr>
+              {% endif %}
+              {% endfor %}
           </tbody>
         </table>
         {% else %}
@@ -115,9 +105,9 @@
               <td>{{ u.telefono or '—' }}</td>
               <td>
                 {% if u.verificado %}
-                  <span class="badge verde">Sí</span>
+                <span class="badge verde">Sí</span>
                 {% else %}
-                  <span class="badge gris">No</span>
+                <span class="badge gris">No</span>
                 {% endif %}
               </td>
             </tr>
@@ -210,9 +200,9 @@
               <td>{{ u.telefono or '—' }}</td>
               <td>
                 {% if u.verificado %}
-                  <span class="badge verde">Verificado</span>
+                <span class="badge verde">Verificado</span>
                 {% else %}
-                  <span class="badge gris">No verificado</span>
+                <span class="badge gris">No verificado</span>
                 {% endif %}
               </td>
             </tr>
@@ -254,10 +244,8 @@
             {% for c in calificaciones %}
             <tr>
               <td>
-                <img src="/static/img/{{ c.producto | lower | replace(' ', '_') }}.jpeg"
-                     class="foto-producto"
-                     alt="{{ c.producto }}"
-                     onerror="this.src='/static/img/default.jpeg'">
+                <img src="/static/img/{{ c.producto | lower | replace(' ', '_') }}.jpeg" class="foto-producto"
+                  alt="{{ c.producto }}" onerror="this.src='/static/img/default.jpeg'">
               </td>
               <td>{{ c.producto }}</td>
               <td>
@@ -281,17 +269,18 @@
 
   </div>
 
+
   <script>
     /* FUNCIÓN PARA CAMBIAR DE PESTAÑA ------------------------------------*/
     function mostrarTab(tabId) {
 
       /* Oculta todas las secciones */
-      document.querySelectorAll(".tab-content").forEach(function(tab) {
+      document.querySelectorAll(".tab-content").forEach(function (tab) {
         tab.classList.remove("activo");
       });
 
       /* Quita el estilo activo de todos los links */
-      document.querySelectorAll(".navbar-links a").forEach(function(link) {
+      document.querySelectorAll(".navbar-links a").forEach(function (link) {
         link.classList.remove("activo");
       });
 
@@ -306,5 +295,33 @@
     }
   </script>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const buscador = document.getElementById("buscadorAdmin");
+
+      buscador.addEventListener("keyup", function () {
+
+        const texto = this.value.toLowerCase();
+
+        const tabActiva = document.querySelector(".tab-content.activo");
+
+        if (!tabActiva) return;
+
+        tabActiva.querySelectorAll("table tbody tr").forEach(fila => {
+
+          const contenido = fila.textContent.toLowerCase();
+
+          fila.style.display =
+            contenido.includes(texto) ? "" : "none";
+
+        });
+
+      });
+
+    });
+  </script>
+
 </body>
+
 </html>

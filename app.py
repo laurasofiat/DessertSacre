@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template, jsonify, redirect, session, flash
+from flask import Flask, request, render_template, jsonify, redirect, session, flash, url_for
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from flask_mail import Mail, Message
 import random
 import uuid
 import smtplib
@@ -358,20 +359,34 @@ def admin():
         return redirect("/login")
 
     cursor = conexion.cursor(cursor_factory=RealDictCursor)
+    
+    # Usuarios
     cursor.execute("SELECT * FROM registro")  # Obtiene todos los usuarios
     usuarios = cursor.fetchall()
+    
+    # Mensajes
+    cursor.execute("""
+        SELECT *
+        FROM mensajes
+        ORDER BY fecha DESC
+    """)
+    mensajes = cursor.fetchall()
+    
     cursor.close()
     conexion.close()
-
+    
     # Calcula total de ventas
     total_ventas = sum(p["total"] for p in pedidos_guardados.values())
+    
+
 
     # Renderiza la plantilla admin con datos
     return render_template("admin/dashboard.html",
         usuarios=usuarios,
         pedidos=pedidos_guardados,
         total_ventas=total_ventas,
-        calificaciones=calificaciones,            
+        calificaciones=calificaciones,
+        mensajes=mensajes,          
         now=datetime.now().strftime("%d %b %Y")   # Fecha actual
     )
 
@@ -635,9 +650,7 @@ def pago_exitoso():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    """
-    """
-    
+  
     payload = request.get_data(as_text=True)
     sig_header = request.headers.get("Stripe-Signature")
     webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
@@ -681,10 +694,8 @@ def webhook():
     return jsonify({"status": "received"}), 200
 
 
-
-
 DATOS_PAGO = {
-    "nequi":  {"numero": "123456789", "titular": "Dessert Sacré"},
+    "nequi":  {"numero": "3025662571", "titular": "Dessert Sacré"},
     "banco":  {"banco": "BANCOLOMBIA", "numero": "123456789",
                "tipo": "Ahorros", "titular": "Dessert Sacré", "cedula": "3214586088"},
     "efecty": {"convenio": "3214586088", "titular": "Dessert Sacré"}
@@ -754,6 +765,8 @@ def calificar():
         print("ERROR CALIFICAR:", e)
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+    
+
 # ====================================
 # RUTA DE PERFIL
 # ====================================
@@ -773,6 +786,8 @@ def perfil():
         pedidos=pedidos_guardados,         # Pasa pedidos
         calificaciones=mis_calificaciones  # Pasa calificaciones del usuario
     )
+
+
 
 # ====================================
 # RUTAS DE NAVEGACIÓN (NAVBAR)
@@ -999,6 +1014,149 @@ def inject_modal_flag():
 def cerrar_modal():
     session["modal_cerrado"] = True  # Marca como cerrado
     return "", 204  # Respuesta vacía con código 204
+
+
+
+# ====================================
+# RUTA Y TABLA DE MENSAJES
+# ====================================
+def crear_tabla_mensajes():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS mensajes (
+        id SERIAL PRIMARY KEY,
+        nombre VARCHAR(100) NOT NULL,
+        apellido VARCHAR(100) NOT NULL,
+        email VARCHAR(150) NOT NULL,
+        mensaje TEXT NOT NULL,
+        fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        leido BOOLEAN DEFAULT FALSE
+    );
+    """)
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+#----FUNCION PARA ENVIAR CORREO-----
+def enviar_mensaje_contacto(nombre, apellido, email, mensaje):
+
+    cuerpo = f"""
+Nuevo mensaje recibido desde Dessert Sacré
+
+Nombre: {nombre} {apellido}
+Correo: {email}
+
+Mensaje:
+{mensaje}
+"""
+
+    msg = MIMEText(cuerpo)
+
+    msg["Subject"] = f"Nuevo mensaje de {nombre}"
+    msg["From"] = EMAIL_USER
+    msg["To"] = "dessertsacre@gmail.com"
+
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+            smtp.starttls()
+            smtp.login(EMAIL_USER, EMAIL_PASS)
+            smtp.send_message(msg)
+
+        return True
+
+    except Exception as e:
+        print("Error enviando mensaje:", e)
+        return False
+
+#-----RUTA PARA GUARDAR MENSAJES-----
+@app.route('/enviar_mensaje', methods=['POST'])
+def enviar_mensaje():
+
+    if not session.get("usuario"):
+        return jsonify({
+            "success": False,
+            "mensaje": "Debes iniciar sesión"
+        }), 401
+
+    nombre = request.form.get("nombre")
+    apellido = request.form.get("apellido")
+    email = request.form.get("email")
+    mensaje = request.form.get("mensaje")
+
+    try:
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            INSERT INTO mensajes
+            (nombre, apellido, email, mensaje)
+            VALUES (%s,%s,%s,%s)
+        """, (nombre, apellido, email, mensaje))
+
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
+        correo_enviado = enviar_mensaje_contacto(
+            nombre,
+            apellido,
+            email,
+            mensaje
+        )
+
+        return jsonify({
+            "success": True,
+            "correo_enviado": correo_enviado
+        })
+
+    except Exception as e:
+
+        print("ERROR:", e)
+
+        return jsonify({
+            "success": False,
+            "mensaje": str(e)
+        })
+
+
+#------CONTADOR DE MENSAJES NO LEÍDOS EN EL ADMIN-----
+@app.context_processor
+def mensajes_sin_leer():
+
+    cantidad = 0
+
+    try:
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            SELECT COUNT(*)
+            FROM mensajes
+            WHERE leido = FALSE
+        """)
+
+        cantidad = cur.fetchone()[0]
+
+        cur.close()
+        conn.close()
+
+    except:
+        pass
+
+    return dict(admin_unread_messages=cantidad)
+
+
+
+
+#-----TABLA DE MENSAJES-----
+crear_tabla_mensajes() # Crea la tabla de mensajes al iniciar la aplicación
+#---------------------------
 
 # ====================================
 # EJECUCIÓN DE LA APLICACIÓN

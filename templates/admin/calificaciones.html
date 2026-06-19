@@ -158,5 +158,54 @@
   <p class="vacio">Aún no hay calificaciones registradas.</p>
   {% endif %}
 
+  <!-- MENSAJES ---------------------------------------------------- -->
+<div id="mensajes" class="tab-content">
+
+  <div class="page-header">
+    <h1>Mensajes</h1>
+  </div>
+
+  <div class="card">
+
+    <div class="card-header">
+      <h3>Mensajes recibidos</h3>
+    </div>
+
+    {% if mensajes %}
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Mensaje</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {% for m in mensajes %}
+        <tr>
+          <td>{{ m.nombre }} {{ m.apellido }}</td>
+          <td>{{ m.email }}</td>
+          <td>{{ m.mensaje }}</td>
+          <td>{{ m.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+
+    {% else %}
+
+    <p class="vacio">No hay mensajes recibidos.</p>
+
+    {% endif %}
+
+  </div>
+
+</div>
+
 </body>
 </html>

@@ -1,0 +1,41 @@
+.topbar-admin-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border: 1px solid #e6c298;
+    border-radius: 14px;
+    padding: 5px 20px;
+    width: 92%;
+    margin: 25px auto 0 auto;
+}
+
+.search-box-admin-top {
+    width: 300px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.topbar-actions-admin-top {
+    display: flex;
+    gap: 10px;
+}
+
+.topbar-actions-admin-top button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #572727;
+    color: white;
+    cursor: pointer;
+}
+
+.container-admin-top {
+    margin-left: 220px; /* mismo ancho que el navbar */
+}
+
+.logout-icon {
+    width: 22px;
+    height: 20px;
+}

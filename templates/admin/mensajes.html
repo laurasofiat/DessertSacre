@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios | Dessert Sacré Admin</title>
+    <title>Mensajes | Dessert Sacré Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/styles/admin/usuarios.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin/navbar-top.css') }}">
+    <link rel="stylesheet" href="/static/styles/admin/pedidos.css">
 </head>
 
 <body>
@@ -27,38 +30,59 @@
         </div>
     </nav>
 
+
     <div class="container mt-4">
-        <h2 class="mb-4">Usuarios registrados</h2>
+        <h2>Mensajes recibidos</h2>
+        {% if mensajes %}
 
         <table class="table table-striped table-hover">
+
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Verificado</th>
+                    <th>Mensaje</th>
+                    <th>Fecha</th>
                 </tr>
             </thead>
+
             <tbody>
-                {% for u in usuarios %}
+
+                {% for m in mensajes %}
                 <tr>
-                    <td>{{ u.id }}</td>
-                    <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
-                    <td>{{ u.correo }}</td>
-                    <td>{{ u.telefono or '—' }}</td>
+
                     <td>
-                        {% if u.verificado %}
-                            <span class="badge bg-success">Verificado</span>
-                        {% else %}
-                            <span class="badge bg-secondary">No verificado</span>
-                        {% endif %}
+                        {{ m.nombre }}
+                        {{ m.apellido }}
                     </td>
+
+                    <td>
+                        <a href="mailto:{{ m.email }}">
+                            {{ m.email }}
+                        </a>
+                    </td>
+
+                    <td>
+                        {{ m.mensaje }}
+                    </td>
+
+                    <td>
+                        {{ m.fecha.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
+
                 </tr>
                 {% endfor %}
             </tbody>
+
         </table>
+        {% else %}
+        <div class="alert alert-info">
+            No hay mensajes registrados.
+        </div>
+        {% endif %}
     </div>
 
+
 </body>
+
 </html>

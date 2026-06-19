@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles/redes.css">
 </head>
+
 <body>
 
-{% include 'navbar1.html' %}
+    {% include 'navbar1.html' %}
 
     <div class="hero-responsive">
-                <img src="static/img/fondo2.jpeg" alt="Panaderia" class="hero-img">
-            <div class="hero-title-overlay">
-                <span>CONTÁCTANOS</span>
-            </div>
+        <img src="static/img/fondo2.jpeg" alt="Panaderia" class="hero-img">
+        <div class="hero-title-overlay">
+            <span>CONTÁCTANOS</span>
+        </div>
     </div>
 
-    <a href="https://wa.me/573025662571?text=Hola,%20quiero%20hacer%20un%20pedido" 
-        class="whatsapp-float" 
+    <a href="https://wa.me/573025662571?text=Hola,%20quiero%20hacer%20un%20pedido" class="whatsapp-float"
         target="_blank">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
     </a>
@@ -34,7 +35,9 @@
                 <p><strong> Horario:</strong> Disponibilidad del cliente</p>
 
                 <!-- Mapa -->
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.589831710085!2d-74.0560485852378!3d4.666991396614131!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a5f3d3a4b9d%3A0x7a3c3c7e3f8a4176!2sParque%2093!5e0!3m2!1ses!2sco!4v1678888888888!5m2!1ses!2sco" loading="lazy" allowfullscreen="">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.589831710085!2d-74.0560485852378!3d4.666991396614131!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a5f3d3a4b9d%3A0x7a3c3c7e3f8a4176!2sParque%2093!5e0!3m2!1ses!2sco!4v1678888888888!5m2!1ses!2sco"
+                    loading="lazy" allowfullscreen="">
                 </iframe>
             </div>
 
@@ -43,13 +46,13 @@
                 <h3>Envíanos un mensaje</h3>
                 <form id="contactForm">
                     <input type="text" id="name" placeholder="Primer Nombre" required="">
-                    <input type="text" id="name" placeholder="Primer Apellido" required="">
+                    <input type="text" id="apellido" placeholder="Primer Apellido" required="">
                     <input type="email" id="email" placeholder="Correo Electrónico" required="">
                     <textarea id="message" placeholder="Escribe tu mensaje aquí..." required=""></textarea>
                     <button type="submit">Enviar mensaje</button>
 
-                    <div class="success-message" id="successMessage">
-                        ¡Gracias por contáctarnos! Tu mensaje se revisará más tarde. 
+                    <div class="success-message" id="btnEnviar" style="display:none;">
+                        ¡Gracias por contactarnos! Tu mensaje fue enviado correctamente 🧁
                     </div>
                 </form>
             </div>
@@ -62,62 +65,131 @@
 
     <!-- Enlace al JavaScript -->
     <script>
-        // Espera a que el DOM cargue completamente
-    document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
 
-        const form = document.getElementById("contactForm");
-        const successMessage = document.getElementById("successMessage");
+            const form = document.getElementById("contactForm");
+            const btnEnviar = document.getElementById("btnEnviar");
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
+            function mostrarMensaje(texto, tipo = "success") {
 
-            const name = document.getElementById("name").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const message = document.getElementById("message").value.trim();
+                const viejo = document.getElementById("mensaje-form");
+                const fondoViejo = document.getElementById("fondo-form");
 
-            // Validar campos vacíos
-            if (name === "" || email === "" || message === "") {
-                alert("Por favor completa todos los campos.");
-                return;
+                if (viejo) viejo.remove();
+                if (fondoViejo) fondoViejo.remove();
+
+                const fondo = document.createElement("div");
+
+                fondo.id = "fondo-form";
+
+                fondo.style.cssText = `
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,.45);
+        z-index:9998;
+    `;
+
+                const caja = document.createElement("div");
+
+                caja.id = "mensaje-form";
+
+                caja.style.cssText = `
+        position:fixed;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        z-index:9999;
+        width:90%;
+        max-width:420px;
+    `;
+
+                caja.innerHTML = `
+        <div class="alert alert-${tipo} text-center shadow">
+            ${texto}
+            <br><br>
+            <button class="btn btn-dark btn-sm">
+                Cerrar
+            </button>
+        </div>
+    `;
+
+                document.body.appendChild(fondo);
+                document.body.appendChild(caja);
+
+                caja.querySelector("button").onclick = () => {
+                    caja.remove();
+                    fondo.remove();
+                };
+
+                fondo.onclick = () => {
+                    caja.remove();
+                    fondo.remove();
+                };
             }
+            const successMessage = document.getElementById("successMessage");
 
-            // Validar formato de correo electrónico
-            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i;
-            if (!email.match(emailPattern)) {
-                alert("Por favor ingresa un correo electrónico válido.");
-            return;
-            }
+            form.addEventListener("submit", async function (e) {
 
-            const destinatario = "dessertsacre@gmail.com";
+                e.preventDefault();
 
-            /* Asunto del correo con el nombre del cliente */
-            const asunto = encodeURIComponent(`Mensaje de ${name}`);
-            /* encodeURIComponent convierte espacios y caracteres especiales para la URL */
+                const formData = new FormData();
 
-            /* Cuerpo del correo con todos los datos */
-            const cuerpo = encodeURIComponent(
-                `Nombre: ${name} \nCorreo: ${email}\n\nMensaje:\n${message}`
-            );
+                formData.append(
+                    "nombre",
+                    document.getElementById("name").value
+                );
 
-            /* Construye el enlace de Gmail con todo prellenado */
-            const gmailURL = `https://mail.google.com/mail/?view=cm&to=${destinatario}&su=${asunto}&body=${cuerpo}`;
+                formData.append(
+                    "apellido",
+                    document.getElementById("apellido").value
+                );
 
-            /* Abre Gmail en una pestaña nueva */
-            window.open(gmailURL, "_blank");
+                formData.append(
+                    "email",
+                    document.getElementById("email").value
+                );
 
-            // Mostrar mensaje de éxito
-            successMessage.style.display = "block";
+                formData.append(
+                    "mensaje",
+                    document.getElementById("message").value
+                );
 
-            // Limpiar formulario
-            form.reset();
+                
+                
+                try {
+                    const respuesta = await fetch(
+                        "/enviar_mensaje",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
 
-            // Ocultar mensaje después de 1 minuto
-            setTimeout(() => {
-            successMessage.style.display = "none";
-            }, 120000);
+                    const data = await respuesta.json();
+
+                    if (data.success) {
+
+                        mostrarMensaje(
+                            "¡Gracias por contactarnos! Tu mensaje fue enviado correctamente 🧁",
+                            "success"
+                        );
+
+                        form.reset();
+
+                    } else {
+                        alert(data.mensaje);
+                    }
+
+                } catch (error) {
+                    console.error(error);
+                    alert("Error enviando el mensaje.");
+                }
+            });
+
         });
-
-    });
     </script>
 
 

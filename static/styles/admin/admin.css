@@ -1,0 +1,356 @@
+
+
+/*----Navbar---*/
+.logo-navbar {
+  height: 70px;
+  /* Tamaño ideal para computadoras */
+  width: auto;
+  display: block;
+}
+
+
+.navbar-brand-text-admin {
+  font-family: "Georgia", serif;
+  color: var(--beige);
+  font-size: 14px;
+  color: #d2b8b8;
+  letter-spacing: 0.1em;
+}
+
+
+.admin-label {
+  font-size: 13px;
+  color: #ffffff;
+  letter-spacing: 0.3em;
+  margin-top: 30px;
+  text-align: center !important;
+  text-transform: uppercase;
+}
+
+/* ── NAVBAR — vertical izquierdo ── */
+.navbar {
+  position: fixed;
+  /* fijo en pantalla */
+  top: 0;
+  left: 0;
+  width: 220px;
+  /* ancho del navbar */
+  height: 95vh;
+  /* toda la altura */
+  background: #572727;
+  display: flex;
+  flex-direction: column;
+  /* elementos apilados verticalmente */
+  padding: 24px 0;
+  gap: 0;
+  border-bottom: none;
+  /* quita el borde inferior */
+  z-index: 100;
+}
+
+/* Contenedor interno */
+.navbar-inner {
+  display: flex;
+  flex-direction: column;
+  /* logo arriba, links abajo */
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  gap: 24px;
+}
+
+/* Logo y nombre */
+.navbar-brand {
+  display: flex;
+  flex-direction: column;
+  /* logo encima del texto */
+  align-items: center;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  /* línea separadora */
+}
+
+.navbar-brand em {
+  font-style: normal;
+  font-weight: 400;
+  color: #aaa;
+  font-size: 13px;
+  margin-left: 0;
+}
+
+/* Lista de links */
+.navbar-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  /* links apilados */
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  /* ocupa el espacio restante */
+}
+
+/* Cada link */
+.navbar-links a {
+  display: block;
+  /* ocupa todo el ancho */
+  padding: 13px 24px;
+  font-size: 13px;
+  color: #d2b8b8;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: background 0.2s, color 0.2s;
+  border-left: 3px solid transparent;
+  /* espacio para el indicador activo */
+}
+
+/* Hover */
+.navbar-links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e8e3de;
+}
+
+/* Link activo */
+.navbar-links a.activo {
+  background: rgba(255, 255, 255, 0.12);
+  border-left: 3px solid #e9d799;
+  /* línea dorada izquierda */
+  border-bottom: none;
+  /* quita el subrayado inferior */
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Estilo del link activo en el navbar */
+.navbar-links a.activo {
+  border-bottom: 2px solid #e9d799;
+  /* subrayado dorado en el tab activo */
+  font-weight: 700;
+}
+
+/* Cerrar sesión */
+.navbar-links a.logout {
+  color: #d99b4d;
+  margin-top: auto;
+}
+
+.navbar-links a.logout:hover {
+  background: rgba(169, 19, 62, 0.2);
+  color: #e08080;
+}
+
+
+:root {
+  --red: #a9133e;
+  --brown: #572727;
+  --pink: #f4c7c4;
+  --rose: #c86a6b;
+  --beige: #f8e8d4;
+  --accent: #d99b4d;
+  --green: #95ae78;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+/* ── CONTENIDO — se desplaza a la derecha ── */
+.container {
+  margin-left: 220px;
+  /* mismo ancho que el navbar */
+  max-width: calc(100% - 220px);
+  padding: 2rem 2.5rem 4rem;
+}
+
+/* ── BODY — quita el padding-top ── */
+body {
+  background: #FFF7EE;
+  font-family: "Georgia", serif;
+  padding-top: 0;
+  /* ya no necesita espacio arriba */
+}
+
+/* ── MÉTRICAS ── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.metric-card {
+  background: var(--beige);
+  border: 1px solid #e6c298;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metric-card.accent {
+  background: var(--brown);
+}
+
+.metric-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rose);
+}
+
+.metric-card.accent .metric-label {
+  color: var(--pink);
+}
+
+.metric-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1;
+}
+
+.metric-card.accent .metric-value {
+  color: var(--beige);
+}
+
+/* ── CARDS ── */
+.card {
+  background: #fff;
+  border: 1px solid #e6c298;
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.card-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f0e8dc;
+}
+
+.card-header h3 {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin: 0;
+}
+
+/* ── TABLAS ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #bbb;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6c298;
+}
+
+tbody td {
+  padding: 10px 0;
+  border-bottom: 1px solid #f5efe8;
+  color: #444;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #fdf8f2;
+}
+
+table code {
+  font-size: 12px;
+  background: #faf7f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--brown);
+}
+
+.vacio {
+  font-size: 13px;
+  color: #bbb;
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+/* ── BADGES ── */
+.badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.badge.verde {
+  background: #eaf4e0;
+  color: #3a7d1e;
+}
+
+.badge.gris {
+  background: #f0ece8;
+  color: #999;
+}
+
+/* Oculta todas las secciones por defecto */
+.tab-content {
+  display: none;
+}
+
+/* Muestra solo la sección activa */
+.tab-content.activo {
+  display: block;
+}
+
+
+
+/* Imagen del producto en calificaciones */
+.foto-producto {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Estrellas */
+.star-on {
+  color: #f5c518;
+  font-size: 16px;
+}
+
+/* estrella llena */
+.star-off {
+  color: #ddd;
+  font-size: 16px;
+}
+
+/* estrella vacía */
+
+/* Enlace ver todas */
+.ver-todas {
+  font-size: 13px;
+  color: #d99b4d;
+  text-decoration: none;
+  margin-left: auto;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
