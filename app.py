@@ -415,6 +415,15 @@ def usuarios_admin():
     conexion.close() # Cierra la conexión a la base de datos
     return render_template("admin/usuarios.html", usuarios=usuarios) # Renderiza plantilla de usuarios pasando la lista de usuarios obtenida
 
+@app.route("/admin/calificaciones")  # Ruta de calificaciones en admin
+def admin_calificaciones():
+    if not session.get("admin"):  # Si no es admin
+        return redirect("/login")  # Redirige al login
+
+    return render_template("admin/calificaciones.html",
+        calificaciones=calificaciones  # Pasa todas las calificaciones
+    )
+    
 # ====================================
 # FUNCIONES Y RUTAS DEL CARRITO DE COMPRAS
 # ====================================
@@ -507,7 +516,7 @@ def carrito():
 def carritoU():
     cart  = _get_cart()
     total = sum(item['precio'] * item['qty'] for item in cart)
-    return render_template('carrito1.html', cart=cart, total=total)
+    return render_template('users/carrito1.html', cart=cart, total=total)
 
 @app.route('/api/cart')  # API para obtener info del carrito
 def api_cart():
@@ -572,7 +581,7 @@ def pasarela():
     usuario = session["usuario"]
 
     return render_template(
-        "pasarela.html",
+        "users/pasarela.html",
         usuario   = usuario,
         cart      = cart,
         total     = total,
@@ -650,7 +659,6 @@ def pago_exitoso():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-  
     payload = request.get_data(as_text=True)
     sig_header = request.headers.get("Stripe-Signature")
     webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
@@ -781,7 +789,7 @@ def perfil():
         if c["email"] == session['usuario']["email"]  # solo las del usuario logueado
     ]
 
-    return render_template('perfil.html',  # Renderiza perfil
+    return render_template('users/perfil.html',  # Renderiza perfil
         usuario=session['usuario'],        # Pasa datos del usuario
         pedidos=pedidos_guardados,         # Pasa pedidos
         calificaciones=mis_calificaciones  # Pasa calificaciones del usuario
@@ -795,17 +803,10 @@ def perfil():
 @app.route("/inicio")  # Ruta de inicio (público)
 def inicio():
     return render_template("inicio.html")
-@app.route("/admin/calificaciones")  # Ruta de calificaciones en admin
-def admin_calificaciones():
-    if not session.get("admin"):  # Si no es admin
-        return redirect("/login")  # Redirige al login
 
-    return render_template("admin/calificaciones.html",
-        calificaciones=calificaciones  # Pasa todas las calificaciones
-    )
 @app.route("/inicioU")  # Ruta de inicio (usuario logueado)
 def inicioU():
-    return render_template("inicio1.html")
+    return render_template("users/inicio1.html")
 
 @app.route('/menu')  # Ruta del menú (público)
 def menu():
@@ -813,7 +814,7 @@ def menu():
 
 @app.route('/menuU')  # Ruta del menú (usuario)
 def menuU():
-    return render_template('menu1.html')
+    return render_template('users/menu1.html')
 
 @app.route('/sobrenosotros')  # Ruta "Sobre nosotros" (público)
 def sobrenosotros():
@@ -821,7 +822,7 @@ def sobrenosotros():
 
 @app.route('/sobrenosotrosU')  # Ruta "Sobre nosotros" (usuario)
 def sobrenosotrosU():
-    return render_template('sobrenosotros1.html')
+    return render_template('users/sobrenosotros1.html')
 
 @app.route('/redes')  # Ruta de redes sociales (público)
 def redes():
@@ -829,13 +830,13 @@ def redes():
 
 @app.route('/redesU')  # Ruta de redes sociales (usuario)
 def redesU():
-    return render_template('redes1.html')
+    return render_template('users/redes1.html')
 
 @app.route('/pedidos') #Ruta para pedidos (usuario)
 def pedidos():
     if not session.get('usuario'): #si no se ha iniciado sesion
         return redirect('/login') #redirige a inicio de sesion
-    return render_template('pedidos1.html', #si se ha iniciado sesion
+    return render_template('users/pedidos1.html', #si se ha iniciado sesion
         usuario=session['usuario'], #Guarda datos del usuario
         pedidos=pedidos_guardados #Guarda los pedidos realizados
     )
@@ -846,7 +847,7 @@ def panaderia():
 
 @app.route('/panaderiaU')  # Ruta de panadería (usuario)
 def panaderiaU():
-    return render_template('panaderia1.html')
+    return render_template('users/panaderia1.html')
 
 @app.route('/pasteleria')  # Ruta de pastelería (público)
 def pasteleria():
@@ -854,7 +855,7 @@ def pasteleria():
 
 @app.route('/pasteleriaU')  # Ruta de pastelería (usuario)
 def pasteleriaU():
-    return render_template('pasteleria1.html')
+    return render_template('users/pasteleria1.html')
 
 @app.route('/reposteria')  # Ruta de repostería (público)
 def reposteria():
@@ -862,7 +863,7 @@ def reposteria():
 
 @app.route('/reposteriaU')  # Ruta de repostería (usuario)
 def reposteriaU():
-    return render_template('reposteria1.html')
+    return render_template('users/reposteria1.html')
 
 @app.route('/bebidas')  # Ruta de bebidas (público)
 def bebidas():
@@ -870,7 +871,7 @@ def bebidas():
 
 @app.route('/bebidasU')  # Ruta de bebidas (usuario)
 def bebidasU():
-    return render_template('bebidas1.html')
+    return render_template('users/bebidas1.html')
 
 # ====================================
 # RUTAS DE RECUPERACIÓN DE CONTRASEÑA
@@ -1150,8 +1151,6 @@ def mensajes_sin_leer():
         pass
 
     return dict(admin_unread_messages=cantidad)
-
-
 
 
 #-----TABLA DE MENSAJES-----

@@ -135,3 +135,67 @@ window.addEventListener('DOMContentLoaded', () => {
   initCartTable();
   initCheckoutButton();
 });
+
+//BARRA DE BÚSQUEDA------------
+
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const inputBuscar = document.getElementById("buscarProducto");
+
+    if (!inputBuscar) return; // por si esta página no tiene buscador
+
+    const productos = document.querySelectorAll(".card");
+ 
+    // Busca cualquier carrusel de Bootstrap en la página (sin importar su ID)
+    const carruselEl = document.querySelector(".carousel");
+    const carrusel = carruselEl?.closest(".container") || carruselEl;
+
+    // Creamos el mensaje de "no encontrado" una sola vez y lo insertamos
+    // justo después de la barra de búsqueda, oculto por defecto.
+    const mensajeNoEncontrado = document.createElement("div");
+    mensajeNoEncontrado.id = "mensajeNoEncontrado";
+    mensajeNoEncontrado.textContent = " No se encontró ningún producto con ese nombre.";
+    mensajeNoEncontrado.style.cssText = `
+        display: none;
+        text-align: center;
+        margin: 20px auto;
+        font-size: 18px;
+        color: #777;
+    `;
+    inputBuscar.closest(".search-bar").insertAdjacentElement("afterend", mensajeNoEncontrado);
+
+    inputBuscar.addEventListener("input", function () {
+
+        // Quita números si el usuario los escribe (solo se busca texto)
+        let texto = this.value.replace(/[0-9]/g, "");
+        if (texto !== this.value) {
+            this.value = texto;
+        }
+
+        const busqueda = texto.toLowerCase().trim();
+
+        // Si hay algo escrito, ocultamos el carrusel para mostrar solo productos
+        if (carrusel) {
+            carrusel.style.display = busqueda === "" ? "" : "none";
+        }
+
+        let encontrados = 0;
+
+        productos.forEach(producto => {
+
+            const nombre = producto.querySelector(".card-title")?.textContent.toLowerCase() || "";
+            const descripcion = producto.querySelector(".card-text")?.textContent.toLowerCase() || "";
+
+            const coincide = nombre.includes(busqueda) || descripcion.includes(busqueda);
+
+            if (coincide) encontrados++;
+
+            // Ocultamos/mostramos la columna completa (col-md-3), no solo la tarjeta
+            const columna = producto.closest(".col-md-3") || producto;
+            columna.style.display = coincide ? "" : "none";
+        });
+
+        // Mostramos el mensaje solo si hay texto escrito y nada coincidió
+        mensajeNoEncontrado.style.display = (busqueda !== "" && encontrados === 0) ? "block" : "none";
+    });
+});

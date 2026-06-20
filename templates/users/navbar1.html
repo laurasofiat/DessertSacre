@@ -31,8 +31,17 @@
           <a class="nav-link" href="{{ url_for('inicioU') }}">Inicio</a>
         </li>
 
-        <p class="d-none d-lg-block">ㅤㅤ</p> <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('menuU') }}">Menú</a>
+        <p class="d-none d-lg-block">ㅤㅤ</p> 
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="{{ url_for('menuU') }}"
+            role="button" aria-expanded="false">Menú</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url_for('panaderiaU') }}">Panadería</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('pasteleriaU') }}">Pastelería</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('reposteriaU') }}">Repostería</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('bebidasU') }}">Bebidas</a></li>
+          </ul>
         </li>
 
         <p class="d-none d-lg-block">ㅤㅤ</p>
@@ -55,7 +64,7 @@
         <p class="d-none d-lg-block">ㅤㅤ</p>
 
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#Tu_Cuenta" role="button" aria-expanded="false">Tu Cuenta</a>
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#Cuenta" role="button" aria-expanded="false">Tu Cuenta</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{ url_for('perfil') }}">Perfil</a></li>
             <li><a class="dropdown-item" href="{{ url_for('pedidos') }}">Pedidos</a></li>
@@ -73,18 +82,24 @@
   </div> 
 </nav>
 
-  <script>
-    document.querySelectorAll('.nav-item.dropdown > a.nav-link').forEach(link => {
-      link.addEventListener('click', function (e) {
-        if (!this.classList.contains('show')) {
-          // Si el menú no está desplegado, navegar a la ruta
-          window.location = this.getAttribute('href');
-        }
-      });
-    });
-  </script>
+<style>
 
-{% include 'modal.html' %}
+    @media (hover: hover) and (pointer: fine) {
+    .nav-item.dropdown:hover .dropdown-menu {
+      display: block;
+      margin-top: 0; /* quita el espacio que deja Bootstrap por defecto */
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nav-item.dropdown:hover .dropdown-toggle::after {
+      transform: rotate(180deg);
+      transition: transform 0.2s ease;
+    }
+  }
+
+</style>
+
 </body>
 
 </html>

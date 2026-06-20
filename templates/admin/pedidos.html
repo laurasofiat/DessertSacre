@@ -15,20 +15,7 @@
   <!--se cambio agrego ds a las clases para que boostrap no las tocara e interrumpiera diseño-->
 
   <!-- NAVBAR -->
-  <nav class="ds-navbar">
-    <div class="ds-navbar-inner">
-      <div class="ds-brand">
-        <img src="/static/img/LOGO1.png" alt="Logo" class="ds-logo">
-        <span>Dessert Sacré <em>Admin</em></span>
-      </div>
-      <ul class="ds-links">
-        <li><a href="{{ url_for('admin') }}">Panel</a></li>
-        <li><a href="{{ url_for('admin_pedidos') }}" class="activo">Pedidos</a></li>
-        <li><a href="{{ url_for('usuarios_admin') }}">Usuarios</a></li>
-        <li><a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a></li>
-      </ul>
-    </div>
-  </nav>
+  {% include '/admi/navbar_izq'%}
 
   <div class="container">
     <h2 class="mb-4">Pedidos registrados</h2>

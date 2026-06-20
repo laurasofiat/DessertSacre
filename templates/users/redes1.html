@@ -8,7 +8,7 @@
 
 <body>
 
-    {% include 'navbar1.html' %}
+    {% include 'users/navbar1.html' %}
 
     <div class="hero-responsive">
         <img src="static/img/fondo2.jpeg" alt="Panaderia" class="hero-img">
@@ -61,14 +61,16 @@
 
     </section>
 
-    {% include 'footer1.html' %}
+    {% include 'users/footer1.html' %}
 
     <!-- Enlace al JavaScript -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
             const form = document.getElementById("contactForm");
-            const btnEnviar = document.getElementById("btnEnviar");
+
+            // Correo que recibirá los mensajes del formulario
+            const destinatario = "dessertsacre@gmail.com";
 
             function mostrarMensaje(texto, tipo = "success") {
 
@@ -129,64 +131,36 @@
                     fondo.remove();
                 };
             }
-            const successMessage = document.getElementById("successMessage");
 
-            form.addEventListener("submit", async function (e) {
+            form.addEventListener("submit", function (e) {
 
                 e.preventDefault();
 
-                const formData = new FormData();
+                const nombre = document.getElementById("name").value;
+                const apellido = document.getElementById("apellido").value;
+                const email = document.getElementById("email").value;
+                const mensaje = document.getElementById("message").value;
 
-                formData.append(
-                    "nombre",
-                    document.getElementById("name").value
+                // Asunto y cuerpo del correo ya armados
+                const asunto = `Mensaje de ${nombre} ${apellido}`;
+                const cuerpo = `${mensaje}`;
+
+                // URL de Gmail compose con destinatario, asunto y cuerpo listos
+                const gmailURL =
+                    "https://mail.google.com/mail/?view=cm&fs=1" +
+                    "&to=" + encodeURIComponent(destinatario) +
+                    "&su=" + encodeURIComponent(asunto) +
+                    "&body=" + encodeURIComponent(cuerpo);
+
+                // Abre Gmail en una pestaña nueva con todo precargado
+                window.open(gmailURL, "_blank");
+
+                mostrarMensaje(
+                    "¡Gracias por contactarnos! Te estamos redirigiendo a Gmail 🧁",
+                    "success"
                 );
 
-                formData.append(
-                    "apellido",
-                    document.getElementById("apellido").value
-                );
-
-                formData.append(
-                    "email",
-                    document.getElementById("email").value
-                );
-
-                formData.append(
-                    "mensaje",
-                    document.getElementById("message").value
-                );
-
-                
-                
-                try {
-                    const respuesta = await fetch(
-                        "/enviar_mensaje",
-                        {
-                            method: "POST",
-                            body: formData
-                        }
-                    );
-
-                    const data = await respuesta.json();
-
-                    if (data.success) {
-
-                        mostrarMensaje(
-                            "¡Gracias por contactarnos! Tu mensaje fue enviado correctamente 🧁",
-                            "success"
-                        );
-
-                        form.reset();
-
-                    } else {
-                        alert(data.mensaje);
-                    }
-
-                } catch (error) {
-                    console.error(error);
-                    alert("Error enviando el mensaje.");
-                }
+                form.reset();
             });
 
         });

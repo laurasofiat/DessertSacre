@@ -11,21 +11,7 @@
 
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="ds-navbar">
-        <div class="ds-navbar-inner">
-            <div class="ds-brand">
-                <img src="/static/img/LOGO1.png" alt="Logo" class="ds-logo">
-                <span>Dessert Sacré <em>Admin</em></span>
-            </div>
-            <ul class="ds-links">
-                <li><a href="{{ url_for('admin') }}">Panel</a></li>
-                <li><a href="{{ url_for('admin_pedidos') }}">Pedidos</a></li>
-                <li><a href="{{ url_for('usuarios_admin') }}" class="activo">Usuarios</a></li>
-                <li><a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a></li>
-            </ul>
-        </div>
-    </nav>
+    {% include '/admi/navbar_izq.html'%}
 
     <div class="container mt-4">
         <h2 class="mb-4">Usuarios registrados</h2>

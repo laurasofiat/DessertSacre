@@ -13,8 +13,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/productos.css') }}" /> 
   </head>
 
-  <body>
+  <body class="zoom">
+    
     {% include 'navbar.html' %}
+
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+      <input type="text" id="buscarProducto" placeholder="Buscar producto de interés...">
+  </div>
+
+  <div class= "espa"> <p></p> </div>
 
     <!-- REPOSTERÍA -->
     <div class="Textoinicio text-center my-5">
