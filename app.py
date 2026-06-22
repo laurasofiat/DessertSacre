@@ -29,11 +29,11 @@ app.secret_key = "clave_super_secreta"
 app.config.from_object(Config)
 
 DB_CONFIG = {
-    'host': os.getenv("PGHOST"),
-    'dbname': os.getenv("PGDATABASE"),
-    'user': os.getenv("PGUSER"),
-    'password': os.getenv("PGPASSWORD"),
-    'port': os.getenv("PGPORT")
+    'host': os.getenv('DB_HOST'),
+    'dbname': os.getenv('DB_NAME'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'port': os.getenv('DB_PORT')
 }
 
 """DB_CONFIG = {
