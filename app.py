@@ -29,12 +29,20 @@ app.secret_key = "clave_super_secreta"
 app.config.from_object(Config)
 
 DB_CONFIG = {
+    'host': os.getenv("PGHOST"),
+    'dbname': os.getenv("PGDATABASE"),
+    'user': os.getenv("PGUSER"),
+    'password': os.getenv("PGPASSWORD"),
+    'port': os.getenv("PGPORT")
+}
+
+"""DB_CONFIG = {
     'host': "localhost", #host.docker.internal
     'dbname': "Dessert_Sacre",
     'user': "postgres",
     'password': "123456",
     'port': 5432
-}
+}"""
 
 def get_db_connection():
     try:
