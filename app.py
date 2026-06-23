@@ -361,45 +361,49 @@ def dashboard():
 @app.route("/admin")  # Ruta del panel admin
 def admin():
     if not session.get("admin"):  # Si no es admin
-        flash("Acceso solo para administradores", "danger")
-        return redirect("/login")
+        flash("Acceso solo para administradores", "danger") # Muestra mensaje de error
+        return redirect("/login") # Redirige al login
 
     # Conecta a BD y obtiene todos los usuarios
     conexion = get_db_connection()
     if not conexion:  # Verifica que la conexión fue exitosa
-        flash("Error de conexión a la base de datos", "danger")
-        return redirect("/login")
+        flash("Error de conexión a la base de datos", "danger") # Muestra mensaje de error
+        return redirect("/login") # Redirige al login si hay error de conexión
 
-    cursor = conexion.cursor(cursor_factory=RealDictCursor)
+    cursor = conexion.cursor(cursor_factory=RealDictCursor) # Crea cursor con resultados como diccionarios
     
     # Usuarios
     cursor.execute("SELECT * FROM registro")  # Obtiene todos los usuarios
-    usuarios = cursor.fetchall()
+    usuarios = cursor.fetchall() # Guarda los usuarios obtenidos en una variable
     
     # Mensajes
     cursor.execute("""
         SELECT *
         FROM mensajes
         ORDER BY fecha DESC
-    """)
-    mensajes = cursor.fetchall()
+    """) # Obtiene todos los mensajes ordenados por fecha
+    mensajes = cursor.fetchall() # Guarda los mensajes obtenidos en una variable
     
-    cursor.close()
-    conexion.close()
+    print("MENSAJES:", len(mensajes))
+    print(mensajes)
+    
+    
+    cursor.close() # Cierra el cursor
+    conexion.close() # Cierra la conexión a la base de datos
     
     # Calcula total de ventas
-    total_ventas = sum(p["total"] for p in pedidos_guardados.values())
+    total_ventas = sum(p["total"] for p in pedidos_guardados.values()) # Calcula total de ventas sumando los totales de los pedidos guardados
     
 
 
     # Renderiza la plantilla admin con datos
-    return render_template("admin/dashboard.html",
-        usuarios=usuarios,
-        pedidos=pedidos_guardados,
-        total_ventas=total_ventas,
-        calificaciones=calificaciones,
-        mensajes=mensajes,          
-        now=datetime.now().strftime("%d %b %Y")   # Fecha actual
+    return render_template("admin/dashboard.html", # Renderiza plantilla de dashboard del admin
+        usuarios=usuarios, # Pasa los usuarios obtenidos de la BD
+        pedidos=pedidos_guardados, # Pasa los pedidos guardados
+        total_ventas=total_ventas, # Pasa el total de ventas
+        calificaciones=calificaciones, # Pasa todas las calificaciones
+        mensajes=mensajes, # Pasa los mensajes obtenidos de la BD
+        now=datetime.now().strftime("%d %b %Y")   # Fecha actual para mostrar en el dashboard
     )
 
 @app.route("/admin/pedidos")  # Ruta de pedidos en admin
@@ -435,6 +439,211 @@ def admin_calificaciones():
     return render_template("admin/calificaciones.html",
         calificaciones=calificaciones  # Pasa todas las calificaciones
     )
+
+@app.route("/admin/mensajes")
+def admin_mensajes():
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
+    cur.execute("""
+        SELECT *
+        FROM mensajes
+        ORDER BY fecha DESC
+    """)
+
+    mensajes = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        "admin/mensajes.html",
+        mensajes=mensajes
+    )
+
+# ====================================
+# RUTA Y TABLA DE MENSAJES
+# ====================================
+def crear_tabla_mensajes():
+    
+    conn = get_db_connection()
+
+    if conn is None:
+        print("No se pudo crear tabla mensajes: sin conexión BD")
+        return
+
+    try:
+        cur = conn.cursor()
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS mensajes (
+                id SERIAL PRIMARY KEY,
+                nombre VARCHAR(100),
+                correo VARCHAR(150),
+                mensaje TEXT,
+                leido BOOLEAN DEFAULT FALSE,
+                fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
+        print("Tabla mensajes lista")
+
+    except Exception as e:
+        print("Error creando tabla mensajes:", e)
+
+# ---- FUNCION PARA ENVIAR CORREO -----
+
+def enviar_mensaje_contacto(nombre, apellido, email, mensaje):
+
+    cuerpo = f"""
+Nuevo mensaje recibido desde Dessert Sacré
+
+Nombre: {nombre} {apellido}
+Correo: {email}
+
+Mensaje:
+{mensaje}
+"""
+
+    msg = Message(
+        subject=f"Nuevo mensaje de {nombre}",
+        sender=app.config["MAIL_USERNAME"],
+        recipients=[app.config["MAIL_USERNAME"]]
+    )
+
+    msg.body = cuerpo
+
+    try:
+        mail.send(msg)
+        print("Mensaje enviado correctamente")
+        return True
+
+    except Exception as e:
+        print("Error enviando mensaje:", e)
+        return False
+
+#-----RUTA PARA GUARDAR MENSAJES-----
+@app.route('/enviar_mensaje', methods=['POST'])
+def enviar_mensaje():
+    print("RUTA ENVIAR_MENSAJE EJECUTADA")
+
+    if not session.get("usuario"):
+        return jsonify({
+            "success": False,
+            "mensaje": "Debes iniciar sesión"
+        }), 401
+
+    nombre = request.form.get("nombre")
+    apellido = request.form.get("apellido")
+    email = request.form.get("email")
+    mensaje = request.form.get("mensaje")
+
+    try:
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            INSERT INTO mensajes
+            (nombre, apellido, email, mensaje)
+            VALUES (%s,%s,%s,%s)
+        """, (nombre, apellido, email, mensaje))
+
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
+        correo_enviado = enviar_mensaje_contacto(
+            nombre,
+            apellido,
+            email,
+            mensaje
+        )
+
+        return jsonify({
+            "success": True,
+            "correo_enviado": correo_enviado
+        })
+
+    except Exception as e:
+
+        print("ERROR INSERTANDO MENSAJE:")
+        print(repr(e))
+
+        return jsonify({
+        "success": False,
+        "mensaje": str(e)
+    })
+
+
+#------CONTADOR DE MENSAJES NO LEÍDOS EN EL ADMIN-----
+@app.context_processor
+def mensajes_sin_leer():
+
+    cantidad = 0
+
+    try:
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            SELECT COUNT(*)
+            FROM mensajes
+            WHERE leido = FALSE
+        """)
+
+        cantidad = cur.fetchone()[0]
+
+        cur.close()
+        conn.close()
+
+    except:
+        pass
+
+    return dict(admin_unread_messages=cantidad)
+
+
+#-----TABLA DE MENSAJES-----
+crear_tabla_mensajes() # Crea la tabla de mensajes al iniciar la aplicación
+
+#-----RUTA DE MENSAJES PARA VER EN DASHBOARD-----
+@app.route("/admin/mensaje/<int:id>")
+def ver_mensaje(id):
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
+    cur.execute("""
+        SELECT *
+        FROM mensajes
+        WHERE id = %s
+    """, (id,))
+
+    mensaje = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        "admin/ver_mensaje.html",
+        mensaje=mensaje
+    )
+
+
     
 # ====================================
 # FUNCIONES Y RUTAS DEL CARRITO DE COMPRAS
@@ -870,6 +1079,9 @@ Dirección: {usuario["direccion"]}
             "ok": False,
             "error": str(e)
         })
+        
+        
+        
 # ====================================
 # RUTA DE PERFIL
 # ====================================
@@ -1112,158 +1324,6 @@ def cerrar_modal():
     return "", 204  # Respuesta vacía con código 204
 
 
-
-# ====================================
-# RUTA Y TABLA DE MENSAJES
-# ====================================
-def crear_tabla_mensajes():
-
-    conn = get_db_connection()
-
-    if conn is None:
-        print("No se pudo crear tabla mensajes: sin conexión BD")
-        return
-
-    try:
-        cur = conn.cursor()
-
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS mensajes (
-                id SERIAL PRIMARY KEY,
-                nombre VARCHAR(100),
-                correo VARCHAR(150),
-                mensaje TEXT,
-                leido BOOLEAN DEFAULT FALSE,
-                fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-
-        conn.commit()
-
-        cur.close()
-        conn.close()
-
-        print("Tabla mensajes lista")
-
-    except Exception as e:
-        print("Error creando tabla mensajes:", e)
-
-# ---- FUNCION PARA ENVIAR CORREO -----
-
-def enviar_mensaje_contacto(nombre, apellido, email, mensaje):
-
-    cuerpo = f"""
-Nuevo mensaje recibido desde Dessert Sacré
-
-Nombre: {nombre} {apellido}
-Correo: {email}
-
-Mensaje:
-{mensaje}
-"""
-
-    msg = Message(
-        subject=f"Nuevo mensaje de {nombre}",
-        sender=app.config["MAIL_USERNAME"],
-        recipients=[app.config["MAIL_USERNAME"]]
-    )
-
-    msg.body = cuerpo
-
-    try:
-        mail.send(msg)
-        print("Mensaje enviado correctamente")
-        return True
-
-    except Exception as e:
-        print("Error enviando mensaje:", e)
-        return False
-
-#-----RUTA PARA GUARDAR MENSAJES-----
-@app.route('/enviar_mensaje', methods=['POST'])
-def enviar_mensaje():
-
-    if not session.get("usuario"):
-        return jsonify({
-            "success": False,
-            "mensaje": "Debes iniciar sesión"
-        }), 401
-
-    nombre = request.form.get("nombre")
-    apellido = request.form.get("apellido")
-    email = request.form.get("email")
-    mensaje = request.form.get("mensaje")
-
-    try:
-
-        conn = get_db_connection()
-        cur = conn.cursor()
-
-        cur.execute("""
-            INSERT INTO mensajes
-            (nombre, apellido, email, mensaje)
-            VALUES (%s,%s,%s,%s)
-        """, (nombre, apellido, email, mensaje))
-
-        conn.commit()
-
-        cur.close()
-        conn.close()
-
-        correo_enviado = enviar_mensaje_contacto(
-            nombre,
-            apellido,
-            email,
-            mensaje
-        )
-
-        return jsonify({
-            "success": True,
-            "correo_enviado": correo_enviado
-        })
-
-    except Exception as e:
-
-        print("ERROR:", e)
-
-        return jsonify({
-            "success": False,
-            "mensaje": str(e)
-        })
-
-
-#------CONTADOR DE MENSAJES NO LEÍDOS EN EL ADMIN-----
-@app.context_processor
-def mensajes_sin_leer():
-
-    cantidad = 0
-
-    try:
-
-        conn = get_db_connection()
-        cur = conn.cursor()
-
-        cur.execute("""
-            SELECT COUNT(*)
-            FROM mensajes
-            WHERE leido = FALSE
-        """)
-
-        cantidad = cur.fetchone()[0]
-
-        cur.close()
-        conn.close()
-
-    except:
-        pass
-
-    return dict(admin_unread_messages=cantidad)
-
-
-#-----TABLA DE MENSAJES-----
-crear_tabla_mensajes() # Crea la tabla de mensajes al iniciar la aplicación
-
-#---------------------------
 
 # ====================================
 # EJECUCIÓN DE LA APLICACIÓN

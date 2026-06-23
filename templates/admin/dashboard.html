@@ -119,7 +119,48 @@
         {% endif %}
       </div>
 
+
+      <!-- MENSAJES RECIENTES ----------------------->
+      <div class="card">
+        <div class="card-header">
+          <h3>Mensajes recientes</h3>
+          <a href="#" onclick="mostrarTab('mensajes')" class="ver-todas">
+            Ver todos →
+          </a>
+        </div>
+        {% if mensajes %}
+
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Correo</th>
+              <th>Mensaje</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for m in mensajes[:3] %}
+            <tr>
+              <td>
+                {{ m.nombre }} {{ m.apellido }}
+              </td>
+              <td>
+                {{ m.email[:15] }}...
+              </td>
+              <td>
+                {{ m.mensaje[:40] }}...
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="vacio">No hay mensajes.</p>
+        {% endif %}
+      </div>
     </div>
+
 
     <!-- PEDIDOS ---------------------------------------------------------------------------------->
     <div id="pedidos" class="tab-content">
@@ -216,6 +257,7 @@
 
     </div>
 
+
     <!-- PESTAÑA: CALIFICACIONES -------------------------------------------------------------------------------->
     <div id="calificaciones" class="tab-content"><!-- fuera de panel -->
 
@@ -264,9 +306,62 @@
         <p class="vacio">No hay calificaciones aún.</p>
         {% endif %}
       </div>
+    </div>
+
+    <!-- PESTAÑA: MENSAJES -------------------------------------------------------------------------------->
+    <div id="mensajes" class="tab-content">
+
+      <div class="page-header">
+        <h1>Mensajes</h1>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Mensajes recibidos</h3>
+        </div>
+
+        {% if mensajes %}
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Mensaje</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for m in mensajes %}
+            <tr>
+              <td>
+                {{ m.nombre }} {{ m.apellido }}
+              </td>
+
+              <td>
+                {{ m.email[:15] }}...
+              </td>
+
+              <td>
+                {{ m.mensaje[:30] }}...
+              </td>
+
+              <td>
+                {{ m.fecha.strftime('%d/%m/%Y') }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="vacio">No hay mensajes.</p>
+        {% endif %}
+      </div>
 
     </div>
 
+  </div>
   </div>
 
 

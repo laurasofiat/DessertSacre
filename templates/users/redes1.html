@@ -133,7 +133,7 @@
                 };
             }
 
-            form.addEventListener("submit", function (e) {
+            form.addEventListener("submit", async function (e) {
 
                 e.preventDefault();
 
@@ -142,26 +142,49 @@
                 const email = document.getElementById("email").value;
                 const mensaje = document.getElementById("message").value;
 
-                // Asunto y cuerpo del correo ya armados
-                const asunto = `Mensaje de ${nombre} ${apellido}`;
-                const cuerpo = `${mensaje}`;
+                try {
 
-                // URL de Gmail compose con destinatario, asunto y cuerpo listos
-                const gmailURL =
-                    "https://mail.google.com/mail/?view=cm&fs=1" +
-                    "&to=" + encodeURIComponent(destinatario) +
-                    "&su=" + encodeURIComponent(asunto) +
-                    "&body=" + encodeURIComponent(cuerpo);
+                    const datos = new FormData();
 
-                // Abre Gmail en una pestaña nueva con todo precargado
-                window.open(gmailURL, "_blank");
+                    datos.append("nombre", nombre);
+                    datos.append("apellido", apellido);
+                    datos.append("email", email);
+                    datos.append("mensaje", mensaje);
 
-                mostrarMensaje(
-                    "¡Gracias por contactarnos! Te estamos redirigiendo a Gmail 🧁",
-                    "success"
-                );
+                    const respuesta = await fetch("/enviar_mensaje", {
+                        method: "POST",
+                        body: datos
+                    });
 
-                form.reset();
+                    const resultado = await respuesta.json();
+
+                    if (resultado.success) {
+
+                        mostrarMensaje(
+                            "¡Gracias por contactarnos! Tu mensaje fue enviado correctamente 🧁",
+                            "success"
+                        );
+
+                        form.reset();
+
+                    } else {
+
+                        mostrarMensaje(
+                            resultado.mensaje || "Error enviando mensaje",
+                            "danger"
+                        );
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    mostrarMensaje(
+                        "Error de conexión con el servidor",
+                        "danger"
+                    );
+                }
+
             });
 
         });
