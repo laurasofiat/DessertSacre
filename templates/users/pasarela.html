@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dessert Sacré | Pasarela</title>
+    <title>Pasarela de Pago | Dessert Sacré</title>
     <script src="https://js.stripe.com/v3/"></script>
     <link
       rel="stylesheet"
@@ -12,15 +12,7 @@
   </head>
 
   <body>
-
     {% include 'users/navbar1.html' %}
-
-    <a href="https://wa.me/573025662571?text=Hola,%20quiero%20hacer%20un%20pedido" class="whatsapp-float"
-        target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-    </a>
-
-    <div class="espa"><p> </p></div>
 
     <div class="container">
       <h1>Dessert Sacré</h1>
@@ -59,9 +51,9 @@
         <h3>Método de pago</h3>
 
         <div class="opciones">
-          <div class="metodo activo" data-metodo="stripe">💳 Tarjeta</div>
-          <div class="metodo" data-metodo="nequi">📱 Nequi</div>
-          <div class="metodo" data-metodo="efecty">💵 Efecty</div>
+          <div class="metodo activo" data-metodo="stripe">Tarjeta</div>
+          <div class="metodo" data-metodo="nequi">Nequi</div>
+          <div class="metodo" data-metodo="efecty">Efecty</div>
         </div>
 
         <!-- Panel Stripe Elements -->
@@ -70,8 +62,8 @@
             <div id="payment-element"></div>
             <p id="payment-errors"></p>
             <button id="btnPagar" type="submit">
-              <span id="btn-text"
-                > Pagar COP {{ "{:,.0f}".format(total) }}</span
+              <span id="btn-text">
+                Pagar COP {{ "{:,.0f}".format(total) }}</span
               >
               <span id="spinner" hidden>Procesando…</span>
             </button>
@@ -80,26 +72,117 @@
 
         <!-- Panel Nequi -->
         <div id="panel-nequi" class="info-pago" hidden>
-          <div id="info-nequi"></div>
-          <button id="btn-nequi" class="btn-manual">Ya realicé el pago</button>
+          <div class="nequi-header">
+            <div class="nequi-logo">*Nequi</div>
+            <div class="nequi-badge">Pago seguro</div>
+          </div>
+          <div class="nequi-pasos">
+            <div class="paso">
+              <div class="paso-num">1</div>
+              <div class="paso-texto">
+                <strong>Abre Nequi</strong> y ve a <em>Cobros y pagos</em>
+              </div>
+            </div>
+            <div class="paso">
+              <div class="paso-num">2</div>
+              <div class="paso-texto">Envía el total al número:</div>
+            </div>
+            <div class="nequi-numero">
+              <span id="numero-nequi">3025662571</span>
+
+              <button type="button" class="btn-copiar" onclick="copiarNumero()">
+                Copiar
+              </button>
+            </div>
+            <div class="paso">
+              <div class="paso-num">3</div>
+              <div class="paso-texto">
+                Toma captura y presiona <strong>"Ya pagué"</strong>
+              </div>
+            </div>
+          </div>
+          <div class="nequi-titular">
+            <span>Titular:</span><strong>Dessert Sacré</strong>
+          </div>
+          <button id="btn-nequi" class="btn-principal">
+            Ya realicé el pago
+          </button>
+        </div>
+        <!-- SECCIÓN SUBIR COMPROBANTE (aparece después de pagar) -->
+        <div
+          id="seccion-comprobante"
+          class="info-pago"
+          style="display: none; margin-top: 30px"
+        >
+          <h3>Subir Comprobante de Pago</h3>
+          <p>Ya realizaste el pago por Nequi? Sube tu comprobante aquí:</p>
+
+          <input type="file" id="input-comprobante" accept="image/*,.pdf" />
+          <br /><br />
+
+          <button onclick="subirComprobante()" class="btn-principal">
+            Enviar Comprobante
+          </button>
+
+          <p id="mensaje-comprobante" style="margin-top: 15px"></p>
         </div>
 
-        <!-- Panel Efecty -->
+        <!-- Panel Efecty - Diseño Mejorado -->
         <div id="panel-efecty" class="info-pago" hidden>
-          <div id="info-efecty"></div>
-          <button id="btn-efecty" class="btn-manual">Ya realicé el pago</button>
+          <div class="efecty-container">
+            <div class="efecty-header">
+              <span class="efecty-logo">Efecty</span>
+              <span class="efecty-badge">Pago en efectivo</span>
+            </div>
+
+            <div class="efecty-pasos">
+              <div class="paso">
+                <span class="paso-num">1</span>
+                <span class="paso-texto">
+                  <strong>Acércate a cualquier punto Efecty</strong> en Colombia
+                </span>
+              </div>
+              <div class="paso">
+                <span class="paso-num">2</span>
+                <span class="paso-texto"
+                  >Proporciona los siguientes datos:</span
+                >
+              </div>
+
+              <div class="efecty-datos">
+                <div class="dato-fila">
+                  <span class="dato-label">Convenio:</span>
+                  <strong id="efecty-convenio">3025662571</strong>
+                </div>
+                <div class="dato-fila">
+                  <span class="dato-label">Titular:</span>
+                  <strong>Dessert Sacré</strong>
+                </div>
+                <div class="dato-fila">
+                  <span class="dato-label">Monto a pagar:</span>
+                  <strong id="efecty-monto"
+                    >COP {{ "{:,.0f}".format(total) }}</strong
+                  >
+                </div>
+              </div>
+
+              <div class="paso">
+                <span class="paso-num">3</span>
+                <span class="paso-texto">
+                  Realiza el pago y <strong>guarda el recibo</strong>
+                </span>
+              </div>
+            </div>
+
+            <button id="btn-efecty" class="btn-principal">
+              YA REALICÉ EL PAGO
+            </button>
+          </div>
         </div>
       </div>
-      <!-- /.metodos -->
-
-      <!-- RESULTADO / CONFIRMACIÓN -->
-      <div id="resultado"></div>
     </div>
-    <!-- /.container -->
 
     <script src="{{ url_for('static', filename='js/pasarela.js') }}"></script>
-
     {% include 'users/footer1.html' %}
-    
   </body>
 </html>

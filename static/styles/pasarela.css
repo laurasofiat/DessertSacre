@@ -15,36 +15,10 @@ body {
   align-items: center;
 }
 
-.whatsapp-float {
-    position: fixed; /* deja el boton fijo*/
-    bottom: 30px;   /* distancia desde abajo */
-    right: 30px; /* pososciona a la derecha */
-    width: 48px;
-    height: 48px;
-    z-index: 9999; /* posiciona el boton por encima de los elementos (toda html)*/
-    }
-
-    .whatsapp-float img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%; /* redondea la imagen */
-    box-shadow: 0 4px 12px rgba(59, 5, 5, 0.83); /* sombra en el fondo */
-    transition: transform 0.2s; /* animación */
-    }
-
-    .whatsapp-float img:hover {
-    transform: scale(1.1); /* da un efecto al pasar el mouse por arriba */
-    }
-
 .container {
   width: 480px;
   padding: 3rem 0 4rem;
   flex: 1;
-}
-
-.espa{
-  width:10px;
-  height:100px;
 }
 
 /* ── TÍTULO ── */
@@ -188,7 +162,7 @@ h3 {
   color: #7a3535;
 }
 
-/* ── PANEL DE CADA MÉTODO ── */
+/* PANEL DE CADA MÉTODO  */
 .info-pago {
   background: #faf7f4;
   border: 0.5px solid #e8e3de;
@@ -200,7 +174,7 @@ h3 {
   min-height: 42px;
 }
 
-/* Stripe Elements vive dentro de .info-pago */
+/* Stripe Elements  .info-pago */
 #payment-element {
   margin-bottom: 10px;
 }
@@ -322,4 +296,187 @@ h3 {
 #resultado.show.error {
   background: #fdecea;
   color: #c0392b;
+}
+.nequi-container {
+  background: #f8f7f4;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e0ddd5;
+}
+
+.nequi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0ddd5;
+}
+
+.nequi-logo {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #7a3535;
+}
+
+.nequi-badge {
+  background: #7a3535;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.paso-num {
+  background: #7a3535;
+  color: white;
+}
+
+.nequi-numero {
+  border: 2px solid #7a3535;
+}
+
+.btn-copiar {
+  background: #7a3535;
+  color: white;
+}
+
+.btn-copiar:hover {
+  background: #5e2828;
+}
+
+.btn-principal {
+  background: #7a3535;
+  color: white;
+}
+
+.btn-principal:hover {
+  background: #5e2828;
+}
+
+.btn-principal:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+/* efecty*/
+.efecty-container {
+  background: #f8f7f4;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e0ddd5;
+}
+
+.efecty-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0ddd5;
+}
+
+.efecty-logo {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #7a3535;
+}
+
+.efecty-badge {
+  background: #7a3535;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.efecty-pasos {
+  margin: 20px 0;
+}
+
+.efecty-datos {
+  background: white;
+  padding: 18px;
+  border-radius: 10px;
+  border: 2px solid #7a3535;
+  margin: 18px 0;
+}
+
+.dato-fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.dato-fila:last-child {
+  border-bottom: none;
+}
+
+.dato-label {
+  color: #555;
+}
+
+.dato-fila strong {
+  color: #7a3535;
+}
+
+.efecty-nota {
+  background: #faf7f4;
+  color: #7a3535;
+  padding: 14px;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: 0.95rem;
+  border-left: 4px solid #7a3535;
+}
+
+/* Pasos */
+
+.paso {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 18px;
+  align-items: flex-start;
+}
+
+.paso-num {
+  background: #7a3535;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* Botón */
+
+.btn-principal {
+  width: 100%;
+  padding: 13px;
+  background: #7a3535;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 12px;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+.btn-principal:hover {
+  background: #5e2828;
+}
+
+.btn-principal:active {
+  transform: scale(0.99);
 }

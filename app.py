@@ -11,10 +11,10 @@ from datetime import datetime, timedelta
 from config import Config
 import traceback
 import os
-import hmac
-import hashlib
 from dotenv import load_dotenv
 import stripe
+from flask_mail import Mail,Message
+import smtplib
 load_dotenv()
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
@@ -36,13 +36,13 @@ DB_CONFIG = {
     'port': os.getenv('DB_PORT')
 }
 
-"""DB_CONFIG = {
+DB_CONFIG = {
     'host': "localhost", #host.docker.internal
     'dbname': "Dessert_Sacre",
     'user': "postgres",
     'password': "123456",
     'port': 5432
-}"""
+}
 
 def get_db_connection():
     try:
@@ -54,21 +54,25 @@ def get_db_connection():
 # ------------------------------------
 # CONFIG SMTP GMAIL
 # ------------------------------------
-EMAIL_USER = app.config["EMAIL_USER"]
-EMAIL_PASS = app.config["EMAIL_PASS"]
+app.config.from_object(Config)
+mail = Mail(app)
+
 
 def enviar_codigo(correo_destino, codigo):
-    msg = MIMEText(f"Tu código de verificación es: {codigo}")
-    msg["Subject"] = "Código de verificación"
-    msg["From"] = EMAIL_USER
-    msg["To"] = correo_destino
+
+    msg = Message(
+        "Código de verificación",
+        sender=app.config["MAIL_USERNAME"],
+        recipients=[correo_destino]
+    )
+
+    msg.body = f"Tu código de verificación es: {codigo}"
+
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-            smtp.starttls()
-            smtp.login(EMAIL_USER, EMAIL_PASS)
-            smtp.send_message(msg)
-            print("Correo enviado ✔")
-            return True
+        mail.send(msg)
+        print("Correo enviado ")
+        return True
+
     except Exception as e:
         print("Error enviando correo:", e)
         return False
@@ -572,7 +576,7 @@ def confirmacion():
     return redirect('/pasarela')  # Redirige a pasarela
 
 # ====================================
-# PASARELA DE PAGOS
+# PASARELA DE PAGOS CON STRIPE ELEMENTS
 # ====================================
 @app.route("/pasarela")
 def pasarela():
@@ -598,7 +602,7 @@ def pasarela():
 
 @app.route("/procesar_pago", methods=["POST"])
 def procesar_pago():
-   
+ 
     if not session.get("usuario"):
         return jsonify({"error": "Debes iniciar sesión"}), 401
 
@@ -655,10 +659,7 @@ def procesar_pago():
 
 @app.route("/pago_exitoso", methods=["GET"])
 def pago_exitoso():
-    """
-
-    """
-    # Limpia el carrito de la sesión
+       # Limpia el carrito de la sesión
     session.pop("carrito", None)
     
     # Muestra página de éxito o redirige
@@ -667,6 +668,13 @@ def pago_exitoso():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
+    """
+    Webhook para eventos de Stripe
+    Valida la firma y procesa eventos de pago
+    """
+    import hmac
+    import hashlib
+    
     payload = request.get_data(as_text=True)
     sig_header = request.headers.get("Stripe-Signature")
     webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
@@ -697,7 +705,7 @@ def webhook():
         print(f" Pago exitoso: {payment_intent['id']} - {amount} {currency}")
         
         # Aquí puedes guardar el pedido en BD, enviar confirmación, etc.
-        # Ejemplo: _save_order_to_db(payment_intent)
+
         
     elif event["type"] == "payment_intent.payment_failed":
         payment_intent = event["data"]["object"]
@@ -705,13 +713,15 @@ def webhook():
         
     elif event["type"] == "charge.refunded":
         charge = event["data"]["object"]
-        print(f"↩ Reembolso procesado: {charge['id']}")
+        print(f" Reembolso procesado: {charge['id']}")
     
     return jsonify({"status": "received"}), 200
 
 
+
+
 DATOS_PAGO = {
-    "nequi":  {"numero": "3025662571", "titular": "Dessert Sacré"},
+    "nequi":  {"numero": "123456789", "titular": "Dessert Sacré"},
     "banco":  {"banco": "BANCOLOMBIA", "numero": "123456789",
                "tipo": "Ahorros", "titular": "Dessert Sacré", "cedula": "3214586088"},
     "efecty": {"convenio": "3214586088", "titular": "Dessert Sacré"}
@@ -724,13 +734,17 @@ def datos_pago():
 
 pedidos_guardados = {}
 
+from flask_mail import Message
+
 @app.route("/api/crear-pedido", methods=["POST"])
 def crear_pedido():
     if not session.get('usuario'):
         return jsonify({"error": "No autenticado"}), 401
+
     try:
         data = request.get_json()
         cart = _get_cart()
+
         if not cart:
             return jsonify({"error": "Carrito vacío"}), 400
 
@@ -738,16 +752,40 @@ def crear_pedido():
         ref   = f"PED-{uuid.uuid4().hex[:8].upper()}"
 
         pedidos_guardados[ref] = {
-            "total":    total,
-            "metodo":   data.get("metodo"),
-            "nombre":   data.get("nombre"),
-            "email":    data.get("email"),
+            "total": total,
+            "metodo": data.get("metodo"),
+            "nombre": data.get("nombre"),
+            "email": data.get("email"),
             "telefono": data.get("telefono"),
-            "fecha":    datetime.now().strftime("%Y-%m-%d %H:%M")
+            "fecha": datetime.now().strftime("%Y-%m-%d %H:%M")
         }
 
+        # ENVIAR CORREO AL DUEÑO
+        msg = Message(
+            subject=f"Nuevo pedido {ref}",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=["dessertsacre@gmail.com"]
+        )
+
+        msg.body = f"""
+Nuevo pedido registrado
+
+Referencia: {ref}
+Cliente: {data.get('nombre')}
+Correo: {data.get('email')}
+Teléfono: {data.get('telefono')}
+Total: ${total:,.0f} COP
+Método: {data.get('metodo')}
+"""
+
+        mail.send(msg)
+
         session.pop("carrito", None)
-        return jsonify({"referencia": ref, "total": total})
+
+        return jsonify({
+            "referencia": ref,
+            "total": total
+        })
 
     except Exception as e:
         traceback.print_exc()
@@ -782,7 +820,56 @@ def calificar():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     
+@app.route("/subir-comprobante", methods=["POST"])
+def subir_comprobante():
 
+    try:
+
+        archivo = request.files.get("comprobante")
+
+        if not archivo:
+            return jsonify({
+                "ok": False,
+                "error": "No llegó archivo"
+            })
+
+        usuario = session.get("usuario")
+
+        msg = Message(
+            subject="Nuevo comprobante de pago",
+            sender=app.config["MAIL_USERNAME"],
+            recipients=["dessertsacre@gmail.com"]
+        )
+
+        msg.body = f"""
+Nuevo comprobante recibido
+
+Cliente: {usuario["nombre"]}
+Correo: {usuario["email"]}
+Teléfono: {usuario["telefono"]}
+Dirección: {usuario["direccion"]}
+
+"""
+
+        msg.attach(
+            archivo.filename,
+            archivo.content_type,
+            archivo.read()
+        )
+
+        mail.send(msg)
+
+        return jsonify({"ok": True})
+
+
+    except Exception as e:
+
+        print("ERROR:", str(e))
+
+        return jsonify({
+            "ok": False,
+            "error": str(e)
+        })
 # ====================================
 # RUTA DE PERFIL
 # ====================================
@@ -1030,26 +1117,39 @@ def cerrar_modal():
 # RUTA Y TABLA DE MENSAJES
 # ====================================
 def crear_tabla_mensajes():
+
     conn = get_db_connection()
-    cur = conn.cursor()
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS mensajes (
-        id SERIAL PRIMARY KEY,
-        nombre VARCHAR(100) NOT NULL,
-        apellido VARCHAR(100) NOT NULL,
-        email VARCHAR(150) NOT NULL,
-        mensaje TEXT NOT NULL,
-        fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        leido BOOLEAN DEFAULT FALSE
-    );
-    """)
+    if conn is None:
+        print("No se pudo crear tabla mensajes: sin conexión BD")
+        return
 
-    conn.commit()
-    cur.close()
-    conn.close()
+    try:
+        cur = conn.cursor()
 
-#----FUNCION PARA ENVIAR CORREO-----
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS mensajes (
+                id SERIAL PRIMARY KEY,
+                nombre VARCHAR(100),
+                correo VARCHAR(150),
+                mensaje TEXT,
+                leido BOOLEAN DEFAULT FALSE,
+                fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
+        print("Tabla mensajes lista")
+
+    except Exception as e:
+        print("Error creando tabla mensajes:", e)
+
+# ---- FUNCION PARA ENVIAR CORREO -----
+
 def enviar_mensaje_contacto(nombre, apellido, email, mensaje):
 
     cuerpo = f"""
@@ -1062,18 +1162,17 @@ Mensaje:
 {mensaje}
 """
 
-    msg = MIMEText(cuerpo)
+    msg = Message(
+        subject=f"Nuevo mensaje de {nombre}",
+        sender=app.config["MAIL_USERNAME"],
+        recipients=[app.config["MAIL_USERNAME"]]
+    )
 
-    msg["Subject"] = f"Nuevo mensaje de {nombre}"
-    msg["From"] = EMAIL_USER
-    msg["To"] = "dessertsacre@gmail.com"
+    msg.body = cuerpo
 
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-            smtp.starttls()
-            smtp.login(EMAIL_USER, EMAIL_PASS)
-            smtp.send_message(msg)
-
+        mail.send(msg)
+        print("Mensaje enviado correctamente")
         return True
 
     except Exception as e:
@@ -1163,6 +1262,7 @@ def mensajes_sin_leer():
 
 #-----TABLA DE MENSAJES-----
 crear_tabla_mensajes() # Crea la tabla de mensajes al iniciar la aplicación
+
 #---------------------------
 
 # ====================================

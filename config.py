@@ -1,6 +1,6 @@
 import os
 class Config:
-
+    STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
     # Clave secreta para sesiones y formularios
     SECRET_KEY = os.environ.get("SECRET_KEY") or "clave_super_secreta_local"
 
@@ -13,6 +13,14 @@ class Config:
         'port': int(os.environ.get("DB_PORT") or 5432)
     }
 
+    
        # CONFIG SMTP GMAIL
-    EMAIL_USER = "dessertsacre@gmail.com"
-    EMAIL_PASS = "utrehsexsumaxznm"   # Contraseña de aplicación Gmail
+    MAIL_USERNAME = "dessertsacre@gmail.com"
+    MAIL_PASSWORD = "utrehsexsumaxznm"   # Contraseña de aplicación Gmail
+    
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_DEFAULT_SENDER = "dessertsacre@gmail.com"
+
+    
