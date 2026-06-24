@@ -12,8 +12,8 @@
             <li><a href="#" onclick="mostrarTab('pedidos')" id="tab-pedidos">Pedidos</a></li>
             <li><a href="#" onclick="mostrarTab('usuarios')" id="tab-usuarios">Usuarios</a></li>
             <li><a href="#" onclick="mostrarTab('calificaciones')" id="tab-calificaciones">Calificaciones</a></li>
-            <li><a href="#" onclick="mostrarTab('mensajes')" id="tab-mensajes">Mensajes {% if admin_unread_messages > 0%}
-                <span class="badge rojo"> {{ admin_unread_messages }}</span>{% endif %}</a></li>
+            <li><a href="#" onclick="mostrarTab('mensajes')" id="tab-mensajes">Mensajes</a></li>
+            <li><a href="#" onclick="mostrarTab('reportes')" id="tab-reportes">Reportes</a></li>
             <li style="margin-top:auto;"><a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a></li>
         </ul>
     </div>

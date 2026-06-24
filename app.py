@@ -1,7 +1,7 @@
-from flask import Flask, request, render_template, jsonify, redirect, session, flash, url_for
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from flask_mail import Mail, Message
+from flask import Flask, request, render_template, jsonify, redirect, session, flash, url_for #pip install flask
+import psycopg2 #pip install psycopg2
+from psycopg2.extras import RealDictCursor #pip install psycopg2-binary
+from flask_mail import Mail, Message 
 import random
 import uuid
 import smtplib
@@ -11,10 +11,14 @@ from datetime import datetime, timedelta
 from config import Config
 import traceback
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv #pip install python-dotenv
 import stripe
 from flask_mail import Mail,Message
 import smtplib
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer #pip install reportlab
+from reportlab.lib.styles import getSampleStyleSheet
+from flask import send_file
+import io
 load_dotenv()
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
@@ -643,6 +647,126 @@ def ver_mensaje(id):
         mensaje=mensaje
     )
 
+
+#====================================
+# RUTAS PARA REPORTES PDF DE ADMINISTRADOR
+#====================================
+
+@app.route("/admin/generar_reporte", methods=["POST"])
+def generar_reporte():
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    tipo = request.form.get("tipo_reporte")
+
+    buffer = io.BytesIO()
+
+    doc = SimpleDocTemplate(buffer)
+
+    styles = getSampleStyleSheet()
+
+    contenido = []
+
+    contenido.append(
+        Paragraph(
+            f"Reporte de {tipo.capitalize()}",
+            styles["Title"]
+        )
+    )
+
+    contenido.append(Spacer(1, 20))
+
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
+    # USUARIOS
+    if tipo == "usuarios":
+
+        cur.execute("""
+            SELECT *
+            FROM registro
+            ORDER BY id
+        """)
+
+        usuarios = cur.fetchall()
+
+        for u in usuarios:
+
+            contenido.append(
+                Paragraph(
+                    f"""
+                    ID: {u['id']}<br/>
+                    Nombre: {u['primer_nombre']} {u['primer_apellido']}<br/>
+                    Correo: {u['correo']}<br/>
+                    Teléfono: {u['telefono']}
+                    """,
+                    styles["BodyText"]
+                )
+            )
+
+            contenido.append(Spacer(1,10))
+
+    # MENSAJES
+    elif tipo == "mensajes":
+
+        cur.execute("""
+            SELECT *
+            FROM mensajes
+            ORDER BY fecha DESC
+        """)
+
+        mensajes = cur.fetchall()
+
+        for m in mensajes:
+
+            contenido.append(
+                Paragraph(
+                    f"""
+                    Nombre: {m['nombre']} {m['apellido']}<br/>
+                    Correo: {m['email']}<br/>
+                    Mensaje: {m['mensaje']}<br/>
+                    Fecha: {m['fecha']}
+                    """,
+                    styles["BodyText"]
+                )
+            )
+
+            contenido.append(Spacer(1,10))
+
+    # CALIFICACIONES
+    elif tipo == "calificaciones":
+
+        for c in calificaciones:
+
+            contenido.append(
+                Paragraph(
+                    f"""
+                    Cliente: {c['cliente']}<br/>
+                    Producto: {c['producto']}<br/>
+                    Estrellas: {c['estrellas']}<br/>
+                    Comentario: {c['comentario']}<br/>
+                    Fecha: {c['fecha']}
+                    """,
+                    styles["BodyText"]
+                )
+            )
+
+            contenido.append(Spacer(1,10))
+
+    cur.close()
+    conn.close()
+
+    doc.build(contenido)
+
+    buffer.seek(0)
+
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=f"reporte_{tipo}.pdf",
+        mimetype="application/pdf"
+    )
 
     
 # ====================================

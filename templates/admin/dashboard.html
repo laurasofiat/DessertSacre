@@ -358,9 +358,43 @@
         <p class="vacio">No hay mensajes.</p>
         {% endif %}
       </div>
-
     </div>
 
+    <!-- PESTAÑA: REPORTES -------------------------------------------------------------------------------->
+    <div id="reportes" class="tab-content">
+
+      <div class="page-header">
+        <h1>Reportes</h1>
+      </div>
+
+      <div class="card">
+
+        <div class="card-header">
+          <h3>Generar reporte PDF</h3>
+        </div>
+
+        <form action="/admin/generar_reporte" method="POST">
+
+          <label>Generar reporte de:</label>
+
+          <select name="tipo_reporte" class="form-control" required>
+            <option value="">Seleccione...</option>
+            <option value="usuarios">Usuarios</option>
+            <option value="calificaciones">Calificaciones</option>
+            <option value="mensajes">Mensajes</option>
+          </select>
+
+          <br>
+
+          <button type="submit" class="btn-generar">
+            Generar PDF
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
   </div>
   </div>
 
