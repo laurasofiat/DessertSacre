@@ -39,7 +39,6 @@ h1::after {
   background: #471010;
   margin: 10px auto 6px;
 }
-
 .subtitulo {
   display: block;
   text-align: center;
@@ -60,7 +59,6 @@ h1::after {
   padding: 1.25rem 1.5rem;
   margin-bottom: 1rem;
 }
-
 h3 {
   font-size: 10px;
   font-weight: 400;
@@ -70,7 +68,7 @@ h3 {
   margin-bottom: 10px;
 }
 
-/* ── RESUMEN DEL PEDIDO ── */
+/* ── RESUMEN ── */
 .resumen-item {
   display: flex;
   justify-content: space-between;
@@ -82,7 +80,6 @@ h3 {
 .resumen-item:last-of-type {
   border-bottom: none;
 }
-
 .resumen-total {
   display: flex;
   justify-content: space-between;
@@ -97,7 +94,6 @@ h3 {
   text-transform: uppercase;
   color: #451c1c;
 }
-
 #total {
   font-size: 32px;
   font-weight: 500;
@@ -129,7 +125,7 @@ h3 {
   cursor: default;
 }
 
-/* ── SELECTOR DE MÉTODO ── */
+/* ── SELECTOR ── */
 .opciones {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -162,7 +158,7 @@ h3 {
   color: #7a3535;
 }
 
-/* PANEL DE CADA MÉTODO  */
+/* ── PANEL ── */
 .info-pago {
   background: #faf7f4;
   border: 0.5px solid #e8e3de;
@@ -173,8 +169,6 @@ h3 {
   line-height: 1.6;
   min-height: 42px;
 }
-
-/* Stripe Elements  .info-pago */
 #payment-element {
   margin-bottom: 10px;
 }
@@ -185,40 +179,154 @@ h3 {
   margin-bottom: 6px;
 }
 
-/* Datos de métodos manuales */
-.metodo-titulo {
-  font-weight: 700;
-  color: #411111;
-  margin-bottom: 10px;
-  font-size: 13px;
-}
-.metodo-datos {
-  margin-bottom: 10px;
-}
-.dato-fila {
+/* ── PASOS COMPARTIDOS ── */
+.paso {
   display: flex;
-  justify-content: space-between;
-  padding: 5px 0;
-  border-bottom: 0.5px solid #f0ebe6;
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: flex-start;
+}
+.paso-num {
+  background: #7a3535;
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.paso-texto {
   font-size: 13px;
-}
-.dato-fila span {
-  color: #888;
-}
-.dato-fila strong {
-  color: #411111;
-}
-.metodo-nota {
-  font-size: 12px;
-  color: #888;
-  margin-top: 8px;
+  color: #555;
   line-height: 1.5;
 }
-.metodo-nota strong {
+.paso-texto strong {
+  color: #411111;
+}
+.paso-texto em {
+  color: #7a3535;
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════
+   NEQUI
+══════════════════════════════ */
+.nequi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 0.5px solid #e8e3de;
+}
+.nequi-logo {
+  font-size: 20px;
+  font-weight: 900;
+  font-style: italic;
+  color: #7a3535;
+  letter-spacing: -0.5px;
+}
+.nequi-badge {
+  background: #7a3535;
+  color: #fff;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+.nequi-pasos {
+  padding: 4px 0 8px;
+}
+.nequi-numero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1.5px solid #7a3535;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 4px 0 14px 38px;
+}
+.nequi-numero span {
+  font-size: 18px;
+  font-weight: 800;
+  color: #411111;
+  letter-spacing: 1px;
+}
+.nequi-titular {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: #888;
+  padding: 8px 0;
+  border-top: 0.5px solid #f0ebe6;
+  margin-top: 4px;
+}
+.nequi-titular strong {
   color: #411111;
 }
 
-/* ── BOTÓN PRINCIPAL (Stripe) ── */
+/* ══════════════════════════════
+   DAVIPLATA
+══════════════════════════════ */
+.daviplata-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 0.5px solid #e8e3de;
+}
+.daviplata-logo {
+  font-size: 20px;
+  font-weight: 900;
+  color: #7a3535;
+  letter-spacing: -0.5px;
+}
+.daviplata-badge {
+  background: #7a3535;
+  color: #fff;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+.daviplata-numero {
+  border-color: #7a3535;
+}
+.daviplata-numero span {
+  color: #411111;
+}
+
+/* ── BOTÓN COPIAR ── */
+.btn-copiar {
+  background: #7a3535;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-copiar:hover {
+  background: #5e2828;
+}
+.daviplata-copiar {
+  background: #7a3535;
+}
+.daviplata-copiar:hover {
+  background: #5e2828;
+}
+
+/* ── BOTONES PRINCIPALES ── */
+.btn-principal,
 #btnPagar {
   width: 100%;
   padding: 13px;
@@ -227,36 +335,7 @@ h3 {
   border: none;
   border-radius: 8px;
   font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-top: 10px;
-  transition:
-    background 0.2s,
-    transform 0.1s;
-}
-#btnPagar:hover:not(:disabled) {
-  background: #5e2828;
-}
-#btnPagar:active:not(:disabled) {
-  transform: scale(0.99);
-}
-#btnPagar:disabled {
-  background: #b08080;
-  cursor: not-allowed;
-}
-
-/* ── BOTONES MANUALES (Nequi / Efecty) ── */
-.btn-manual {
-  width: 100%;
-  padding: 13px;
-  background: #7a3535;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
@@ -265,18 +344,38 @@ h3 {
     background 0.2s,
     transform 0.1s;
 }
-.btn-manual:hover:not(:disabled) {
+.btn-principal:hover:not(:disabled),
+#btnPagar:hover:not(:disabled) {
   background: #5e2828;
 }
-.btn-manual:active:not(:disabled) {
+.btn-principal:active:not(:disabled),
+#btnPagar:active:not(:disabled) {
   transform: scale(0.99);
 }
-.btn-manual:disabled {
+.btn-principal:disabled,
+#btnPagar:disabled {
   background: #b08080;
   cursor: not-allowed;
 }
+.daviplata-btn {
+  background: #7a3535 !important;
+}
+.daviplata-btn:hover:not(:disabled) {
+  background: #5e2828 !important;
+}
 
-/* ── RESULTADO / CONFIRMACIÓN ── */
+/* ── COMPROBANTE ── */
+.info-pago h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #411111;
+  margin-bottom: 8px;
+}
+#input-comprobante {
+  font-size: 12px;
+}
+
+/* ── RESULTADO ── */
 #resultado {
   margin-top: 10px;
   padding: 14px 16px;
@@ -297,186 +396,22 @@ h3 {
   background: #fdecea;
   color: #c0392b;
 }
-.nequi-container {
-  background: #f8f7f4;
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid #e0ddd5;
-}
 
-.nequi-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e0ddd5;
-}
-
-.nequi-logo {
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: #7a3535;
-}
-
-.nequi-badge {
-  background: #7a3535;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-}
-
-.paso-num {
-  background: #7a3535;
-  color: white;
-}
-
-.nequi-numero {
-  border: 2px solid #7a3535;
-}
-
-.btn-copiar {
-  background: #7a3535;
-  color: white;
-}
-
-.btn-copiar:hover {
-  background: #5e2828;
-}
-
-.btn-principal {
-  background: #7a3535;
-  color: white;
-}
-
-.btn-principal:hover {
-  background: #5e2828;
-}
-
-.btn-principal:disabled {
-  background: #999;
-  cursor: not-allowed;
-}
-/* efecty*/
-.efecty-container {
-  background: #f8f7f4;
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid #e0ddd5;
-}
-
-.efecty-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e0ddd5;
-}
-
-.efecty-logo {
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: #7a3535;
-}
-
-.efecty-badge {
-  background: #7a3535;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.efecty-pasos {
-  margin: 20px 0;
-}
-
-.efecty-datos {
-  background: white;
-  padding: 18px;
-  border-radius: 10px;
-  border: 2px solid #7a3535;
-  margin: 18px 0;
-}
-
+/* ── DATO FILAS (tabla de datos) ── */
 .dato-fila {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 0.5px solid #f0ebe6;
+  font-size: 13px;
 }
-
 .dato-fila:last-child {
   border-bottom: none;
 }
-
-.dato-label {
-  color: #555;
+.dato-fila span {
+  color: #888;
 }
-
 .dato-fila strong {
-  color: #7a3535;
-}
-
-.efecty-nota {
-  background: #faf7f4;
-  color: #7a3535;
-  padding: 14px;
-  border-radius: 8px;
-  margin: 20px 0;
-  font-size: 0.95rem;
-  border-left: 4px solid #7a3535;
-}
-
-/* Pasos */
-
-.paso {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 18px;
-  align-items: flex-start;
-}
-
-.paso-num {
-  background: #7a3535;
-  color: white;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-/* Botón */
-
-.btn-principal {
-  width: 100%;
-  padding: 13px;
-  background: #7a3535;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-top: 12px;
-  transition:
-    background 0.2s,
-    transform 0.1s;
-}
-
-.btn-principal:hover {
-  background: #5e2828;
-}
-
-.btn-principal:active {
-  transform: scale(0.99);
+  color: #411111;
 }

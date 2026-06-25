@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function mostrarPanel(metodo) {
     document.getElementById("panel-stripe").hidden = true;
     document.getElementById("panel-nequi").hidden = true;
-    document.getElementById("panel-efecty").hidden = true;
+    document.getElementById("panel-daviplata").hidden = true;
 
     const comprobante = document.getElementById("seccion-comprobante");
 
@@ -104,21 +104,38 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /*  BOTÓN NEQUI */
+  /* 
+Botones nequi  y daviplata */
 
   const btnNequi = document.getElementById("btn-nequi");
+  const btnDaviplata = document.getElementById("btn-daviplata");
+  const seccion = document.getElementById("seccion-comprobante");
 
-  if (btnNequi) {
+  if (btnNequi && seccion) {
     btnNequi.addEventListener("click", () => {
-      const seccion = document.getElementById("seccion-comprobante");
+      btnNequi.insertAdjacentElement("afterend", seccion);
 
-      if (seccion) {
-        seccion.style.display = "block";
+      ```
+seccion.style.display = "block";
 
-        seccion.scrollIntoView({
-          behavior: "smooth",
-        });
-      }
+seccion.scrollIntoView({
+  behavior: "smooth",
+});
+```;
+    });
+  }
+
+  if (btnDaviplata && seccion) {
+    btnDaviplata.addEventListener("click", () => {
+      btnDaviplata.insertAdjacentElement("afterend", seccion);
+
+      ```
+seccion.style.display = "block";
+
+seccion.scrollIntoView({
+  behavior: "smooth",
+});
+```;
     });
   }
 
@@ -126,25 +143,17 @@ document.addEventListener("DOMContentLoaded", () => {
      COPIAR NÚMERO NEQUI
   ========================== */
 
-  window.copiarNumero = async function () {
-    const numero = document.getElementById("numero-nequi").innerText.trim();
+  window.copiarNumero = async function (idElemento) {
+    const numero = document.getElementById(idElemento).innerText.trim();
 
     try {
       await navigator.clipboard.writeText(numero);
       alert("Número copiado: " + numero);
     } catch (err) {
       console.error(err);
-
-      const input = document.createElement("input");
-      input.value = numero;
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand("copy");
-      document.body.removeChild(input);
-
-      alert("Número copiado: " + numero);
     }
   };
+
   /* ==========================
      SUBIR COMPROBANTE
   ========================== */
@@ -186,39 +195,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
   /* ==========================
-     EFECTY
-  ========================== */
+   BOTÓN DAVIPLATA
+========================== */
 
-  const btnEfecty = document.getElementById("btn-efecty");
+  if (btnDaviplata) {
+    btnDaviplata.addEventListener("click", () => {
+      const seccion = document.getElementById("seccion-comprobante");
 
-  if (btnEfecty) {
-    btnEfecty.addEventListener("click", async () => {
-      try {
-        const resp = await fetch("/api/crear-pedido", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            metodo: "efecty",
-          }),
+      if (seccion) {
+        seccion.style.display = "block";
+
+        seccion.scrollIntoView({
+          behavior: "smooth",
         });
-
-        const data = await resp.json();
-
-        if (data.referencia) {
-          document.getElementById("mensaje-efecty").innerHTML =
-            "Pedido creado correctamente ";
-
-          setTimeout(() => {
-            window.location.href = "/inicioU";
-          }, 1500);
-        } else {
-          alert(data.error);
-        }
-      } catch (error) {
-        console.error(error);
-        alert("Error creando pedido");
       }
     });
   }

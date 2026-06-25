@@ -53,18 +53,16 @@
         <div class="opciones">
           <div class="metodo activo" data-metodo="stripe">Tarjeta</div>
           <div class="metodo" data-metodo="nequi">Nequi</div>
-          <div class="metodo" data-metodo="efecty">Efecty</div>
+          <div class="metodo" data-metodo="daviplata">Daviplata</div>
         </div>
 
-        <!-- Panel Stripe Elements -->
+        <!-- Panel Stripe -->
         <div id="panel-stripe" class="info-pago">
           <form id="payment-form">
             <div id="payment-element"></div>
             <p id="payment-errors"></p>
             <button id="btnPagar" type="submit">
-              <span id="btn-text">
-                Pagar COP {{ "{:,.0f}".format(total) }}</span
-              >
+              <span id="btn-text">Pagar COP {{ "{:,.0f}".format(total) }}</span>
               <span id="spinner" hidden>Procesando…</span>
             </button>
           </form>
@@ -89,8 +87,11 @@
             </div>
             <div class="nequi-numero">
               <span id="numero-nequi">3025662571</span>
-
-              <button type="button" class="btn-copiar" onclick="copiarNumero()">
+              <button
+                type="button"
+                class="btn-copiar"
+                onclick="copiarNumero('numero-nequi', this)"
+              >
                 Copiar
               </button>
             </div>
@@ -105,81 +106,76 @@
             <span>Titular:</span><strong>Dessert Sacré</strong>
           </div>
           <button id="btn-nequi" class="btn-principal">
-            Ya realicé el pago
+            YA REALICÉ EL PAGO
           </button>
         </div>
-        <!-- SECCIÓN SUBIR COMPROBANTE (aparece después de pagar) -->
+
+        <!-- SECCIÓN SUBIR COMPROBANTE (aparece después de click en Nequi/Daviplata) -->
         <div
           id="seccion-comprobante"
           class="info-pago"
-          style="display: none; margin-top: 30px"
+          style="display: none; margin-top: 16px"
         >
-          <h3>Subir Comprobante de Pago</h3>
-          <p>Ya realizaste el pago por Nequi? Sube tu comprobante aquí:</p>
-
+          <h3>Subir comprobante de pago</h3>
+          <p style="font-size: 13px; color: #666; margin-bottom: 12px">
+            ¿Ya realizaste el pago? Sube tu comprobante aquí:
+          </p>
           <input type="file" id="input-comprobante" accept="image/*,.pdf" />
           <br /><br />
-
           <button onclick="subirComprobante()" class="btn-principal">
-            Enviar Comprobante
+            Enviar comprobante
           </button>
-
-          <p id="mensaje-comprobante" style="margin-top: 15px"></p>
+          <p
+            id="mensaje-comprobante"
+            style="margin-top: 12px; font-size: 13px"
+          ></p>
         </div>
 
-        <!-- Panel Efecty - Diseño Mejorado -->
-        <div id="panel-efecty" class="info-pago" hidden>
-          <div class="efecty-container">
-            <div class="efecty-header">
-              <span class="efecty-logo">Efecty</span>
-              <span class="efecty-badge">Pago en efectivo</span>
-            </div>
-
-            <div class="efecty-pasos">
-              <div class="paso">
-                <span class="paso-num">1</span>
-                <span class="paso-texto">
-                  <strong>Acércate a cualquier punto Efecty</strong> en Colombia
-                </span>
-              </div>
-              <div class="paso">
-                <span class="paso-num">2</span>
-                <span class="paso-texto"
-                  >Proporciona los siguientes datos:</span
-                >
-              </div>
-
-              <div class="efecty-datos">
-                <div class="dato-fila">
-                  <span class="dato-label">Convenio:</span>
-                  <strong id="efecty-convenio">3025662571</strong>
-                </div>
-                <div class="dato-fila">
-                  <span class="dato-label">Titular:</span>
-                  <strong>Dessert Sacré</strong>
-                </div>
-                <div class="dato-fila">
-                  <span class="dato-label">Monto a pagar:</span>
-                  <strong id="efecty-monto"
-                    >COP {{ "{:,.0f}".format(total) }}</strong
-                  >
-                </div>
-              </div>
-
-              <div class="paso">
-                <span class="paso-num">3</span>
-                <span class="paso-texto">
-                  Realiza el pago y <strong>guarda el recibo</strong>
-                </span>
-              </div>
-            </div>
-
-            <button id="btn-efecty" class="btn-principal">
-              YA REALICÉ EL PAGO
-            </button>
+        <!-- Panel Daviplata -->
+        <div id="panel-daviplata" class="info-pago" hidden>
+          <div class="daviplata-header">
+            <div class="daviplata-logo">Daviplata</div>
+            <div class="daviplata-badge">Pago seguro</div>
           </div>
+          <div class="nequi-pasos">
+            <div class="paso">
+              <div class="paso-num">1</div>
+              <div class="paso-texto">
+                <strong>Abre Daviplata</strong> en tu celular
+              </div>
+            </div>
+            <div class="paso">
+              <div class="paso-num">2</div>
+              <div class="paso-texto">Envía el total al número:</div>
+            </div>
+            <div class="nequi-numero daviplata-numero">
+              <span id="numero-daviplata">3025662571</span>
+              <button
+                type="button"
+                class="btn-copiar daviplata-copiar"
+                onclick="copiarNumero('numero-daviplata', this)"
+              >
+                Copiar
+              </button>
+            </div>
+            <div class="paso">
+              <div class="paso-num">3</div>
+              <div class="paso-texto">
+                Toma captura y presiona <strong>"Ya pagué"</strong>
+              </div>
+            </div>
+          </div>
+          <div class="nequi-titular">
+            <span>Titular:</span><strong>Dessert Sacré</strong>
+          </div>
+          <button id="btn-daviplata" class="btn-principal daviplata-btn">
+            YA REALICÉ EL PAGO
+          </button>
         </div>
       </div>
+      <!-- /.metodos -->
+
+      <div id="resultado"></div>
     </div>
 
     <script src="{{ url_for('static', filename='js/pasarela.js') }}"></script>
