@@ -30,21 +30,22 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 app.secret_key = "clave_super_secreta"
 app.config.from_object(Config)
 stripe.api_key = Config.STRIPE_SECRET_KEY
-"""DB_CONFIG = {
+
+DB_CONFIG = {
     'host': os.getenv('DB_HOST'),
     'dbname': os.getenv('DB_NAME'),
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD'),
     'port': os.getenv('DB_PORT')
-}"""
+}
 
-DB_CONFIG = {
+"""DB_CONFIG = {
     'host': "localhost", #host.docker.internal
     'dbname': "Dessert_Sacre",
     'user': "postgres",
     'password': "123456",
     'port': 5432
-}
+}"""
 
 def get_db_connection():
     try:
