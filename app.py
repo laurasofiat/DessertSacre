@@ -13,7 +13,6 @@ import traceback
 import os
 from dotenv import load_dotenv #pip install python-dotenv
 import stripe
-from flask_mail import Mail,Message
 import smtplib
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer #pip install reportlab
 from reportlab.lib.styles import getSampleStyleSheet
@@ -40,13 +39,13 @@ DB_CONFIG = {
     'port': os.getenv('DB_PORT')
 }
 
-DB_CONFIG = {
+"""DB_CONFIG = {
     'host': "localhost", #host.docker.internal
     'dbname': "Dessert_Sacre",
     'user': "postgres",
     'password': "123456",
     'port': 5432
-}
+}"""
 
 def get_db_connection():
     try:
@@ -1067,7 +1066,6 @@ def datos_pago():
 
 pedidos_guardados = {}
 
-from flask_mail import Message
 
 @app.route("/api/crear-pedido", methods=["POST"])
 def crear_pedido():
