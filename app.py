@@ -20,9 +20,8 @@ from flask import send_file
 import io
 load_dotenv()
 
-STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 
-
+print("Stripe:", stripe.api_key)
 # ------------------------------------
 # CONFIG GENERAL
 # ------------------------------------
@@ -30,22 +29,22 @@ app = Flask(__name__)
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 app.secret_key = "clave_super_secreta"
 app.config.from_object(Config)
-
-DB_CONFIG = {
+stripe.api_key = Config.STRIPE_SECRET_KEY
+"""DB_CONFIG = {
     'host': os.getenv('DB_HOST'),
     'dbname': os.getenv('DB_NAME'),
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD'),
     'port': os.getenv('DB_PORT')
-}
+}"""
 
-"""DB_CONFIG = {
+DB_CONFIG = {
     'host': "localhost", #host.docker.internal
     'dbname': "Dessert_Sacre",
     'user': "postgres",
     'password': "123456",
     'port': 5432
-}"""
+}
 
 def get_db_connection():
     try:
@@ -776,6 +775,7 @@ def _get_cart():  # Función privada para obtener el carrito de la sesión
 
 def _save_cart(cart):  # Función privada para guardar el carrito en sesión
     session["carrito"] = cart  # Actualiza la sesión
+    session.modified = True
 
 def _get_cart_info(cart=None):  # Función para obtener info del carrito
     if cart is None:
@@ -903,10 +903,18 @@ def confirmacion():
     if not cart:  # Si carrito vacío
         flash('El carrito está vacío.', 'warning')
         return redirect('/carrito')
-    session.pop('carrito', None)  # Limpia carrito
-    flash('¡Tu compra ha sido confirmada!', 'success')
+    
     return redirect('/pasarela')  # Redirige a pasarela
+@app.route("/vaciar_carrito", methods=["POST"])
+def vaciar_carrito():
+    session.pop("carrito", None)
+    return jsonify({"ok": True})
 
+@app.context_processor
+def inject_cart_count():
+    cart = session.get("carrito", [])
+    cart_count = sum(item.get("qty", 0) for item in cart)
+    return dict(cart_count=cart_count)
 # ====================================
 # PASARELA DE PAGOS CON STRIPE ELEMENTS
 # ====================================
@@ -959,7 +967,7 @@ def procesar_pago():
             customer_id = cliente.id
 
         intent = stripe.PaymentIntent.create(
-            amount              = int(total * 100),  # COP: cantidad en centavos
+            amount              = int(total ),  # COP: cantidad en centavos
             currency            = "cop",
             customer            = customer_id,
             receipt_email       = usuario["email"],
@@ -993,7 +1001,7 @@ def procesar_pago():
 def pago_exitoso():
        # Limpia el carrito de la sesión
     session.pop("carrito", None)
-    
+    session.modified = True    
     # Muestra página de éxito o redirige
     flash("¡Pago realizado con éxito! Gracias por tu compra.", "success")
     return redirect("/inicioU")
@@ -1065,6 +1073,7 @@ def datos_pago():
     return jsonify({"datos": DATOS_PAGO.get(metodo)})
 
 pedidos_guardados = {}
+calificaciones = []
 
 
 @app.route("/api/crear-pedido", methods=["POST"])
@@ -1122,9 +1131,9 @@ Método: {data.get('metodo')}
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 # Diccionario para almacenar pedidos (en memoria, no persistente)
-pedidos_guardados = {}
+
 # Lista para almacenar calificaciones (en memoria, no persistente)
-calificaciones = []
+
 @app.route("/api/calificar", methods=["POST"])  # API para guardar calificación
 def calificar():
     if not session.get('usuario'):  # Si no hay usuario autenticado
@@ -1452,4 +1461,4 @@ def cerrar_modal():
 # ====================================
 if __name__ == "__main__":  # Si se ejecuta directamente
     crear_tabla()  # Crea las tablas si no existen
-    app.run(host="0.0.0.0", port=5000, debug=True)  # Ejecuta el servidor en modo debug
+    app.run(host="0.0.0.0", port=5000, debug=True)  # Ejecuta el servidor en modo debug"

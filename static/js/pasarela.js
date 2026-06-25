@@ -115,13 +115,11 @@ Botones nequi  y daviplata */
     btnNequi.addEventListener("click", () => {
       btnNequi.insertAdjacentElement("afterend", seccion);
 
-      ```
-seccion.style.display = "block";
+      seccion.style.display = "block";
 
-seccion.scrollIntoView({
-  behavior: "smooth",
-});
-```;
+      seccion.scrollIntoView({
+        behavior: "smooth",
+      });
     });
   }
 
@@ -129,13 +127,11 @@ seccion.scrollIntoView({
     btnDaviplata.addEventListener("click", () => {
       btnDaviplata.insertAdjacentElement("afterend", seccion);
 
-      ```
-seccion.style.display = "block";
+      seccion.style.display = "block";
 
-seccion.scrollIntoView({
-  behavior: "smooth",
-});
-```;
+      seccion.scrollIntoView({
+        behavior: "smooth",
+      });
     });
   }
 
@@ -179,12 +175,16 @@ seccion.scrollIntoView({
       const data = await resp.json();
 
       if (data.ok) {
+        await fetch("/vaciar_carrito", {
+          method: "POST",
+        });
+
         document.getElementById("mensaje-comprobante").innerHTML =
-          "Comprobante enviado correctamente ";
+          "Comprobante enviado correctamente";
 
         // espera un momento y vuelve al inicio
         setTimeout(() => {
-          window.location.href = "/inicioU";
+          window.location.replace("/inicioU");
         }, 1500);
       } else {
         alert(data.error);
@@ -194,6 +194,7 @@ seccion.scrollIntoView({
       alert("Error enviando comprobante");
     }
   };
+
   /* ==========================
    BOTÓN DAVIPLATA
 ========================== */
