@@ -354,3 +354,97 @@ table code {
   align-items: center;
   justify-content: space-between;
 }
+
+/* --- RESPONSIVE DESIGN --- */
+
+/* Ocultar botón de menú en escritorio */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+  margin-top: -13px;
+  margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  /* Mostrar botón en móvil */
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+  }
+
+  /* Cambiar Navbar a oculto/desplegable */
+  .navbar {
+    width: 100%;
+    height: auto;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding-top: 20px; /* Aumenta este valor si necesitas bajar todo el logo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .navbar-brand {
+    padding-bottom: 20px; /* Separación entre el logo/texto y lo demás */
+    width: 100%;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+}
+
+.logo-navbar {
+    max-width: 70px; /* Ajusta este tamaño para que no sea gigante */
+    height: auto;
+    margin-top: -20px;
+}
+
+  .navbar.open {
+    max-height: 500px; /* Suficiente para mostrar tus links */
+  }
+
+  /* Ajustar contenedor principal */
+  .container {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 4rem 1rem 2rem; /* Más espacio arriba para el botón */
+  }
+
+  .container-admin-top {
+    /* Asegúrate de que este contenedor tenga un margin-top o padding suficiente */
+    padding-top: 20px; 
+}
+
+  /* Ajustar métricas para que no se desborden */
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Hacer que las tablas sean desplazables horizontalmente */
+  .card {
+    overflow-x: auto;
+  }
+}
+
+.buscador-clase { 
+  margin-top: 15px; /* Empuja el buscador hacia abajo */
+}
+
+
+@media (max-width: 480px) {
+  .metric-value {
+    font-size: 22px; /* Reducir valores grandes en pantallas muy pequeñas */
+  }
+  .metrics {
+    grid-template-columns: 1fr; /* Una sola columna en pantallas muy estrechas */
+  }
+}

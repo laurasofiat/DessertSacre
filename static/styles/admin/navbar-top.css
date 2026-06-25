@@ -1,13 +1,14 @@
 .topbar-admin-top {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* Esto mantiene todo a la izquierda */
     align-items: center;
     background: white;
     border: 1px solid #e6c298;
     border-radius: 14px;
-    padding: 5px 20px;
-    width: 92%;
-    margin: 25px auto 0 auto;
+    padding: 10px 20px; /* Aumenté un poco el padding vertical para que no se vea apretado */
+    width: calc(100% - 40px); /* Usamos calc para que no desborde */
+    margin: 20px auto; 
+    box-sizing: border-box; /* Importante para que el padding no sume ancho extra */
 }
 
 .search-box-admin-top {
@@ -15,27 +16,29 @@
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    margin-right: auto; /* Esto empuja los botones hacia la derecha si los hubiera */
 }
 
-.topbar-actions-admin-top {
-    display: flex;
-    gap: 10px;
-}
-
-.topbar-actions-admin-top button {
-    border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: #572727;
-    color: white;
-    cursor: pointer;
-}
-
+/* Ajuste para el contenedor en pantallas grandes */
 .container-admin-top {
-    margin-left: 220px; /* mismo ancho que el navbar */
+    margin-left: 220px; /* Esto es para pantallas grandes */
 }
 
-.logout-icon {
-    width: 22px;
-    height: 20px;
+/* --- AJUSTES RESPONSIVE (CRÍTICO) --- */
+@media (max-width: 768px) {
+    .container-admin-top {
+        margin-left: 0; /* En móvil, eliminamos el margen lateral */
+    }
+    
+    .topbar-admin-top {
+        width: 95%; /* Un poco más de espacio en móviles */
+        margin-top: 60px; /* Espacio para que no tape el botón hamburguesa */
+        flex-direction: column; /* Apilamos buscador y botones en vertical */
+        align-items: flex-start; /* Alineamos todo a la izquierda */
+        gap: 10px;
+    }
+
+    .search-box-admin-top {
+        width: 97%; /* El buscador ocupa todo el ancho disponible */
+    }
 }
