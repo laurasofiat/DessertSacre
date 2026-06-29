@@ -3,23 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dessert Sacré | Panadería </title>
+    <title>Dessert Sacré | Panadería</title>
 
     <!-- Estilos propios -->
     <link rel="stylesheet" href="/static/styles/style.css" />
     <link rel="stylesheet" href="/static/styles/productos.css" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/dessert_sacre_icon.ico') }}"
+    />
   </head>
 
   <body class="zoom">
-
     {% include 'navbar.html' %}
 
-  <!-- Barra de búsqueda -->
-  <div class="search-bar">
-      <input type="text" id="buscarProducto" placeholder="Buscar producto de interés...">
-  </div>
+    <!-- Barra de búsqueda -->
+    <div class="search-bar">
+      <input
+        type="text"
+        id="buscarProducto"
+        placeholder="Buscar producto de interés..."
+      />
+    </div>
 
-  <div class= "espa"> <p></p> </div>
+    <div class="espa"><p></p></div>
 
     <!-- TITULO -->
     <div class="Textoinicio text-center my-5">
@@ -30,31 +38,63 @@
     <!-- CARRUSEL -->
     <div class="zoom">
       <div class="container my-4">
-        <div id="carouselPanaderia" class="carousel slide" data-bs-ride="carousel">
+        <div
+          id="carouselPanaderia"
+          class="carousel slide"
+          data-bs-ride="carousel"
+        >
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <img src="/static/img/panaderia1.jpeg" class="d-block w-100" alt="Croissants" />
-              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+              <img
+                src="/static/img/panaderia1.jpeg"
+                class="d-block w-100"
+                alt="Croissants"
+              />
+              <div
+                class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded"
+              >
                 <h5>Pan Cacho</h5>
               </div>
             </div>
             <div class="carousel-item">
-              <img src="/static/img/panaderia2.jpeg" class="d-block w-100" alt="Pan Cacho" />
-              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+              <img
+                src="/static/img/panaderia2.jpeg"
+                class="d-block w-100"
+                alt="Pan Cacho"
+              />
+              <div
+                class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded"
+              >
                 <h5>Pan Aliñado</h5>
               </div>
             </div>
             <div class="carousel-item">
-              <img src="/static/img/panaderia3.jpeg" class="d-block w-100" alt="Pan Aliñado" />
-              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+              <img
+                src="/static/img/panaderia3.jpeg"
+                class="d-block w-100"
+                alt="Pan Aliñado"
+              />
+              <div
+                class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded"
+              >
                 <h5>Pan Pollo</h5>
               </div>
             </div>
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselPanaderia" data-bs-slide="prev">
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselPanaderia"
+            data-bs-slide="prev"
+          >
             <span class="carousel-control-prev-icon"></span>
           </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselPanaderia" data-bs-slide="next">
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselPanaderia"
+            data-bs-slide="next"
+          >
             <span class="carousel-control-next-icon"></span>
           </button>
         </div>
@@ -63,139 +103,312 @@
       <!-- TARJETAS DE PANADERÍA -->
       <div class="container mt-4">
         <div class="row text-center g-4">
-          
           <!-- Producto 1 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/pandebono.jpg" class="card-img-top" alt="Pandebono" />
+              <img
+                src="/static/img/pandebono.jpg"
+                class="card-img-top"
+                alt="Pandebono"
+              />
               <h5 class="card-title">Pandebono</h5>
-              <p class="card-text">Producto elaborado con almidón de yuca, queso, huevo y leche. Contiene carbohidratos del almidón y es naturalmente libre de gluten, pero contiene lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con almidón de yuca, queso, huevo y leche.
+                Contiene carbohidratos del almidón y es naturalmente libre de
+                gluten, pero contiene lácteos y huevo.
+              </p>
               <h6>400 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pandebono" data-price="400">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pandebono"
+                data-price="400"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 2 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/buñuelo.jpg" class="card-img-top" alt="Buñuelo" />
+              <img
+                src="/static/img/buñuelo.jpg"
+                class="card-img-top"
+                alt="Buñuelo"
+              />
               <h5 class="card-title">Buñuelo</h5>
-              <p class="card-text">Producto frito elaborado con almidón de yuca, queso, huevo y almidón de maíz. Contiene carbohidratos y grasas por fritura. Libre de gluten, pero contiene lácteos y huevo.</p>
+              <p class="card-text">
+                Producto frito elaborado con almidón de yuca, queso, huevo y
+                almidón de maíz. Contiene carbohidratos y grasas por fritura.
+                Libre de gluten, pero contiene lácteos y huevo.
+              </p>
               <h6>600 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Buñuelo" data-price="600">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Buñuelo"
+                data-price="600"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 3 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/pancacho.jpg" class="card-img-top" alt="Pancacho" />
+              <img
+                src="/static/img/pancacho.jpg"
+                class="card-img-top"
+                alt="Pancacho"
+              />
               <h5 class="card-title">Pancacho</h5>
-              <p class="card-text">Producto elaborado con harina de trigo, queso y huevo. Contiene carbohidratos complejos del trigo y proteínas y grasas de origen lácteo. Contiene gluten, lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, queso y huevo. Contiene
+                carbohidratos complejos del trigo y proteínas y grasas de origen
+                lácteo. Contiene gluten, lácteos y huevo.
+              </p>
               <h6>1500 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pancacho" data-price="1500">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pancacho"
+                data-price="1500"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 4 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/Acema_mogolla.jpg" class="card-img-top" alt="Acemas-Mogolla" />
+              <img
+                src="/static/img/Acema_mogolla.jpg"
+                class="card-img-top"
+                alt="Acemas-Mogolla"
+              />
               <h5 class="card-title">Acemas-Mogolla</h5>
-              <p class="card-text">Producto elaborado con harina de trigo, panela o azúcar y mantequilla. Aporta carbohidratos complejos y contiene gluten y lácteos.</p>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, panela o azúcar y
+                mantequilla. Aporta carbohidratos complejos y contiene gluten y
+                lácteos.
+              </p>
               <h6>500 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Acemas-Mogolla" data-price="500">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Acemas-Mogolla"
+                data-price="500"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 5 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/pan huevo.jpg" class="card-img-top" alt="Pan Huevo" />
+              <img
+                src="/static/img/pan huevo.jpg"
+                class="card-img-top"
+                alt="Pan Huevo"
+              />
               <h5 class="card-title">Pan Huevo</h5>
-              <p class="card-text">Producto elaborado con harina de trigo, huevo, azúcar, mantequilla y leche. Contiene gluten, lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, huevo, azúcar,
+                mantequilla y leche. Contiene gluten, lácteos y huevo.
+              </p>
               <h6>600 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pan Huevo" data-price="600">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pan Huevo"
+                data-price="600"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 6 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/pan piñita.jpg" class="card-img-top" alt="Pan Piñita" />
+              <img
+                src="/static/img/pan piñita.jpg"
+                class="card-img-top"
+                alt="Pan Piñita"
+              />
               <h5 class="card-title">Pan Piñita</h5>
-              <p class="card-text">Producto elaborado con harina de trigo, azúcar, huevo, mantequilla y leche. Textura suave y sabor ligeramente dulce. Contiene gluten, lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, azúcar, huevo,
+                mantequilla y leche. Textura suave y sabor ligeramente dulce.
+                Contiene gluten, lácteos y huevo.
+              </p>
               <h6>700 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pan Piñita" data-price="700">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pan Piñita"
+                data-price="700"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 7 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/pan coco.jpg" class="card-img-top" alt="Pan Coco" />
+              <img
+                src="/static/img/pan coco.jpg"
+                class="card-img-top"
+                alt="Pan Coco"
+              />
               <h5 class="card-title">Pan Coco</h5>
-              <p class="card-text">Producto elaborado con harina de trigo, coco rallado, azúcar, mantequilla, leche y huevo. Contiene gluten, lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, coco rallado, azúcar,
+                mantequilla, leche y huevo. Contiene gluten, lácteos y huevo.
+              </p>
               <h6>500 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pan Coco" data-price="500">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pan Coco"
+                data-price="500"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 8 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/pan aliñado.jpg" class="card-img-top" alt="Pan Aliñado" />
+              <img
+                src="/static/img/pan aliñado.jpg"
+                class="card-img-top"
+                alt="Pan Aliñado"
+              />
               <h5 class="card-title">Pan Aliñado</h5>
-              <p class="card-text">Producto elaborado con harina de trigo, mantequilla o margarina, sal, leche y huevo. Contiene gluten, lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, mantequilla o margarina,
+                sal, leche y huevo. Contiene gluten, lácteos y huevo.
+              </p>
               <h6>2000 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pan Aliñado" data-price="2000">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pan Aliñado"
+                data-price="2000"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 9 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/Almojabana.jpg" class="card-img-top" alt="Almojabana" />
+              <img
+                src="/static/img/Almojabana.jpg"
+                class="card-img-top"
+                alt="Almojabana"
+              />
               <h5 class="card-title">Almojabana</h5>
-              <p class="card-text">Producto elaborado con almidón de maíz o yuca, queso, leche y huevo. No contiene gluten y contiene lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con almidón de maíz o yuca, queso, leche y
+                huevo. No contiene gluten y contiene lácteos y huevo.
+              </p>
               <h6>700 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Almojabana" data-price="700">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Almojabana"
+                data-price="700"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 10 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/Pan salchicha.jpg" class="card-img-top" alt="Pan Salchicha" />
+              <img
+                src="/static/img/Pan salchicha.jpg"
+                class="card-img-top"
+                alt="Pan Salchicha"
+              />
               <h5 class="card-title">Pan Salchicha</h5>
-              <p class="card-text">Producto elaborado con almidón de yuca, queso, huevo y leche. Contiene carbohidratos del almidón y es naturalmente libre de gluten, pero contiene lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con almidón de yuca, queso, huevo y leche.
+                Contiene carbohidratos del almidón y es naturalmente libre de
+                gluten, pero contiene lácteos y huevo.
+              </p>
               <h6>400 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pan Salchicha" data-price="400">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pan Salchicha"
+                data-price="400"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 11 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/Pan integral.jpg" class="card-img-top" alt="Pan Integral" />
+              <img
+                src="/static/img/Pan integral.jpg"
+                class="card-img-top"
+                alt="Pan Integral"
+              />
               <h5 class="card-title">Pan Integral</h5>
-              <p class="card-text">Producto elaborado con harina de trigo integral, agua, levadura y sal. Contiene gluten y aporta mayor contenido de fibra.</p>
+              <p class="card-text">
+                Producto elaborado con harina de trigo integral, agua, levadura
+                y sal. Contiene gluten y aporta mayor contenido de fibra.
+              </p>
               <h6>1400 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pan Integral" data-price="1400">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pan Integral"
+                data-price="1400"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
 
           <!-- Producto 12 -->
           <div class="col-md-3">
             <div class="card">
-              <img src="/static/img/pan crema.jpg.png" class="card-img-top" alt="Pan Crema" />
+              <img
+                src="/static/img/pan crema.jpg.png"
+                class="card-img-top"
+                alt="Pan Crema"
+              />
               <h5 class="card-title">Pan Crema</h5>
-              <p class="card-text">Producto elaborado con harina de trigo, azúcar, mantequilla, leche, levadura y huevo. Textura suave y sabor dulce. Contiene gluten, lácteos y huevo.</p>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, azúcar, mantequilla,
+                leche, levadura y huevo. Textura suave y sabor dulce. Contiene
+                gluten, lácteos y huevo.
+              </p>
               <h6>3000 COP c/u</h6>
-              <button type="button" class="btn-warning add-to-cart" data-name="Pan Crema" data-price="3000">Agregar al carrito</button>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pan Crema"
+                data-price="3000"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>

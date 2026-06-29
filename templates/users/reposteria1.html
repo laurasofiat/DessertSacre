@@ -6,25 +6,48 @@
     <title>Dessert Sacré | Repostería</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
     <!-- Estilos propios -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/productos.css') }}" /> 
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/productos.css') }}"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/dessert_sacre_icon.ico') }}"
+    />
   </head>
 
   <body>
-
     {% include 'users/navbar1.html' %}
 
     <!-- Barra de búsqueda -->
-  <div class="search-bar">
-      <input type="text" id="buscarProducto" placeholder="Buscar producto de interés...">
-  </div>
+    <div class="search-bar">
+      <input
+        type="text"
+        id="buscarProducto"
+        placeholder="Buscar producto de interés..."
+      />
+    </div>
 
-    <a href="https://wa.me/573025662571?text=Hola,%20quiero%20presentar%20una%20inquietud%20sobre%20Dessert%20Sacré" class="whatsapp-float"
-        target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    <a
+      href="https://wa.me/573025662571?text=Hola,%20quiero%20presentar%20una%20inquietud%20sobre%20Dessert%20Sacré"
+      class="whatsapp-float"
+      target="_blank"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        alt="WhatsApp"
+      />
     </a>
 
     <!-- REPOSTERÍA -->
@@ -35,260 +58,461 @@
 
     <!-- CARRUSEL -->
     <div class="zoom">
-    <div class="container my-4">
-      <div id="carouselReposteria" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="{{ url_for('static', filename='img/reposteria1.jpeg') }}" class="d-block w-100" alt="Galleta Red Velvet" />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Galleta Red Velvet</h5>
+      <div class="container my-4">
+        <div
+          id="carouselReposteria"
+          class="carousel slide"
+          data-bs-ride="carousel"
+        >
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img
+                src="{{ url_for('static', filename='img/reposteria1.jpeg') }}"
+                class="d-block w-100"
+                alt="Galleta Red Velvet"
+              />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>Galleta Red Velvet</h5>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img
+                src="{{ url_for('static', filename='img/reposteria2.jpeg') }}"
+                class="d-block w-100"
+                alt="Alfajores"
+              />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>Alfajores</h5>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img
+                src="{{ url_for('static', filename='img/reposteria3.jpeg') }}"
+                class="d-block w-100"
+                alt="Bollos de canela"
+              />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>Bollos de canela</h5>
+              </div>
             </div>
           </div>
-          <div class="carousel-item">
-            <img src="{{ url_for('static', filename='img/reposteria2.jpeg') }}" class="d-block w-100" alt="Alfajores" />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Alfajores</h5>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselReposteria"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselReposteria"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TARJETAS DE REPOSTERÍA -->
+      <div class="container mt-4">
+        <div class="row text-center g-4">
+          <!-- Producto 1 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/muffins.jpg"
+                class="card-img-top"
+                alt="Muffins de chocolate"
+              />
+              <h5 class="card-title">Muffins de chocolate</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, cacao, azúcar, huevo,
+                mantequilla y leche. Contiene gluten, lácteos y huevo.
+              </p>
+              <h6>4500 COP c/u</h6>
+              <div
+                class="estrellas-carrusel"
+                data-producto="Muffins de chocolate"
+              >
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Muffins de chocolate"
+                data-price="4500"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
-          <div class="carousel-item">
-            <img src="{{ url_for('static', filename='img/reposteria3.jpeg') }}" class="d-block w-100" alt="Bollos de canela" />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Bollos de canela</h5>
+
+          <!-- Producto 2 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/alfajores.jpg"
+                class="card-img-top"
+                alt="Alfajores"
+              />
+              <h5 class="card-title">Alfajores</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, mantequilla y azúcar,
+                relleno de arequipe. Contiene gluten y lácteos.
+              </p>
+              <h6>4500 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Alfajores">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Alfajores"
+                data-price="4500"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 3 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/galletas con chocolate.jpg"
+                class="card-img-top"
+                alt="Galletas con chocolate"
+              />
+              <h5 class="card-title">Galletas con chocolate</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, azúcar, mantequilla,
+                huevo y chocolate. Contiene gluten, lácteos y huevo.
+              </p>
+              <h6>2000 COP c/u</h6>
+              <div
+                class="estrellas-carrusel"
+                data-producto="Galletas con chocolate"
+              >
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Galletas con chocolate"
+                data-price="2000"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 4 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/orejas.jpg"
+                class="card-img-top"
+                alt="Oreja"
+              />
+              <h5 class="card-title">Oreja</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, mantequilla y azúcar.
+                Contiene gluten y lácteos.
+              </p>
+              <h6>2000 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Oreja">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Oreja"
+                data-price="2000"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 5 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/galleta cuca.jpg"
+                class="card-img-top"
+                alt="Galleta cuca"
+              />
+              <h5 class="card-title">Galleta cuca</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, panela, mantequilla y
+                huevo. Contiene gluten, lácteos y huevo.
+              </p>
+              <h6>1200 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Galleta cuca">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Galleta cuca"
+                data-price="1200"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 6 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/empanada de cambray.jpg"
+                class="card-img-top"
+                alt="Empanada de cambray"
+              />
+              <h5 class="card-title">Empanada de cambray</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, azúcar, mantequilla y
+                huevo, relleno dulce. Contiene gluten, lácteos y huevo.
+              </p>
+              <h6>3000 COP c/u</h6>
+              <div
+                class="estrellas-carrusel"
+                data-producto="Empanada de cambray"
+              >
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Empanada de cambray"
+                data-price="3000"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 7 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/brazo de reina.jpg"
+                class="card-img-top"
+                alt="Brazo de reina"
+              />
+              <h5 class="card-title">Brazo de reina</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, huevo y azúcar, relleno
+                de arequipe o mermelada. Contiene gluten, lácteos y huevo.
+              </p>
+              <h6>2800 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Brazo de reina">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Brazo de reina"
+                data-price="2800"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 8 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img src="/static/img/pera.jpg" class="card-img-top" alt="Pera" />
+              <h5 class="card-title">Pera</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, azúcar, mantequilla,
+                leche y huevo, relleno dulce y cubierto con coco. Contiene
+                gluten, lácteos y huevo.
+              </p>
+              <h6>2700 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Pera">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Pera"
+                data-price="2700"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 9 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/donas.jpg"
+                class="card-img-top"
+                alt="Donas"
+              />
+              <h5 class="card-title">Donas</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, azúcar, levadura,
+                mantequilla, leche y huevo, frito. Contiene gluten, lácteos y
+                huevo.
+              </p>
+              <h6>3500 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Donas">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Donas"
+                data-price="3500"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 10 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/cupcakes.jpg"
+                class="card-img-top"
+                alt="Cupcakes"
+              />
+              <h5 class="card-title">Cupcakes</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, azúcar, huevo,
+                mantequilla y leche, con cobertura dulce. Contiene gluten,
+                lácteos y huevo.
+              </p>
+              <h6>44000 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Cupcakes">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Cupcakes"
+                data-price="44000"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 11 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/brownies.jpg"
+                class="card-img-top"
+                alt="Brownies"
+              />
+              <h5 class="card-title">Brownies</h5>
+              <p class="card-text">
+                Producto elaborado con harina de trigo, chocolate, azúcar,
+                mantequilla y huevo. Contiene gluten, lácteos y huevo.
+              </p>
+              <h6>45000 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Brownies">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Brownies"
+                data-price="45000"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 12 -->
+          <div class="col-md-3">
+            <div class="card">
+              <img
+                src="/static/img/macarons.jpg"
+                class="card-img-top"
+                alt="Macarons"
+              />
+              <h5 class="card-title">Macarons</h5>
+              <p class="card-text">
+                Producto elaborado con harina de almendra, azúcar y clara de
+                huevo, con relleno dulce. No contiene gluten y contiene huevo,
+                puede contener lácteos.
+              </p>
+              <h6>42000 COP c/u</h6>
+              <div class="estrellas-carrusel" data-producto="Macarons">
+                <span data-val="1">★</span>
+                <span data-val="2">★</span>
+                <span data-val="3">★</span>
+                <span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              <button
+                type="button"
+                class="btn-warning add-to-cart"
+                data-name="Macarons"
+                data-price="42000"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselReposteria" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselReposteria" data-bs-slide="next">
-          <span class="carousel-control-next-icon"></span>
-        </button>
       </div>
     </div>
-
-    <!-- TARJETAS DE REPOSTERÍA -->
-    <div class="container mt-4">
-      <div class="row text-center g-4">
-
-        <!-- Producto 1 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/muffins.jpg" class="card-img-top" alt="Muffins de chocolate" />
-            <h5 class="card-title">Muffins de chocolate</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, cacao, azúcar, huevo, mantequilla y leche. Contiene gluten, lácteos y huevo.</p>
-            <h6>4500 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Muffins de chocolate">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Muffins de chocolate" data-price="4500">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 2 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/alfajores.jpg" class="card-img-top" alt="Alfajores" />
-            <h5 class="card-title">Alfajores</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, mantequilla y azúcar, relleno de arequipe. Contiene gluten y lácteos.</p>
-            <h6>4500 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Alfajores">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Alfajores" data-price="4500">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 3 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/galletas con chocolate.jpg" class="card-img-top" alt="Galletas con chocolate" />
-            <h5 class="card-title">Galletas con chocolate</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, azúcar, mantequilla, huevo y chocolate. Contiene gluten, lácteos y huevo.</p>
-            <h6>2000 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Galletas con chocolate">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Galletas con chocolate" data-price="2000">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 4 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/orejas.jpg" class="card-img-top" alt="Oreja" />
-            <h5 class="card-title">Oreja</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, mantequilla y azúcar. Contiene gluten y lácteos.</p>
-            <h6>2000 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Oreja">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Oreja" data-price="2000">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 5 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/galleta cuca.jpg" class="card-img-top" alt="Galleta cuca" />
-            <h5 class="card-title">Galleta cuca</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, panela, mantequilla y huevo. Contiene gluten, lácteos y huevo.</p>
-            <h6>1200 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Galleta cuca">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Galleta cuca" data-price="1200">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 6 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/empanada de cambray.jpg" class="card-img-top" alt="Empanada de cambray" />
-            <h5 class="card-title">Empanada de cambray</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, azúcar, mantequilla y huevo, relleno dulce. Contiene gluten, lácteos y huevo.</p>
-            <h6>3000 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Empanada de cambray">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Empanada de cambray" data-price="3000">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 7 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/brazo de reina.jpg" class="card-img-top" alt="Brazo de reina" />
-            <h5 class="card-title">Brazo de reina</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, huevo y azúcar, relleno de arequipe o mermelada. Contiene gluten, lácteos y huevo.</p>
-            <h6>2800 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Brazo de reina">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Brazo de reina" data-price="2800">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 8 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/pera.jpg" class="card-img-top" alt="Pera" />
-            <h5 class="card-title">Pera</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, azúcar, mantequilla, leche y huevo, relleno dulce y cubierto con coco. Contiene gluten, lácteos y huevo.</p>
-            <h6>2700 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Pera">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Pera" data-price="2700">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 9 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/donas.jpg" class="card-img-top" alt="Donas" />
-            <h5 class="card-title">Donas</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, azúcar, levadura, mantequilla, leche y huevo, frito. Contiene gluten, lácteos y huevo.</p>
-            <h6>3500 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Donas">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Donas" data-price="3500">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 10 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/cupcakes.jpg" class="card-img-top" alt="Cupcakes" />
-            <h5 class="card-title">Cupcakes</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, azúcar, huevo, mantequilla y leche, con cobertura dulce. Contiene gluten, lácteos y huevo.</p>
-            <h6>44000 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Cupcakes">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Cupcakes" data-price="44000">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 11 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/brownies.jpg" class="card-img-top" alt="Brownies" />
-            <h5 class="card-title">Brownies</h5>
-            <p class="card-text">Producto elaborado con harina de trigo, chocolate, azúcar, mantequilla y huevo. Contiene gluten, lácteos y huevo.</p>
-            <h6>45000 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Brownies">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Brownies" data-price="45000">Agregar al carrito</button>
-          </div>
-        </div>
-
-        <!-- Producto 12 -->
-        <div class="col-md-3">
-          <div class="card">
-            <img src="/static/img/macarons.jpg" class="card-img-top" alt="Macarons" />
-            <h5 class="card-title">Macarons</h5>
-            <p class="card-text">Producto elaborado con harina de almendra, azúcar y clara de huevo, con relleno dulce. No contiene gluten y contiene huevo, puede contener lácteos.</p>
-            <h6>42000 COP c/u</h6>
-            <div class="estrellas-carrusel" data-producto="Macarons">
-                <span data-val="1">★</span>
-                <span data-val="2">★</span>
-                <span data-val="3">★</span>
-                <span data-val="4">★</span>
-                <span data-val="5">★</span>
-              </div>
-            <button type="button" class="btn-warning add-to-cart" data-name="Macarons" data-price="42000">Agregar al carrito</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
 
     {% include 'users/footer1.html' %}
 

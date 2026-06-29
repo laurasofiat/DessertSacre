@@ -1,82 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dessert Sacré | Perfil</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/perfil.css') }}">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dessert Sacré | Perfil</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/perfil.css') }}"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/dessert_sacre_icon.ico') }}?v=1"
+    />
+  </head>
+  <body>
+    {% include 'users/navbar1.html' %}
 
-  {% include 'users/navbar1.html' %}
-
-  <a href="https://wa.me/573025662571?text=Hola,%20quiero%20presentar%20una%20inquietud%20sobre%20Dessert%20Sacré" class="whatsapp-float"
-        target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    <a
+      href="https://wa.me/573025662571?text=Hola,%20quiero%20presentar%20una%20inquietud%20sobre%20Dessert%20Sacré"
+      class="whatsapp-float"
+      target="_blank"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        alt="WhatsApp"
+      />
     </a>
 
-<div class="container">
+    <div class="container">
+      <!-- ENCABEZADO -->
+      <div class="perfil-header">
+        <div class="avatar">{{ usuario.nombre[0] | upper }}</div>
+        <div>
+          <h1>{{ usuario.nombre }}</h1>
+          <span class="subtitulo">Cuenta activa</span>
+        </div>
+      </div>
 
-  <!-- ENCABEZADO -->
-  <div class="perfil-header">
-    <div class="avatar">{{ usuario.nombre[0] | upper }}</div>
-    <div>
-      <h1>{{ usuario.nombre }}</h1>
-      <span class="subtitulo">Cuenta activa</span>
+      <!-- DATOS PERSONALES -->
+      <div class="card">
+        <h3>Datos personales</h3>
+        <div class="datos-grid">
+          <div class="dato">
+            <span class="label">Correo</span>
+            <span class="valor">{{ usuario.email }}</span>
+          </div>
+          <div class="dato">
+            <span class="label">Teléfono</span>
+            <span class="valor">{{ usuario.telefono or '—' }}</span>
+          </div>
+          <div class="dato">
+            <span class="label">Dirección</span>
+            <span class="valor">{{ usuario.direccion or '—' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORIAL DE PEDIDOS -->
+      <div class="card">
+        <h3>Historial de pedidos</h3>
+        {% if pedidos %}
+        <table class="tabla-pedidos">
+          <thead>
+            <tr>
+              <th>Referencia</th>
+              <th>Fecha</th>
+              <th>Método</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ref, p in pedidos.items() %}
+            <tr>
+              <td><code>{{ p.productos | join(", ") }}</code></td>
+              <!-- join quita los corchetes de la lista-->
+              <td>{{ p.fecha }}</td>
+              <td>{{ p.metodo | capitalize }}</td>
+              <td>${{ '{:,.0f}'.format(p.total) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="vacio">Aún no tienes pedidos registrados.</p>
+        {% endif %}
+      </div>
     </div>
-  </div>
 
-  <!-- DATOS PERSONALES -->
-  <div class="card">
-    <h3>Datos personales</h3>
-    <div class="datos-grid">
-      <div class="dato">
-        <span class="label">Correo</span>
-        <span class="valor">{{ usuario.email }}</span>
-      </div>
-      <div class="dato">
-        <span class="label">Teléfono</span>
-        <span class="valor">{{ usuario.telefono or '—' }}</span>
-      </div>
-      <div class="dato">
-        <span class="label">Dirección</span>
-        <span class="valor">{{ usuario.direccion or '—' }}</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- HISTORIAL DE PEDIDOS -->
-  <div class="card">
-    <h3>Historial de pedidos</h3>
-    {% if pedidos %}
-      <table class="tabla-pedidos">
-        <thead>
-          <tr>
-            <th>Referencia</th>
-            <th>Fecha</th>
-            <th>Método</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for ref, p in pedidos.items() %}
-          <tr>
-            <td><code>{{ p.productos | join(", ") }}</code></td> <!-- join quita los corchetes de la lista-->
-            <td>{{ p.fecha }}</td>  
-            <td>{{ p.metodo | capitalize }}</td>
-            <td>${{ '{:,.0f}'.format(p.total) }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <p class="vacio">Aún no tienes pedidos registrados.</p>
-    {% endif %}
-  </div>
-
-</div>
-
-{% include 'users/footer1.html' %}
-
-</body>
+    {% include 'users/footer1.html' %}
+  </body>
 </html>

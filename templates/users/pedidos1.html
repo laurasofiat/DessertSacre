@@ -1,86 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dessert Sacré | Pedidos</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/perfil.css') }}">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dessert Sacré | Pedidos</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/perfil.css') }}"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/dessert_sacre_icon.ico') }}?v=1"
+    />
+  </head>
 
-  {% include 'users/navbar1.html' %}
+  <body>
+    {% include 'users/navbar1.html' %}
 
-  <a href="https://wa.me/573025662571?text=Hola,%20quiero%20presentar%20una%20inquietud%20sobre%20Dessert%20Sacré" class="whatsapp-float"
-        target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    <a
+      href="https://wa.me/573025662571?text=Hola,%20quiero%20presentar%20una%20inquietud%20sobre%20Dessert%20Sacré"
+      class="whatsapp-float"
+      target="_blank"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        alt="WhatsApp"
+      />
     </a>
 
-<div class="container">
+    <div class="container">
+      <!-- AQUÍ ESTÁ LA MAGIA DEL PERFIL -->
+      <div class="perfil-header">
+        <div class="avatar">
+          {% if usuario and usuario.nombre %} {{ usuario.nombre[0] | upper }} {%
+          else %}
+          <!-- Si Flask no envía el usuario, pone un ? para no dar error -->
+          ? {% endif %}
+        </div>
+        <div>
+          <h1>
+            {% if usuario and usuario.nombre %} {{ usuario.nombre }} {% else %}
+            Usuario Desconocido {% endif %}
+          </h1>
+          <span class="subtitulo">Mis pedidos</span>
+        </div>
+      </div>
 
-  <!-- AQUÍ ESTÁ LA MAGIA DEL PERFIL -->
-  <div class="perfil-header">
-    <div class="avatar">
-      {% if usuario and usuario.nombre %}
-        {{ usuario.nombre[0] | upper }}
-      {% else %}
-        <!-- Si Flask no envía el usuario, pone un ? para no dar error -->
-        ?
-      {% endif %}
-    </div>
-    <div>
-      <h1>
-        {% if usuario and usuario.nombre %}
-          {{ usuario.nombre }}
+      <div class="card">
+        <h3>Historial de pedidos</h3>
+
+        {% if pedidos %}
+        <table class="tabla-pedidos">
+          <thead>
+            <tr>
+              <th>Referencia</th>
+              <th>Fecha</th>
+              <th>Método</th>
+              <th>Total</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Agregué validación de usuario aquí también para evitar errores -->
+            {% for ref, p in pedidos.items() if usuario and p.email ==
+            usuario.email %}
+            <tr>
+              <td>{{ p.productos | join(", ") }}</td>
+              <td>{{ p.fecha }}</td>
+              <td>{{ p.metodo | capitalize }}</td>
+              <td>${{ '{:,.0f}'.format(p.total) }}</td>
+              <td><span class="badge-estado">Pendiente</span></td>
+            </tr>
+            {% else %}
+            <tr>
+              <td
+                colspan="5"
+                style="text-align: center; color: #bbb; padding: 1.5rem 0"
+              >
+                No tienes pedidos aún.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
         {% else %}
-          Usuario Desconocido
+        <p class="vacio">No tienes pedidos registrados aún.</p>
         {% endif %}
-      </h1>
-      <span class="subtitulo">Mis pedidos</span>
+      </div>
     </div>
-  </div>
 
-  <div class="card">
-    <h3>Historial de pedidos</h3>
-
-    {% if pedidos %}
-    <table class="tabla-pedidos">
-      <thead>
-        <tr>
-          <th>Referencia</th>
-          <th>Fecha</th>
-          <th>Método</th>
-          <th>Total</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Agregué validación de usuario aquí también para evitar errores -->
-        {% for ref, p in pedidos.items() if usuario and p.email == usuario.email %}
-        <tr>
-          <td>{{ p.productos | join(", ") }}</td>
-          <td>{{ p.fecha }}</td>
-          <td>{{ p.metodo | capitalize }}</td>
-          <td>${{ '{:,.0f}'.format(p.total) }}</td>
-          <td><span class="badge-estado">Pendiente</span></td>
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="5" style="text-align:center; color:#bbb; padding: 1.5rem 0;">
-            No tienes pedidos aún.
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    {% else %}
-    <p class="vacio">No tienes pedidos registrados aún.</p>
-    {% endif %}
-  </div>
-
-</div>
-
-{% include 'users/footer1.html' %}
-
-</body>
+    {% include 'users/footer1.html' %}
+  </body>
 </html>

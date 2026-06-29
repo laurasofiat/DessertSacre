@@ -4,7 +4,6 @@ from psycopg2.extras import RealDictCursor #pip install psycopg2-binary
 from flask_mail import Mail, Message 
 import random
 import uuid
-import smtplib
 from email.mime.text import MIMEText
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
@@ -21,7 +20,6 @@ import io
 load_dotenv()
 
 
-print("Stripe:", stripe.api_key)
 # ------------------------------------
 # CONFIG GENERAL
 # ------------------------------------
@@ -31,21 +29,21 @@ app.secret_key = "clave_super_secreta"
 app.config.from_object(Config)
 stripe.api_key = Config.STRIPE_SECRET_KEY
 
-DB_CONFIG = {
+"""DB_CONFIG = {
     'host': os.getenv('DB_HOST'),
     'dbname': os.getenv('DB_NAME'),
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD'),
     'port': os.getenv('DB_PORT')
-}
+}"""
 
-"""DB_CONFIG = {
+DB_CONFIG = {
     'host': "localhost", #host.docker.internal
     'dbname': "Dessert_Sacre",
     'user': "postgres",
     'password': "123456",
     'port': 5432
-}"""
+}
 
 def get_db_connection():
     try:
@@ -79,6 +77,7 @@ def enviar_codigo(correo_destino, codigo):
     except Exception as e:
         print("Error enviando correo:", e)
         return False
+
 
 # ------------------------------------
 # TABLAS

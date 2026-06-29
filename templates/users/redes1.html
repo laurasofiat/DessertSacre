@@ -1,91 +1,115 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles/redes.css">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/styles/redes.css" />
     <title>Dessert Sacré | Contáctanos</title>
-</head>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/dessert_sacre_icon.ico') }}?v=1"
+    />
+  </head>
 
-<body>
-
+  <body>
     {% include 'users/navbar1.html' %}
 
     <div class="hero-responsive">
-        <img src="static/img/fondo2.jpeg" alt="Panaderia" class="hero-img">
-        <div class="hero-title-overlay">
-            <span>CONTÁCTANOS</span>
-        </div>
+      <img src="static/img/fondo2.jpeg" alt="Panaderia" class="hero-img" />
+      <div class="hero-title-overlay">
+        <span>CONTÁCTANOS</span>
+      </div>
     </div>
 
-    <a href="https://wa.me/573025662571?text=Hola,%20quiero%20presentar%20una%20inquietud%20sobre%20Dessert%20Sacré" class="whatsapp-float"
-        target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    <a
+      href="https://wa.me/573025662571?text=Hola,%20quiero%20presentar%20una%20inquietud%20sobre%20Dessert%20Sacré"
+      class="whatsapp-float"
+      target="_blank"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        alt="WhatsApp"
+      />
     </a>
 
     <section class="contact-section">
+      <div class="contact-container">
+        <!-- Información de contacto -->
+        <div class="contact-info">
+          <h3>Dessert Sacré</h3>
+          <p><strong> Dirección:</strong> Ubicación del cliente</p>
+          <p><strong> Teléfono:</strong> +57 302 566 2571</p>
+          <p><strong>Correo:</strong> dessertsacre@gmail.com</p>
+          <p><strong> Horario:</strong> Disponibilidad del cliente</p>
 
-        <div class="contact-container">
-
-            <!-- Información de contacto -->
-            <div class="contact-info">
-                <h3>Dessert Sacré</h3>
-                <p><strong> Dirección:</strong> Ubicación del cliente </p>
-                <p><strong> Teléfono:</strong> +57 302 566 2571</p>
-                <p><strong>Correo:</strong> dessertsacre@gmail.com</p>
-                <p><strong> Horario:</strong> Disponibilidad del cliente</p>
-
-                <!-- Mapa -->
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.589831710085!2d-74.0560485852378!3d4.666991396614131!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a5f3d3a4b9d%3A0x7a3c3c7e3f8a4176!2sParque%2093!5e0!3m2!1ses!2sco!4v1678888888888!5m2!1ses!2sco"
-                    loading="lazy" allowfullscreen="">
-                </iframe>
-            </div>
-
-            <!-- Formulario -->
-            <div class="contact-form">
-                <h3>Envíanos un mensaje</h3>
-                <form id="contactForm">
-                    <input type="text" id="name" placeholder="Primer Nombre" required="">
-                    <input type="text" id="apellido" placeholder="Primer Apellido" required="">
-                    <input type="email" id="email" placeholder="Correo Electrónico" required="">
-                    <textarea id="message" placeholder="Escribe tu mensaje aquí..." required=""></textarea>
-                    <button type="submit">Enviar mensaje</button>
-
-                    <div class="success-message" id="btnEnviar" style="display:none;">
-                        ¡Gracias por contactarnos! Tu mensaje fue enviado correctamente 🧁
-                    </div>
-                </form>
-            </div>
-
+          <!-- Mapa -->
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.589831710085!2d-74.0560485852378!3d4.666991396614131!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a5f3d3a4b9d%3A0x7a3c3c7e3f8a4176!2sParque%2093!5e0!3m2!1ses!2sco!4v1678888888888!5m2!1ses!2sco"
+            loading="lazy"
+            allowfullscreen=""
+          >
+          </iframe>
         </div>
 
+        <!-- Formulario -->
+        <div class="contact-form">
+          <h3>Envíanos un mensaje</h3>
+          <form id="contactForm">
+            <input
+              type="text"
+              id="name"
+              placeholder="Primer Nombre"
+              required=""
+            />
+            <input
+              type="text"
+              id="apellido"
+              placeholder="Primer Apellido"
+              required=""
+            />
+            <input
+              type="email"
+              id="email"
+              placeholder="Correo Electrónico"
+              required=""
+            />
+            <textarea
+              id="message"
+              placeholder="Escribe tu mensaje aquí..."
+              required=""
+            ></textarea>
+            <button type="submit">Enviar mensaje</button>
+
+            <div class="success-message" id="btnEnviar" style="display: none">
+              ¡Gracias por contactarnos! Tu mensaje fue enviado correctamente 🧁
+            </div>
+          </form>
+        </div>
+      </div>
     </section>
 
     {% include 'users/footer1.html' %}
 
     <!-- Enlace al JavaScript -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("contactForm");
 
-            const form = document.getElementById("contactForm");
+        // Correo que recibirá los mensajes del formulario
+        const destinatario = "dessertsacre@gmail.com";
 
-            // Correo que recibirá los mensajes del formulario
-            const destinatario = "dessertsacre@gmail.com";
+        function mostrarMensaje(texto, tipo = "success") {
+          const viejo = document.getElementById("mensaje-form");
+          const fondoViejo = document.getElementById("fondo-form");
 
-            function mostrarMensaje(texto, tipo = "success") {
+          if (viejo) viejo.remove();
+          if (fondoViejo) fondoViejo.remove();
 
-                const viejo = document.getElementById("mensaje-form");
-                const fondoViejo = document.getElementById("fondo-form");
+          const fondo = document.createElement("div");
 
-                if (viejo) viejo.remove();
-                if (fondoViejo) fondoViejo.remove();
+          fondo.id = "fondo-form";
 
-                const fondo = document.createElement("div");
-
-                fondo.id = "fondo-form";
-
-                fondo.style.cssText = `
+          fondo.style.cssText = `
         position:fixed;
         top:0;
         left:0;
@@ -95,11 +119,11 @@
         z-index:9998;
     `;
 
-                const caja = document.createElement("div");
+          const caja = document.createElement("div");
 
-                caja.id = "mensaje-form";
+          caja.id = "mensaje-form";
 
-                caja.style.cssText = `
+          caja.style.cssText = `
         position:fixed;
         top:50%;
         left:50%;
@@ -109,7 +133,7 @@
         max-width:420px;
     `;
 
-                caja.innerHTML = `
+          caja.innerHTML = `
         <div class="alert alert-${tipo} text-center shadow">
             ${texto}
             <br><br>
@@ -119,78 +143,63 @@
         </div>
     `;
 
-                document.body.appendChild(fondo);
-                document.body.appendChild(caja);
+          document.body.appendChild(fondo);
+          document.body.appendChild(caja);
 
-                caja.querySelector("button").onclick = () => {
-                    caja.remove();
-                    fondo.remove();
-                };
+          caja.querySelector("button").onclick = () => {
+            caja.remove();
+            fondo.remove();
+          };
 
-                fondo.onclick = () => {
-                    caja.remove();
-                    fondo.remove();
-                };
-            }
+          fondo.onclick = () => {
+            caja.remove();
+            fondo.remove();
+          };
+        }
 
-            form.addEventListener("submit", async function (e) {
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-                e.preventDefault();
+          const nombre = document.getElementById("name").value;
+          const apellido = document.getElementById("apellido").value;
+          const email = document.getElementById("email").value;
+          const mensaje = document.getElementById("message").value;
 
-                const nombre = document.getElementById("name").value;
-                const apellido = document.getElementById("apellido").value;
-                const email = document.getElementById("email").value;
-                const mensaje = document.getElementById("message").value;
+          try {
+            const datos = new FormData();
 
-                try {
+            datos.append("nombre", nombre);
+            datos.append("apellido", apellido);
+            datos.append("email", email);
+            datos.append("mensaje", mensaje);
 
-                    const datos = new FormData();
-
-                    datos.append("nombre", nombre);
-                    datos.append("apellido", apellido);
-                    datos.append("email", email);
-                    datos.append("mensaje", mensaje);
-
-                    const respuesta = await fetch("/enviar_mensaje", {
-                        method: "POST",
-                        body: datos
-                    });
-
-                    const resultado = await respuesta.json();
-
-                    if (resultado.success) {
-
-                        mostrarMensaje(
-                            "¡Gracias por contactarnos! Tu mensaje fue enviado correctamente 🧁",
-                            "success"
-                        );
-
-                        form.reset();
-
-                    } else {
-
-                        mostrarMensaje(
-                            resultado.mensaje || "Error enviando mensaje",
-                            "danger"
-                        );
-                    }
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    mostrarMensaje(
-                        "Error de conexión con el servidor",
-                        "danger"
-                    );
-                }
-
+            const respuesta = await fetch("/enviar_mensaje", {
+              method: "POST",
+              body: datos,
             });
 
+            const resultado = await respuesta.json();
+
+            if (resultado.success) {
+              mostrarMensaje(
+                "¡Gracias por contactarnos! Tu mensaje fue enviado correctamente 🧁",
+                "success",
+              );
+
+              form.reset();
+            } else {
+              mostrarMensaje(
+                resultado.mensaje || "Error enviando mensaje",
+                "danger",
+              );
+            }
+          } catch (error) {
+            console.error(error);
+
+            mostrarMensaje("Error de conexión con el servidor", "danger");
+          }
         });
+      });
     </script>
-
-
-</body>
-
+  </body>
 </html>

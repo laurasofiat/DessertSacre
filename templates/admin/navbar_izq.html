@@ -1,20 +1,52 @@
+<link
+  rel="icon"
+  type="image/x-icon"
+  href="{{ url_for('static', filename='img/dessert_sacre_icon.ico') }}?v=1"
+/>
 <nav class="navbar">
-    <div class="navbar-inner">
-        <div class="navbar-brand">
-            <img src="/static/img/LOGO1.png" alt="Logo" class="logo-navbar">
-            <a class="navbar-brand-text-admin">Dessert Sacré</a>
-            <a class="admin-label">Panel de Administración</a>
-        </div>
+  <div class="navbar-inner">
+    <div class="navbar-brand">
+      <img src="/static/img/LOGO1.png" alt="Logo" class="logo-navbar" />
+      <a class="navbar-brand-text-admin">Dessert Sacré</a>
+      <a class="admin-label">Panel de Administración</a>
+    </div>
 
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-        <ul class="navbar-links">
-            <li><a href="#" onclick="mostrarTab('panel')" id="tab-panel" class="activo">Panel</a></li>
-            <li><a href="#" onclick="mostrarTab('pedidos')" id="tab-pedidos">Pedidos</a></li>
-            <li><a href="#" onclick="mostrarTab('usuarios')" id="tab-usuarios">Usuarios</a></li>
-            <li><a href="#" onclick="mostrarTab('calificaciones')" id="tab-calificaciones">Calificaciones</a></li>
-            <li><a href="#" onclick="mostrarTab('mensajes')" id="tab-mensajes">Mensajes</a></li>
-            <li><a href="#" onclick="mostrarTab('reportes')" id="tab-reportes">Reportes</a></li>
-            <li style="margin-top:auto;"><a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a></li>
-        </ul>
-    </div>
+    <ul class="navbar-links">
+      <li>
+        <a href="#" onclick="mostrarTab('panel')" id="tab-panel" class="activo"
+          >Panel</a
+        >
+      </li>
+      <li>
+        <a href="#" onclick="mostrarTab('pedidos')" id="tab-pedidos">Pedidos</a>
+      </li>
+      <li>
+        <a href="#" onclick="mostrarTab('usuarios')" id="tab-usuarios"
+          >Usuarios</a
+        >
+      </li>
+      <li>
+        <a
+          href="#"
+          onclick="mostrarTab('calificaciones')"
+          id="tab-calificaciones"
+          >Calificaciones</a
+        >
+      </li>
+      <li>
+        <a href="#" onclick="mostrarTab('mensajes')" id="tab-mensajes"
+          >Mensajes</a
+        >
+      </li>
+      <li>
+        <a href="#" onclick="mostrarTab('reportes')" id="tab-reportes"
+          >Reportes</a
+        >
+      </li>
+      <li style="margin-top: auto">
+        <a href="{{ url_for('logout') }}" class="logout">Cerrar sesión</a>
+      </li>
+    </ul>
+  </div>
 </nav>

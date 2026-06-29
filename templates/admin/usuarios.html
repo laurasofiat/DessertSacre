@@ -1,50 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usuarios | Dessert Sacré Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/styles/admin/usuarios.css">
-</head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/static/styles/admin/usuarios.css" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/dessert_sacre_icon.ico') }}?v=1"
+    />
+  </head>
 
-<body>
-
+  <body>
     {% include '/admi/navbar_izq.html'%}
 
     <div class="container mt-4">
-        <h2 class="mb-4">Usuarios registrados</h2>
+      <h2 class="mb-4">Usuarios registrados</h2>
 
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Verificado</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for u in usuarios %}
-                <tr>
-                    <td>{{ u.id }}</td>
-                    <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
-                    <td>{{ u.correo }}</td>
-                    <td>{{ u.telefono or '—' }}</td>
-                    <td>
-                        {% if u.verificado %}
-                            <span class="badge bg-success">Verificado</span>
-                        {% else %}
-                            <span class="badge bg-secondary">No verificado</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Verificado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in usuarios %}
+          <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
+            <td>{{ u.correo }}</td>
+            <td>{{ u.telefono or '—' }}</td>
+            <td>
+              {% if u.verificado %}
+              <span class="badge bg-success">Verificado</span>
+              {% else %}
+              <span class="badge bg-secondary">No verificado</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-
-</body>
+  </body>
 </html>
