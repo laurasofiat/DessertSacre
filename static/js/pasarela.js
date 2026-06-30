@@ -95,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
           return_url: window.location.origin + "/pago_exitoso",
         },
       });
-
       if (error) {
         document.getElementById("payment-errors").innerHTML = error.message;
 
@@ -165,6 +164,17 @@ Botones nequi  y daviplata */
     const formData = new FormData();
 
     formData.append("comprobante", archivo);
+
+    // Enviar el método de pago
+    let metodo = "";
+
+    if (!document.getElementById("panel-nequi").hidden) {
+      metodo = "Nequi";
+    } else if (!document.getElementById("panel-daviplata").hidden) {
+      metodo = "Daviplata";
+    }
+
+    formData.append("metodo", metodo);
 
     try {
       const resp = await fetch("/subir-comprobante", {

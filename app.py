@@ -6,6 +6,7 @@ import random
 import uuid
 from email.mime.text import MIMEText
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from config import Config
 import traceback
@@ -51,6 +52,10 @@ def get_db_connection():
     except Exception as e:
         print("Error BD:", e)
         return None
+
+# Carpeta donde se guardan físicamente los comprobantes subidos
+UPLOAD_FOLDER_COMPROBANTES = os.path.join("static", "uploads", "comprobantes")
+os.makedirs(UPLOAD_FOLDER_COMPROBANTES, exist_ok=True)
 
 # ------------------------------------
 # CONFIG SMTP GMAIL
@@ -108,6 +113,73 @@ def crear_tabla():
             codigo VARCHAR(6) NOT NULL,
             expiracion TIMESTAMP DEFAULT (NOW() + INTERVAL '15 minutes'),
             usado BOOLEAN DEFAULT FALSE
+        );
+        """)
+   
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS pedidos (
+            id SERIAL PRIMARY KEY,
+            referencia VARCHAR(30) UNIQUE NOT NULL,
+            correo VARCHAR(150) REFERENCES registro(correo),
+            cliente VARCHAR(150) NOT NULL,
+            telefono VARCHAR(20),
+            direccion TEXT,
+            metodo VARCHAR(30),
+            total NUMERIC(10,2),
+            estado VARCHAR(30),
+            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS detalle_pedido (
+            id SERIAL PRIMARY KEY,
+            pedido_id INTEGER REFERENCES pedidos(id) ON DELETE CASCADE,
+            producto VARCHAR(150),
+            cantidad INTEGER,
+            precio NUMERIC(10,2)
+        );
+        """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS productos (
+            id SERIAL PRIMARY KEY,
+            nombre VARCHAR(150) NOT NULL,
+            categoria VARCHAR(50),
+            descripcion TEXT,
+            precio NUMERIC(10,2),
+            imagen VARCHAR(255),
+            disponible BOOLEAN DEFAULT TRUE
+        );
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS calificaciones (
+            id SERIAL PRIMARY KEY,
+            correo VARCHAR(150) REFERENCES registro(correo),
+            producto VARCHAR(150),
+            estrellas INTEGER CHECK (estrellas BETWEEN 1 AND 5),
+            comentario TEXT,
+            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS comprobantes (
+            id SERIAL PRIMARY KEY,
+            pedido_id INTEGER REFERENCES pedidos(id) ON DELETE CASCADE,
+            archivo VARCHAR(255),
+            estado VARCHAR(30),
+            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS transacciones (
+            id SERIAL PRIMARY KEY,
+            pedido_id INTEGER REFERENCES pedidos(id) ON DELETE CASCADE,
+            payment_intent VARCHAR(100),
+            estado VARCHAR(30),
+            monto NUMERIC(10,2),
+            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         """)
         conexion.commit()
@@ -358,6 +430,107 @@ def dashboard():
     return render_template("dashboard.html", usuario=session["usuario"])  # Renderiza dashboard
 
 # ====================================
+# PEDIDOS: HELPER PARA LEER DESDE LA BASE DE DATOS
+# ====================================
+def obtener_pedidos(correo=None):
+    """
+    Lee los pedidos desde las tablas 'pedidos' y 'detalle_pedido' de la BD
+    y los entrega como un diccionario {referencia: {...}} con la MISMA forma
+    que antes tenía 'pedidos_guardados' en memoria, para no tener que tocar
+    las plantillas (perfil.html, pedidos1.html, admin/pedidos.html, etc).
+
+    Si se pasa 'correo', solo trae los pedidos de ese usuario.
+    """
+    conexion = get_db_connection()
+    if not conexion:
+        return {}
+
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
+
+    base_sql = """
+        SELECT p.id, p.referencia, p.correo, p.cliente, p.telefono,
+               p.direccion, p.metodo, p.total, p.estado, p.fecha,
+               COALESCE(
+                   array_agg(d.producto) FILTER (WHERE d.producto IS NOT NULL),
+                   '{}'
+               ) AS productos
+        FROM pedidos p
+        LEFT JOIN detalle_pedido d ON d.pedido_id = p.id
+    """
+
+    if correo:
+        cursor.execute(base_sql + " WHERE p.correo = %s GROUP BY p.id ORDER BY p.fecha DESC", (correo,))
+    else:
+        cursor.execute(base_sql + " GROUP BY p.id ORDER BY p.fecha DESC")
+
+    filas = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+
+    pedidos = {}
+    for f in filas:
+        pedidos[f["referencia"]] = {
+            "productos": f["productos"],
+            "fecha":     f["fecha"].strftime("%Y-%m-%d %H:%M") if f["fecha"] else "",
+            "metodo":    f["metodo"],
+            "total":     float(f["total"]) if f["total"] is not None else 0,
+            "estado":    f["estado"],
+            "email":     f["correo"],
+            "nombre":    f["cliente"],
+            "telefono":  f["telefono"],
+            "direccion": f["direccion"]
+        }
+    return pedidos
+
+def obtener_calificaciones(correo=None):
+    """
+    Lee las calificaciones desde la tabla 'calificaciones' de la BD
+    (antes vivían solo en una lista en memoria, por eso la tabla
+    aparecía vacía y el admin mostraba datos inconsistentes).
+
+    Se une con 'registro' para el nombre del cliente y con 'productos'
+    para traer la imagen del producto calificado (si existe un producto
+    con ese mismo nombre en la tabla productos).
+    """
+    conexion = get_db_connection()
+    if not conexion:
+        return []
+
+    cursor = conexion.cursor(cursor_factory=RealDictCursor)
+
+    base_sql = """
+        SELECT cal.correo, cal.producto, cal.estrellas, cal.comentario, cal.fecha,
+               reg.primer_nombre, reg.primer_apellido,
+               prod.imagen AS imagen
+        FROM calificaciones cal
+        LEFT JOIN registro reg ON reg.correo = cal.correo
+        LEFT JOIN productos prod ON prod.nombre = cal.producto
+    """
+
+    if correo:
+        cursor.execute(base_sql + " WHERE cal.correo = %s ORDER BY cal.fecha DESC", (correo,))
+    else:
+        cursor.execute(base_sql + " ORDER BY cal.fecha DESC")
+
+    filas = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+
+    resultado = []
+    for f in filas:
+        nombre_cliente = f"{f['primer_nombre'] or ''} {f['primer_apellido'] or ''}".strip() or f["correo"]
+        resultado.append({
+            "cliente":    nombre_cliente,
+            "email":      f["correo"],
+            "producto":   f["producto"],
+            "estrellas":  f["estrellas"],
+            "comentario": f["comentario"],
+            "fecha":      f["fecha"].strftime("%Y-%m-%d %H:%M") if f["fecha"] else "",
+            "imagen":     f["imagen"]  # None si el producto no existe en la tabla productos
+        })
+    return resultado
+
+# ====================================
 # RUTAS DE ADMINISTRADOR
 # ====================================
 @app.route("/admin")  # Ruta del panel admin
@@ -393,6 +566,9 @@ def admin():
     cursor.close() # Cierra el cursor
     conexion.close() # Cierra la conexión a la base de datos
     
+    # Pedidos desde la base de datos (antes venía de pedidos_guardados en memoria)
+    pedidos_guardados = obtener_pedidos()
+
     # Calcula total de ventas
     total_ventas = sum(p["total"] for p in pedidos_guardados.values()) # Calcula total de ventas sumando los totales de los pedidos guardados
     
@@ -401,9 +577,9 @@ def admin():
     # Renderiza la plantilla admin con datos
     return render_template("admin/dashboard.html", # Renderiza plantilla de dashboard del admin
         usuarios=usuarios, # Pasa los usuarios obtenidos de la BD
-        pedidos=pedidos_guardados, # Pasa los pedidos guardados
+        pedidos=pedidos_guardados, # Pasa los pedidos guardados (desde la BD)
         total_ventas=total_ventas, # Pasa el total de ventas
-        calificaciones=calificaciones, # Pasa todas las calificaciones
+        calificaciones=obtener_calificaciones(), # Pasa todas las calificaciones (desde la BD)
         mensajes=mensajes, # Pasa los mensajes obtenidos de la BD
         now=datetime.now().strftime("%d %b %Y")   # Fecha actual para mostrar en el dashboard
     )
@@ -413,10 +589,13 @@ def admin_pedidos():
     if not session.get("admin"): # Si no es admin
         return redirect("/login") # Redirige al login
 
+    # Pedidos desde la base de datos (antes venía de pedidos_guardados en memoria)
+    pedidos_guardados = obtener_pedidos()
+
     total_ventas = sum(p["total"] for p in pedidos_guardados.values()) # Calcula total de ventas
 
     return render_template("admin/pedidos.html", # Renderiza plantilla de pedidos
-        pedidos=pedidos_guardados, # Pasa los pedidos guardados
+        pedidos=pedidos_guardados, # Pasa los pedidos guardados (desde la BD)
         total_ventas=total_ventas # Pasa el total de ventas para mostrar en el admin
     )
 
@@ -439,7 +618,7 @@ def admin_calificaciones():
         return redirect("/login")  # Redirige al login
 
     return render_template("admin/calificaciones.html",
-        calificaciones=calificaciones  # Pasa todas las calificaciones
+        calificaciones=obtener_calificaciones()  # Pasa todas las calificaciones (desde la BD)
     )
 
 @app.route("/admin/mensajes")
@@ -732,10 +911,35 @@ def generar_reporte():
 
             contenido.append(Spacer(1,10))
 
+    # PEDIDOS (ahora desde la base de datos)
+    elif tipo == "pedidos":
+
+        pedidos_reporte = obtener_pedidos()
+
+        for ref, p in pedidos_reporte.items():
+
+            contenido.append(
+                Paragraph(
+                    f"""
+                    Referencia: {ref}<br/>
+                    Cliente: {p['nombre']}<br/>
+                    Correo: {p['email']}<br/>
+                    Productos: {', '.join(p['productos'])}<br/>
+                    Total: ${p['total']:,.0f}<br/>
+                    Método: {p['metodo']}<br/>
+                    Estado: {p['estado']}<br/>
+                    Fecha: {p['fecha']}
+                    """,
+                    styles["BodyText"]
+                )
+            )
+
+            contenido.append(Spacer(1,10))
+
     # CALIFICACIONES
     elif tipo == "calificaciones":
 
-        for c in calificaciones:
+        for c in obtener_calificaciones():
 
             contenido.append(
                 Paragraph(
@@ -999,11 +1203,77 @@ def procesar_pago():
 
 @app.route("/pago_exitoso", methods=["GET"])
 def pago_exitoso():
-       # Limpia el carrito de la sesión
+
+    usuario = session.get("usuario")
+    cart = _get_cart()
+
+    payment_intent = request.args.get("payment_intent")
+
+    print("PAYMENT INTENT:", payment_intent)  # prueba
+
+
+    if usuario and cart:
+
+        total = sum(item["precio"] * item["qty"] for item in cart)
+
+        referencia = f"PED-{uuid.uuid4().hex[:8].upper()}"
+
+        conexion = get_db_connection()
+        cursor = conexion.cursor()
+
+        cursor.execute("""
+        INSERT INTO pedidos
+        (referencia, correo, cliente, telefono, direccion, metodo, total, estado)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+        RETURNING id
+        """, (
+            referencia,
+            usuario["email"],
+            usuario["nombre"],
+            usuario["telefono"],
+            usuario["direccion"],
+            "Tarjeta",
+            total,
+            "Pagado"
+        ))
+
+        pedido_id = cursor.fetchone()[0]
+
+
+        for item in cart:
+            cursor.execute("""
+            INSERT INTO detalle_pedido
+            (pedido_id, producto, cantidad, precio)
+            VALUES (%s,%s,%s,%s)
+            """, (
+                pedido_id,
+                item["nombre"],
+                item["qty"],
+                item["precio"]
+            ))
+
+
+        cursor.execute("""
+        INSERT INTO transacciones
+        (pedido_id, payment_intent, estado, monto)
+        VALUES (%s,%s,%s,%s)
+        """, (
+            pedido_id,
+            payment_intent,
+            "Pagado",
+            total
+        ))
+
+
+        conexion.commit()
+        cursor.close()
+        conexion.close()
+
+
     session.pop("carrito", None)
-    session.modified = True    
-    # Muestra página de éxito o redirige
-    flash("¡Pago realizado con éxito! Gracias por tu compra.", "success")
+
+    flash("¡Pago realizado con éxito!", "success")
+
     return redirect("/inicioU")
 
 @app.route("/webhook", methods=["POST"])
@@ -1072,8 +1342,9 @@ def datos_pago():
     metodo = request.args.get("metodo", "nequi")
     return jsonify({"datos": DATOS_PAGO.get(metodo)})
 
-pedidos_guardados = {}
-calificaciones = []
+# Las listas en memoria de pedidos y calificaciones ya no se usan: ahora
+# viven en las tablas 'pedidos'/'detalle_pedido' y 'calificaciones' de la
+# base de datos (ver funciones obtener_pedidos y obtener_calificaciones).
 
 
 @app.route("/api/crear-pedido", methods=["POST"])
@@ -1088,17 +1359,47 @@ def crear_pedido():
         if not cart:
             return jsonify({"error": "Carrito vacío"}), 400
 
-        total = sum(item['precio'] * item['qty'] for item in cart)
-        ref   = f"PED-{uuid.uuid4().hex[:8].upper()}"
+        total   = sum(item['precio'] * item['qty'] for item in cart)
+        ref     = f"PED-{uuid.uuid4().hex[:8].upper()}"
+        usuario = session["usuario"]
 
-        pedidos_guardados[ref] = {
-            "total": total,
-            "metodo": data.get("metodo"),
-            "nombre": data.get("nombre"),
-            "email": data.get("email"),
-            "telefono": data.get("telefono"),
-            "fecha": datetime.now().strftime("%Y-%m-%d %H:%M")
-        }
+        # Guarda el pedido y su detalle en la base de datos
+        conexion = get_db_connection()
+        cursor = conexion.cursor()
+
+        cursor.execute("""
+            INSERT INTO pedidos
+            (referencia, correo, cliente, telefono, direccion, metodo, total, estado)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+            RETURNING id
+        """, (
+            ref,
+            data.get("email") or usuario.get("email"),
+            data.get("nombre") or usuario.get("nombre"),
+            data.get("telefono") or usuario.get("telefono"),
+            usuario.get("direccion"),
+            data.get("metodo"),
+            total,
+            "Pendiente"
+        ))
+
+        pedido_id = cursor.fetchone()[0]
+
+        for item in cart:
+            cursor.execute("""
+                INSERT INTO detalle_pedido
+                (pedido_id, producto, cantidad, precio)
+                VALUES (%s,%s,%s,%s)
+            """, (
+                pedido_id,
+                item["nombre"],
+                item["qty"],
+                item["precio"]
+            ))
+
+        conexion.commit()
+        cursor.close()
+        conexion.close()
 
         # ENVIAR CORREO AL DUEÑO
         msg = Message(
@@ -1130,9 +1431,6 @@ Método: {data.get('metodo')}
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
-# Diccionario para almacenar pedidos (en memoria, no persistente)
-
-# Lista para almacenar calificaciones (en memoria, no persistente)
 
 @app.route("/api/calificar", methods=["POST"])  # API para guardar calificación
 def calificar():
@@ -1143,15 +1441,23 @@ def calificar():
         data    = request.get_json()       # Obtiene datos JSON del frontend
         usuario = session.get('usuario')   # Obtiene el usuario de la sesión
 
-        # Agrega la calificación a la lista con todos los datos
-        calificaciones.append({
-            "cliente":    usuario["nombre"],          # Nombre del cliente
-            "email":      usuario["email"],           # Email del cliente
-            "producto":   data.get("producto"),       # Nombre del producto calificado
-            "estrellas":  int(data.get("estrellas")), # Número de estrellas (1-5)
-            "comentario": data.get("comentario"),     # Comentario del cliente
-            "fecha":      datetime.now().strftime("%Y-%m-%d %H:%M")  # Fecha
-        })
+        conexion = get_db_connection()
+        if not conexion:
+            return jsonify({"error": "Error de conexión a la base de datos"}), 500
+
+        cursor = conexion.cursor()
+        cursor.execute("""
+            INSERT INTO calificaciones (correo, producto, estrellas, comentario)
+            VALUES (%s,%s,%s,%s)
+        """, (
+            usuario["email"],
+            data.get("producto"),
+            int(data.get("estrellas")),
+            data.get("comentario")
+        ))
+        conexion.commit()
+        cursor.close()
+        conexion.close()
 
         return jsonify({"success": True})  # Retorna éxito
 
@@ -1175,6 +1481,73 @@ def subir_comprobante():
 
         usuario = session.get("usuario")
 
+       
+        cart = _get_cart()
+
+        total = sum(item["precio"] * item["qty"] for item in cart)
+
+        ref = f"PED-{uuid.uuid4().hex[:8].upper()}"
+
+        # Lee el archivo UNA sola vez: se usa para guardarlo en disco
+        # y también para adjuntarlo en el correo
+        contenido_archivo = archivo.read()
+        nombre_seguro      = secure_filename(archivo.filename) or f"{ref}.dat"
+        nombre_guardado     = f"{ref}_{nombre_seguro}"
+        ruta_disco           = os.path.join(UPLOAD_FOLDER_COMPROBANTES, nombre_guardado)
+
+        with open(ruta_disco, "wb") as f:
+            f.write(contenido_archivo)
+
+        ruta_relativa = f"uploads/comprobantes/{nombre_guardado}"
+
+        conexion = get_db_connection()
+        cursor = conexion.cursor()
+
+        cursor.execute("""
+            INSERT INTO pedidos
+            (referencia, correo, cliente, telefono, direccion, metodo, total, estado)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+            RETURNING id
+        """, (
+            ref,
+            usuario["email"],
+            usuario["nombre"],
+            usuario["telefono"],
+            usuario["direccion"],
+            request.form.get("metodo"),
+            total,
+            "Pago realizado"
+        ))
+
+        pedido_id = cursor.fetchone()[0]
+
+        for item in cart:
+            cursor.execute("""
+                INSERT INTO detalle_pedido
+                (pedido_id, producto, cantidad, precio)
+                VALUES (%s,%s,%s,%s)
+            """, (
+                pedido_id,
+                item["nombre"],
+                item["qty"],
+                item["precio"]
+            ))
+
+        # Registra el comprobante subido en la base de datos
+        cursor.execute("""
+            INSERT INTO comprobantes
+            (pedido_id, archivo, estado)
+            VALUES (%s,%s,%s)
+        """, (
+            pedido_id,
+            ruta_relativa,
+            "Pendiente de revisión"
+        ))
+
+        conexion.commit()
+        cursor.close()
+        conexion.close()
+
         msg = Message(
             subject="Nuevo comprobante de pago",
             sender=app.config["MAIL_USERNAME"],
@@ -1194,13 +1567,17 @@ Dirección: {usuario["direccion"]}
         msg.attach(
             archivo.filename,
             archivo.content_type,
-            archivo.read()
+            contenido_archivo
         )
 
         mail.send(msg)
 
-        return jsonify({"ok": True})
+       
+        session.pop("carrito", None)
+        session.modified = True
+        
 
+        return jsonify({"ok": True})
 
     except Exception as e:
 
@@ -1212,7 +1589,6 @@ Dirección: {usuario["direccion"]}
         })
         
         
-        
 # ====================================
 # RUTA DE PERFIL
 # ====================================
@@ -1221,16 +1597,18 @@ def perfil():
     if not session.get('usuario'):  # Si no hay usuario
         return redirect('/login')  # Redirige al login
 
-    # Filtra solo las calificaciones del usuario actual
-    mis_calificaciones = [
-        c for c in calificaciones          # recorre todas las calificaciones
-        if c["email"] == session['usuario']["email"]  # solo las del usuario logueado
-    ]
+    correo_usuario = session['usuario']["email"]
+
+    # Pedidos del usuario actual, leídos desde la base de datos
+    mis_pedidos = obtener_pedidos(correo_usuario)
+
+    # Calificaciones del usuario actual, leídas desde la base de datos
+    mis_calificaciones = obtener_calificaciones(correo_usuario)
 
     return render_template('users/perfil.html',  # Renderiza perfil
         usuario=session['usuario'],        # Pasa datos del usuario
-        pedidos=pedidos_guardados,         # Pasa pedidos
-        calificaciones=mis_calificaciones  # Pasa calificaciones del usuario
+        pedidos=mis_pedidos,               # Pasa pedidos (desde la BD, ya filtrados)
+        calificaciones=mis_calificaciones  # Pasa calificaciones del usuario (desde la BD)
     )
 
 
@@ -1274,9 +1652,12 @@ def redesU():
 def pedidos():
     if not session.get('usuario'): #si no se ha iniciado sesion
         return redirect('/login') #redirige a inicio de sesion
+
+    correo_usuario = session['usuario']["email"]
+
     return render_template('users/pedidos1.html', #si se ha iniciado sesion
         usuario=session['usuario'], #Guarda datos del usuario
-        pedidos=pedidos_guardados #Guarda los pedidos realizados
+        pedidos=obtener_pedidos(correo_usuario) #Pedidos del usuario, desde la BD
     )
 
 @app.route('/panaderia')  # Ruta de panadería (público)
@@ -1461,4 +1842,4 @@ def cerrar_modal():
 # ====================================
 if __name__ == "__main__":  # Si se ejecuta directamente
     crear_tabla()  # Crea las tablas si no existen
-    app.run(host="0.0.0.0", port=5000, debug=True)  # Ejecuta el servidor en modo debug"
+    app.run(host="0.0.0.0", port=5000, debug=True)  # Ejecuta el servidor en modo debug

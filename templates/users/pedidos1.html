@@ -70,7 +70,9 @@
               <td>{{ p.fecha }}</td>
               <td>{{ p.metodo | capitalize }}</td>
               <td>${{ '{:,.0f}'.format(p.total) }}</td>
-              <td><span class="badge-estado">Pendiente</span></td>
+              <td>
+                <span class="badge-estado"> {{ p.estado }} </span>
+              </td>
             </tr>
             {% else %}
             <tr>
